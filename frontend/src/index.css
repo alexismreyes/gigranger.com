@@ -1,0 +1,23 @@
+@keyframes glowPulseRed {
+  0% {
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+  }
+}
+
+@keyframes glowPulseGreen {
+  0% {
+    box-shadow: 0 0 12px rgba(0, 255, 0, 0.4); /* light green */
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.8); /* stronger glow */
+  }
+  100% {
+    box-shadow: 0 0 12px rgba(0, 255, 0, 0.4);
+  }
+}

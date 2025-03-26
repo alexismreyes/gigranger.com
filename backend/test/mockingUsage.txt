@@ -1,0 +1,8 @@
+Basic Mocking:
+Use jest.fn() to replace a simple function and control its return value.
+
+Mocking External Dependencies:
+Use jest.mock() to replace entire modules (like database models) so you can simulate success or failure cases.
+
+Mocking Express Response Objects:
+Create helper functions (like createRes()) to mimic the chaining and behavior of Express’s response object.
