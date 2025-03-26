@@ -1,7 +1,6 @@
 import {
   Delete,
   Edit,
-  InfoOutlined,
   MenuBookOutlined,
   PictureAsPdf,
 } from '@mui/icons-material';
@@ -177,7 +176,7 @@ const JobApplicationTable: React.FC<JobApplicationTableProps> = ({
                 <TableCell>
                   {applicant?.resumeUrl && (
                     <IconButton
-                      onClick={() => showResume(applicant?.resumeUrl)}
+                      onClick={() => showResume(applicant?.resumeUrl as string)}
                     >
                       <PictureAsPdf />
                     </IconButton>

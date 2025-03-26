@@ -15,7 +15,7 @@ const UserRegistrationDialog: React.FC<UserRegistrationProps> = ({
   onClose,
   onSave,
 }) => {
-  const [initialValues, setInitialValues] = useState<User>({
+  const [initialValues] = useState<User>({
     firstName: '',
     lastName: '',
     roleId: '',

@@ -19,7 +19,7 @@ const UsersList: React.FC = () => {
     updateUser,
     deleteUser,
     uploadResume,
-    resumeUrl,
+    /* resumeUrl, */
     fetchLoggedUserById,
   } = useUsersManagement();
   const { roles } = useRolesManagement();
@@ -97,7 +97,7 @@ const UsersList: React.FC = () => {
         currentUser={currentUser}
         roles={roles}
         uploadResume={uploadResume}
-        resumeUrl={resumeUrl}
+        /* resumeUrl={resumeUrl} */
       />
 
       <ConfirmationDialog

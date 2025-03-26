@@ -35,7 +35,7 @@ export interface User {
   email: string;
   password: string;
   roleId: number | string;
-  resumeUrl: string;
+  resumeUrl?: string;
 }
 
 export interface LoggedUser {

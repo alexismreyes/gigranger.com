@@ -20,8 +20,8 @@ interface JobsDialogProps {
   onSave: (user: User) => void;
   currentUser?: User | undefined;
   roles: Role[];
-  uploadResume: (resumeFile: File) => string;
-  resumeUrl: string;
+  uploadResume: (resumeFile: File) => Promise<string>;
+  /* resumeUrl: string; */
 }
 
 const UsersDialog: React.FC<JobsDialogProps> = ({

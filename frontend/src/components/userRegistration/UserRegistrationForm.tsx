@@ -1,4 +1,4 @@
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import { Role, User } from '../../interfaces/interfaces';
 import { UserSchema } from '../../validations/userSchema';
 import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
@@ -10,15 +10,27 @@ interface UserRegistrationFormProps {
   roles: Role[];
 }
 
+type UserFormValues = User & { confirmPassword: string }; //this is done for type match because confirmPassword is not part of the interface User
+
 const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
   onSave,
   initialValues,
   onClose,
   roles,
 }) => {
-  const handleSubmit = async (values: User, actions) => {
+  const handleSubmit = async (
+    values: UserFormValues,
+    actions: FormikHelpers<UserFormValues>
+  ) => {
     try {
-      await onSave(values);
+      const userData = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        roleId: values.roleId,
+        email: values.email,
+        password: values.password,
+      };
+      await onSave(userData);
       actions.setSubmitting(false);
     } catch (error) {
       console.error(error);

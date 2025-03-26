@@ -68,9 +68,11 @@ const VerifyEmail = () => {
           )}
         </Box>
 
-        <Alert severity={status} sx={{ my: 2 }}>
-          {message}
-        </Alert>
+        {(status === 'success' || status === 'error') && (
+          <Alert severity={status} sx={{ my: 2 }}>
+            {message}
+          </Alert>
+        )}
 
         {status === 'success' && (
           <Button

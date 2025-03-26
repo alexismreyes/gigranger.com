@@ -11,13 +11,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import {
-  Job,
-  JobApplication,
-  JobApplicationHistory,
-  Status,
-  User,
-} from '../../interfaces/interfaces';
+import { Job, JobApplication, Status, User } from '../../interfaces/interfaces';
 import { useJobApplicationHistoryManagement } from '../../hooks/useJobApplicationHistoryManagement';
 import { useEffect } from 'react';
 

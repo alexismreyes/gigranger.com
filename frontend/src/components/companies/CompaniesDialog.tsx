@@ -1,10 +1,4 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from '@mui/material';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Company } from '../../interfaces/interfaces';
 import CompaniesForm from './CompaniesForm';

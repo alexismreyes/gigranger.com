@@ -41,7 +41,7 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
   const [company, setCompany] = useState<number>(0);
   const [salary, setSalary] = useState<number>(0);
   const [jobCategory, setJobCategory] = useState<number>(0);
-  const { companies, fetchCompanies, createCompany } = useCompaniesManagement();
+  const { companies, createCompany } = useCompaniesManagement();
 
   //logic for adding non existing companies
   const [openCompanyDialog, setOpenCompanyDialog] = useState(false);

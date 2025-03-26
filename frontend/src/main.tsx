@@ -8,7 +8,7 @@ import eyecandyTheme from './themes/theme.ts';
 import { SnackBarProvider } from './context/SnackBarContext.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
 import { MyOwnProvider } from './context/MyOwnContext.tsx';
-import { LoadingProvider } from './context/LoadinContext.tsx';
+import { LoadingProvider } from './context/LoadingContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

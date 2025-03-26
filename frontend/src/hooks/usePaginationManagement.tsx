@@ -5,7 +5,8 @@ export const usePaginationManagement = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5); // Rows per page
 
   // Handle page change
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown, newPage: number) => {
+    //prefix underscore means ""Yes, this parameter is required syntactically, but I intentionally don't use it.""
     setPage(newPage);
   };
 

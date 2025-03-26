@@ -1,5 +1,5 @@
 import { Button, Container, Typography } from '@mui/material';
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { Job } from '../interfaces/interfaces';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import useSnackBarContext from '../hooks/useSnackBarContext';

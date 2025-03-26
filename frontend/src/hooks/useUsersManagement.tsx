@@ -10,12 +10,11 @@ import {
 import { User } from '../interfaces/interfaces';
 import useSnackBarContext from './useSnackBarContext';
 import { AxiosError } from 'axios';
-import useAuthContext from './useAuthContext';
 
 export const useUsersManagement = () => {
   const [users, setUsers] = useState<User[]>([]);
   const { setSnackStatus } = useSnackBarContext();
-  const { user, token, login } = useAuthContext();
+  /* const { user, token, login } = useAuthContext(); */
 
   useEffect(() => {
     fetchUsers();

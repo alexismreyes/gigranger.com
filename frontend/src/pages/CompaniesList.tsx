@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CompaniesTable from '../components/companies/CompaniesTable';
 import { useCompaniesManagement } from '../hooks/useCompaniesManagement';
 import { Company } from '../interfaces/interfaces';
@@ -7,9 +7,8 @@ import CompaniesDialog from '../components/companies/CompaniesDialog';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import SnackBar from '../components/SnackBar';
 import useSnackBarContext from '../hooks/useSnackBarContext';
-import useAuthContext from '../hooks/useAuthContext';
+
 import HasRole from '../components/HasRole';
-import useMyOwnContext from '../hooks/useMyOwnContext';
 
 const CompaniesList: React.FC = () => {
   const { companies, updateCompany, createCompany, deleteCompany } =

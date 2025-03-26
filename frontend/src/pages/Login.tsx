@@ -25,8 +25,7 @@ const Login = () => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [openNewUserDialog, setOpenNewUserDialog] = useState<boolean>(false);
-  const { fetchLoggedUser, registerNewUser, requestUserVerification } =
-    useAuthManagement();
+  const { fetchLoggedUser, requestUserVerification } = useAuthManagement();
   const { snackStatus, handleCloseSnack } = useSnackBarContext();
 
   useEffect(() => {

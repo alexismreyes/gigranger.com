@@ -1,7 +1,7 @@
 import useAuthContext from '../hooks/useAuthContext';
 
 interface HasRoleProps {
-  role: number | number[];
+  role: number | string | number[];
   children: React.ReactNode;
 }
 

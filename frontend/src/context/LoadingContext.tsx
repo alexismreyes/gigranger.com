@@ -1,9 +1,14 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
+
+type LoadingContextType = {
+  isLoading: boolean;
+  setLoading: (val: boolean) => void;
+};
 
 //create and export the context
-export const LoadingContext = createContext({
+export const LoadingContext = createContext<LoadingContextType>({
   isLoading: false,
-  setLoading: (val: boolean) => {},
+  setLoading: () => {},
 });
 
 //create and export the provider

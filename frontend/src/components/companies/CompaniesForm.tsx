@@ -1,4 +1,4 @@
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import { Company } from '../../interfaces/interfaces';
 import { CompanySchema } from '../../validations/companySchema';
 import { Box, Button, TextField } from '@mui/material';
@@ -14,7 +14,10 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
   onSave,
   onClose,
 }) => {
-  const handleSubmit = async (values: Company, actions) => {
+  const handleSubmit = async (
+    values: Company,
+    actions: FormikHelpers<Company>
+  ) => {
     try {
       await onSave(values);
     } catch (error) {
@@ -33,14 +36,7 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
       validateOnChange={true}
       enableReinitialize={true} //allows to edit
     >
-      {({
-        isSubmitting,
-        handleChange,
-        setFieldValue,
-        values,
-        touched,
-        errors,
-      }) => (
+      {({ isSubmitting, handleChange, values, touched, errors }) => (
         <Form>
           <Box
             sx={{
