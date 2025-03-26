@@ -1,7 +1,13 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const dotenv = require('dotenv');
 
-dotenv.config({ path: '.env.development' });
+//dotenv.config({ path: '.env.development' });
+require('dotenv').config({
+  path:
+    process.env.NODE_ENV === 'production'
+      ? '.env.production'
+      : '.env.development',
+});
 
 const db_user = process.env.DB_USER;
 const db_password = process.env.DB_PASS;
