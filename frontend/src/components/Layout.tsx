@@ -1,6 +1,11 @@
 import {
   AppBar,
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Drawer,
   IconButton,
   List,
@@ -16,14 +21,23 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useState } from 'react';
 import useAuthContext from '../hooks/useAuthContext';
 import { useRolesManagement } from '../hooks/useRolesManagement';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutDialog from './LogoutDialog';
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true);
+  const [openDialogLogout, setOpenDialogLogout] = useState<boolean>(false);
+  /* const [confirmLogout, setConfirmLogout] = useState<boolean>(false); */
   const openDrawerWidth = 150;
   const collapsedDrawerWidth = 0;
   const { user } = useAuthContext();
   const { roles } = useRolesManagement();
+
+  const handleLogout = (): void => {
+    setOpenDialogLogout(false);
+    navigate('/logout');
+  };
 
   const drawer = (
     <List>
@@ -47,7 +61,8 @@ const Layout: React.FC = () => {
         <ListItemText primary="Users" />
       </ListItemButton>
 
-      <ListItemButton onClick={() => navigate('/logout')}>
+      {/* <ListItemButton onClick={() => navigate('/logout')}> */}
+      <ListItemButton onClick={() => setOpenDialogLogout(true)}>
         <ListItemText primary="Logout" />
       </ListItemButton>
     </List>
@@ -118,6 +133,11 @@ const Layout: React.FC = () => {
       >
         <Outlet />
       </Box>
+      <LogoutDialog
+        open={openDialogLogout}
+        onClose={() => setOpenDialogLogout(false)}
+        onConfirm={handleLogout}
+      />
     </Box>
   );
 };
