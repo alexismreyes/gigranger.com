@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Jobs, JobApplication } = require('../models');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -71,6 +71,12 @@ exports.updateUser = async (req, res) => {
     const { firstName, lastName, roleId, email, password, resumeUrl } =
       req.body;
 
+    const emailExists = await User.findOne({ where: { email } });
+    if (emailExists)
+      return res
+        .status(409)
+        .json({ error: 'User with that email already exists' });
+
     // Prepare updated user data
     const updatedUser = {
       firstName,
@@ -98,6 +104,29 @@ exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findByPk(id);
+
+    //check if user has created jobs
+    const jobsCount = await Jobs.count({
+      where: { createdBy: id },
+    });
+
+    if (jobsCount > 0) {
+      return res.status(409).json({
+        error:
+          'You cannot delete this user, it already has jobs created active',
+      });
+    }
+
+    //check if user has jobApplication active
+    const jobApplicationsCount = await JobApplication.count({
+      where: { userId: id },
+    });
+
+    if (jobApplicationsCount > 0) {
+      return res.status(409).json({
+        error: 'You cannot delete this user, it has jobApplications active',
+      });
+    }
 
     if (user) {
       await user.destroy();

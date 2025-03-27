@@ -65,8 +65,17 @@ export const useUsersManagement = () => {
         source: 'UsersList',
         severity: 'success',
       });
-    } catch (error) {
-      console.error('Error within the hook->', error);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const message = error.response?.data.error;
+        console.error(message);
+        setSnackStatus({
+          open: true,
+          message: message,
+          severity: 'error',
+          source: 'UsersList',
+        });
+      }
     }
   };
 
@@ -80,8 +89,17 @@ export const useUsersManagement = () => {
         source: 'UsersList',
         severity: 'success',
       });
-    } catch (error) {
-      console.error('Error within the hook->', error);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const message = error.response?.data.error;
+        console.error(message);
+        setSnackStatus({
+          open: true,
+          message: message,
+          severity: 'error',
+          source: 'UsersList',
+        });
+      }
     }
   };
 

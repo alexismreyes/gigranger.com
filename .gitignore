@@ -1,5 +1,7 @@
 node_modules/
-.env*   
+.env*  
+*.zip
+backend/uploads/resumes/*
 
 # Logs
 logs

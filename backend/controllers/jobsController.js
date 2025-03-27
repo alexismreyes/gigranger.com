@@ -1,4 +1,4 @@
-const { Jobs } = require('../models');
+const { Jobs, JobApplication } = require('../models');
 
 exports.getAllJobs = async (req, res) => {
   try {
@@ -77,6 +77,17 @@ exports.deleteJob = async (req, res) => {
         return res
           .status(403)
           .json({ error: 'You are not authorized to delete this job' });
+      }
+
+      const jobApplicationsCount = await JobApplication.count({
+        where: { jobId: id },
+      });
+
+      if (jobApplicationsCount > 0) {
+        return res.status(409).json({
+          error:
+            'You cannot delete the selected job because it already has job applications active',
+        });
       }
 
       await job.destroy();

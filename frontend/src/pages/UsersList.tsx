@@ -36,20 +36,21 @@ const UsersList: React.FC = () => {
     setDialogOpen(true);
   };
 
-  const handleSaveUser = async (user: User) => {
+  const handleSaveUser = async (newUser: User) => {
     if (currentUser) {
-      await updateUser(user);
+      await updateUser(newUser);
 
-      //this re-fetch and update context is done to validate in the job applications component to show/hide the alert to upload resume
-      // 🟢 Re-fetch the updated user
-      const updatedUser = await fetchLoggedUserById(user?.id as number);
-
-      // 🟢 Update context
-      if (token && updatedUser) {
-        login(token, updatedUser);
+      if (user?.roleId === 2) {
+        //this re-fetch and update context is done to validate in the job applications component to show/hide the alert to upload resume
+        // Re-fetch the updated user
+        const updatedUser = await fetchLoggedUserById(newUser?.id as number);
+        // Update context
+        if (token && updatedUser) {
+          login(token, updatedUser);
+        }
       }
     } else {
-      await createUser(user);
+      await createUser(newUser);
     }
     handleCloseDialog();
   };

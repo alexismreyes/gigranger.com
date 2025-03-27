@@ -83,6 +83,14 @@ const UsersDialog: React.FC<JobsDialogProps> = ({
       roleId: role,
       resumeUrl: localResumeUrl,
     });
+
+    //clear the states
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setRole(0);
   };
 
   return (
