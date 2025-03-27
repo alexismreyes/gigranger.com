@@ -6,7 +6,7 @@ const {
   createJobCategory,
   updateJobCategory,
   deleteJobCategory,
-} = require('../../controllers/JobCategoriesController');
+} = require('../../controllers/jobCategoriesController');
 const { JobCategories } = require('../../models');
 
 jest.mock('../../models'); //this tells jest to mock the models
