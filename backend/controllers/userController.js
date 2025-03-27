@@ -1,6 +1,7 @@
 const { User, Jobs, JobApplication } = require('../models');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { Op } = require('sequelize');
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -71,7 +72,10 @@ exports.updateUser = async (req, res) => {
     const { firstName, lastName, roleId, email, password, resumeUrl } =
       req.body;
 
-    const emailExists = await User.findOne({ where: { email } });
+    //This will find any user with the same email but a different id than the current one
+    const emailExists = await User.findOne({
+      where: { email, id: { [Op.not]: id } },
+    });
     if (emailExists)
       return res
         .status(409)
