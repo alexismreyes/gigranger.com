@@ -1,11 +1,6 @@
 import {
   AppBar,
   Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Drawer,
   IconButton,
   List,
@@ -21,7 +16,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useState } from 'react';
 import useAuthContext from '../hooks/useAuthContext';
 import { useRolesManagement } from '../hooks/useRolesManagement';
-import LogoutIcon from '@mui/icons-material/Logout';
+
 import LogoutDialog from './LogoutDialog';
 
 const Layout: React.FC = () => {
