@@ -205,13 +205,3 @@ The frontend follows a **Component-Driven Development (CDD)** approach, emphasiz
 - **Pages** use these building blocks to compose full features.
 
 This modular pattern improves reusability, testing, and clarity across the UI codebase.
-
-## 📌 Final Notes
-
-This app began as a personal initiative to practice and explore full-stack development concepts using modern tools like React, Node.js, MySQL, and AWS. While it may not follow a single strict standard across all components — for instance, some forms use Dialogs while others use Formik, and error handling varies between Axios responses and `console.error` — this was intentional.
-
-The goal has always been to build a progressively enhanced application while experimenting with different patterns, tools, and technologies. As it evolved, I incorporated more real-world features such as file uploads, email notifications, role-based access control, protected routes, and application history.
-
-It is not yet fully optimized nor finalized, and I plan to continue improving it with technologies like RabbitMQ, WebSockets, and more advanced backend patterns. This app is meant to be a learning-driven, functional foundation of a job portal, reflecting growth, curiosity, and hands-on problem solving.
-
-So don’t judge it by perfection 😄
