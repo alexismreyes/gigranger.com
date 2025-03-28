@@ -61,7 +61,8 @@ So don’t judge it by perfection 😄
 - Responsive layout using **Material UI**
 
 - Intuitive admin panel with Drawer navigation, modals, tables, and
-  pagination
+
+pagination
 
 - Inline feedback using Snackbars and confirmation dialogs
 
@@ -73,65 +74,107 @@ So don’t judge it by perfection 😄
 
 ## 💠 Tech Stack
 
-| Layer          | Technology                                      |
+| Layer | Technology |
+
 | -------------- | ----------------------------------------------- |
-| **Frontend**   | React + Vite, TypeScript, Material UI, Axios    |
-| **Backend**    | Node.js, Express, Sequelize ORM, Multer, JWT    |
-| **Database**   | MySQL (AWS RDS)                                 |
-| **Auth**       | JWT + Bcrypt, Context API                       |
+
+| **Frontend** | React + Vite, TypeScript, Material UI, Axios |
+
+| **Backend** | Node.js, Express, Sequelize ORM, Multer, JWT |
+
+| **Database** | MySQL (AWS RDS) |
+
+| **Auth** | JWT + Bcrypt, Context API |
+
 | **Deployment** | S3 (frontend), Elastic Beanstalk (backend), RDS |
-| **Dev Tools**  | Postman, Jest, Supertest, ESLint, Prettier      |
+
+| **Dev Tools** | Postman, Jest, Supertest, ESLint, Prettier |
 
 ## 📁 Project Structure
 
 ```plaintext
+
 employment-app/
-│	README.md
+
+│ README.md
+
 ├── backend/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── config/
-│   ├── middlewares/
-│   ├── test/
-│   ├── uploads/              # Resume storage
-│   ├── utils/
-│   ├── app.js
-│   ├── server.js
-│   ├── package.json
-│   └── .env.*
+
+│ ├── controllers/
+
+│ ├── models/
+
+│ ├── routes/
+
+│ ├── config/
+
+│ ├── middlewares/
+
+│ ├── test/
+
+│ ├── uploads/ # Resume storage
+
+│ ├── utils/
+
+│ ├── app.js
+
+│ ├── server.js
+
+│ ├── package.json
+
+│ └── .env.*
+
 │
+
 ├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── hooks/
-│   │   ├── services/
-│   │   ├── validations/
-│   │   ├── interfaces/
-│   │   ├── context/
-│   │   ├── utils/
-│   │   ├── themes/
-│   │   ├── App.tsx
-│   │   ├── index.css
-│   │   └── main.tsx
-│   ├── public/
-│   ├── index.html
-│   ├── package.json
-│   └── .env.*
+
+│ ├── src/
+
+│ │ ├── components/
+
+│ │ ├── pages/
+
+│ │ ├── hooks/
+
+│ │ ├── services/
+
+│ │ ├── validations/
+
+│ │ ├── interfaces/
+
+│ │ ├── context/
+
+│ │ ├── utils/
+
+│ │ ├── themes/
+
+│ │ ├── App.tsx
+
+│ │ ├── index.css
+
+│ │ └── main.tsx
+
+│ ├── public/
+
+│ ├── index.html
+
+│ ├── package.json
+
+│ └── .env.*
+
 ```
 
 ## 🧩 Installation Guide
 
-1. Clone the Repository
+1.  Clone the Repository
 
-2. Install Backend Dependencies
+2.  Install Backend Dependencies
 
-3. Install Frontend Dependencies
+3.  Install Frontend Dependencies
 
-4. Import the Database (Make sure the database `employment_db` exists or create it manually)
+4.  Import the Database (Make sure the database `employment_db` exists or create it manually)
 
-5. Configure Environment Files
+5.  Configure Environment Files
 
 Copy and adjust the `.env.development` files in both `backend` and `frontend` folders as shown below.
 
@@ -143,19 +186,27 @@ Copy and adjust the `.env.development` files in both `backend` and `frontend` fo
 
 Backend .env.development
 
-    PORT=4000
-    DB_HOST=localhost
-    DB_NAME=employment_db
-    DB_USER=root #your DB user
-    DB_PASSWORD=yourpassword #your DB password
-    JWT_SECRET=your_jwt_secret
-    EMAIL_USER=your_email@example.com #The main email account from which app will send the emails
-    EMAIL_PASS=your_email_password #The password from that main email account
-    FRONTEND_URL=http://localhost:5173
+PORT=4000
+
+DB_HOST=localhost
+
+DB_NAME=employment_db
+
+DB_USER=root #your DB user
+
+DB_PASSWORD=yourpassword #your DB password
+
+JWT_SECRET=your_jwt_secret
+
+EMAIL_USER=your_email@example.com #The main email account from which app will send the emails
+
+EMAIL_PASS=your_email_password #The password from that main email account
+
+FRONTEND_URL=http://localhost:5173
 
 Frontend .env.development
 
-      VITE_API_URL=http://localhost:4000/api/v1
+VITE_API_URL=http://localhost:4000/api/v1
 
 ✅ Use .env.production files for deployment, replacing localhost URLs with actual production domains or IPs.
 
@@ -187,12 +238,68 @@ http://employmentapps3.s3-website.us-east-2.amazonaws.com/
 
 ✅ Database: AWS RDS (MySQL)
 
+## 📄 Resume Upload Feature
+
+This project includes a file upload functionality for user resumes, which supports **both local storage (for development)** and **Amazon S3 storage (for production)**.
+
+### 🔁 Automatic Storage Mode Detection
+
+The app automatically switches between **local disk storage** and **S3 cloud storage** depending on the environment configuration:
+
+| Environment | Storage Method         | Trigger                               |
+| ----------- | ---------------------- | ------------------------------------- |
+| Development | Local (project folder) | No `S3_BUCKET_NAME` defined in `.env` |
+| Production  | Amazon S3              | `S3_BUCKET_NAME` is defined in `.env` |
+
+---
+
+### 📂 Local Storage (Development)
+
+- Files are saved under:  
+  `backend/uploads/resumes/`
+
+- Accessible during development via:  
+  `http://localhost:4000/uploads/resumes/<filename>`
+
+- Ensure the following line is active in `app.js`:
+
+  ```js
+  app.use(
+    '/uploads/resumes',
+    express.static(path.join(__dirname, 'uploads/resumes'))
+  );
+  ```
+
+### ☁️ Amazon S3 Storage (Production)
+
+When the application is deployed in production and the environment is properly configured, resumes are uploaded to **Amazon S3** instead of being stored locally.
+
+- Files are saved inside the `resumes/` folder within your S3 bucket.
+- The uploaded file is publicly accessible using the returned S3 URL.
+- Example of a stored file URL:  
+   `https://your-bucket-name.s3.amazonaws.com/resumes/123456-resume.pdf`
+
+To enable S3 uploads, ensure the following environment variables are defined in your `.env.production`:
+
+| Variable                | Description                    |
+| ----------------------- | ------------------------------ |
+| `AWS_ACCESS_KEY_ID`     | Your AWS access key            |
+| `AWS_SECRET_ACCESS_KEY` | Your AWS secret access key     |
+| `AWS_REGION`            | AWS region (e.g., `us-east-2`) |
+| `S3_BUCKET_NAME`        | Your S3 bucket name            |
+
+If any of these are missing, the app will **automatically fallback to local storage**.
+
 ## 👨‍💼 **Author & Contact**
 
 **Marlon Alexis Manzano Reyes**
+
 Full Stack Developer | React | Node.js | MySQL | Express.js | Typescript
+
 📍 San Salvador, El Salvador
+
 📧 malexismreyes@gmail.com
+
 🌐 https://www.linkedin.com/in/alexismreyes/
 
 ## 📦 Frontend Architecture
@@ -200,8 +307,11 @@ Full Stack Developer | React | Node.js | MySQL | Express.js | Typescript
 The frontend follows a **Component-Driven Development (CDD)** approach, emphasizing separation of concerns:
 
 - **Services** handle all API communication (e.g., `JobService`, `AuthService`).
+
 - **Hooks** (e.g., `useJobCategories`, `useAuth`) encapsulate logic and data fetching.
+
 - **Components** like tables, dialogs, and form inputs focus on UI rendering.
+
 - **Pages** use these building blocks to compose full features.
 
 This modular pattern improves reusability, testing, and clarity across the UI codebase.

@@ -2,7 +2,7 @@ import { User } from '../interfaces/interfaces';
 import api from './api';
 
 const usersEndpoint = '/users';
-const uploadsEndpoint = '/uploads/resume';
+const uploadsEndpoint = '/uploads/resumes';
 
 export const fetchUsers = async (): Promise<User[]> => {
   try {
@@ -54,10 +54,12 @@ export const uploadResume = async (resumeFile: File) => {
       },
     });
 
-    console.log(`response.data en uploadResume service->`, response.data);
-    return response.data.url; //return only the url string
+    /* console.log(`response.data en uploadResume service->`, response.data);
+    console.log('Uploading to:', response.data.resumeUrl); */
+
+    return response.data.resumeUrl; //return only the url string
   } catch (error) {
-    console.error('Something went wrong within the service->', error);
+    console.error('Something went wrong within the upload service->', error);
     throw error;
   }
 };
