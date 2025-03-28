@@ -1,31 +1,22 @@
-// routes/upload.js
 const express = require('express');
-const multer = require('multer');
-const path = require('path');
 const router = express.Router();
+const upload = require('../middlewares/uploadResume');
 
-// Configure storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/resumes');
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = Date.now() + '-' + file.originalname;
-    cb(null, uniqueName);
-  },
-});
+router.post('/resumes', upload.single('resume'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'File upload failed' });
+  }
 
-const upload = multer({ storage });
+  // If using S3 (req.file.location will exist)
+  if (req.file.location) {
+    return res.status(200).json({ resumeUrl: req.file.location });
+  }
 
-// Route: POST /upload/resume
-router.post('/resume', upload.single('resume'), (req, res) => {
-  const file = req.file;
-  if (!file) return res.status(400).json({ error: 'No file uploaded' });
-
+  // If using local disk, manually construct the URL
   const fileUrl = `${req.protocol}://${req.get('host')}/uploads/resumes/${
-    file.filename
+    req.file.filename
   }`;
-  res.status(200).json({ url: fileUrl }); // 👈 Send this URL to the frontend and store it in the DB
+  return res.status(200).json({ resumeUrl: fileUrl });
 });
 
 module.exports = router;
