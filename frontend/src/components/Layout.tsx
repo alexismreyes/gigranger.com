@@ -1,6 +1,7 @@
 import {
   AppBar,
   Box,
+  colors,
   Drawer,
   IconButton,
   List,
@@ -8,6 +9,8 @@ import {
   ListItemText,
   Toolbar,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Outlet, useNavigate } from 'react-router-dom';
@@ -23,11 +26,14 @@ const Layout: React.FC = () => {
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true);
   const [openDialogLogout, setOpenDialogLogout] = useState<boolean>(false);
-  /* const [confirmLogout, setConfirmLogout] = useState<boolean>(false); */
+
   const openDrawerWidth = 150;
   const collapsedDrawerWidth = 0;
   const { user } = useAuthContext();
   const { roles } = useRolesManagement();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleLogout = (): void => {
     setOpenDialogLogout(false);
@@ -77,7 +83,12 @@ const Layout: React.FC = () => {
           },
         }}
       >
-        <Toolbar>
+        <Toolbar
+          sx={{
+            minHeight: 64,
+            height: 64,
+          }}
+        >
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
               onClick={() => setDrawerOpen(!drawerOpen)}
@@ -85,7 +96,9 @@ const Layout: React.FC = () => {
             >
               {drawerOpen ? <ChevronLeftIcon /> : <MenuIcon />}
             </IconButton>
-            <Typography variant="h4">The Job Finding App</Typography>
+            <Typography variant={isMobile ? 'body1' : 'h4'}>
+              The Job Finding App
+            </Typography>
           </Box>
 
           {/* Right Side: User Info */}
@@ -109,7 +122,11 @@ const Layout: React.FC = () => {
         </Toolbar>
       </AppBar>
       <Box component="nav">
-        <Drawer variant="persistent" open={drawerOpen}>
+        <Drawer
+          variant={isMobile ? 'temporary' : 'persistent'}
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        >
           {drawer}
         </Drawer>
       </Box>
@@ -120,7 +137,7 @@ const Layout: React.FC = () => {
           padding: '16px',
           ml: {
             sm: drawerOpen
-              ? `${openDrawerWidth + 40}px` //30 is an additional spacing between the drawer and the main content
+              ? `${openDrawerWidth + 30}px` //30 is an additional spacing between the drawer and the main content
               : `${collapsedDrawerWidth}px`,
           },
           transition: 'margin-left 0.3s ease-in-out',
