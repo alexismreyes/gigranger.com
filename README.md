@@ -1,4 +1,4 @@
-## Employment Platform🧑‍💼
+## gigranger.com - A Employment Platform🧑‍💼
 
 A full-featured job portal application that allows recruiters to post and manage job listings, and job seekers to find, apply, and track job applications. This project showcases real-world features such as authentication, role-based access, file uploads, filtering, email notifications, and application history tracking — built with production-ready technologies.
 
@@ -86,7 +86,7 @@ pagination
 
 | **Auth** | JWT + Bcrypt, Context API |
 
-| **Deployment** | S3 (frontend), Elastic Beanstalk (backend), RDS |
+| **Deployment** | S3 + CloudFront (frontend), Elastic Beanstalk with HTTPS (backend), RDS (MySQL) |
 
 | **Dev Tools** | Postman, Jest, Supertest, ESLint, Prettier |
 
@@ -226,17 +226,23 @@ This project includes a MySQL database dump in the root of the project to get yo
 
 Make sure the employment_db exists or create it first:
 
-## **🌐 Current Deployment**
+## 🌐 Current Deployment
 
 You can try out the app here:
 
-http://employmentapps3.s3-website.us-east-2.amazonaws.com/
+🔗 [https://gigranger.com](https://gigranger.com) — Main frontend  
+🔗 [https://api.gigranger.com](https://api.gigranger.com) — Backend API
 
-✅ Frontend: AWS S3 Static Hosting
+---
 
-✅ Backend API: AWS Elastic Beanstalk
+### ✅ Deployment Stack
 
-✅ Database: AWS RDS (MySQL)
+| Component              | Details                                                                                                                                                                |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Frontend**           | React app hosted on **AWS S3** and served via **CloudFront** with custom domain and HTTPS (`gigranger.com`)                                                            |
+| **Subdomain Redirect** | `www.gigranger.com` redirects to the root domain using **S3 redirect + CloudFront**                                                                                    |
+| **Backend API**        | Node.js + Express app deployed to **Elastic Beanstalk** (single-instance, no load balancer), reverse-proxied with **Nginx + Let's Encrypt SSL** at `api.gigranger.com` |
+| **Database**           | **AWS RDS** using **MySQL**                                                                                                                                            |
 
 ## 📄 Resume Upload Feature
 
