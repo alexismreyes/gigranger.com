@@ -11,6 +11,7 @@ import CompaniesList from './pages/CompaniesList';
 import JobApplicationsList from './pages/JobApplicationList';
 import UsersList from './pages/UsersList';
 import VerifyEmail from './pages/VerifyEmail';
+import ChatPage from './pages/ChatPage';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
                 element={<JobApplicationsList />}
               />
               <Route path="/users" element={<UsersList />} />
+              {/* <Route path="/chat/:roomId" element={<ChatPage />} /> */}
               <Route path="/logout" element={<Logout />} />
             </Route>
           </Route>

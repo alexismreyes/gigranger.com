@@ -94,3 +94,15 @@ export interface JobFilterState {
   minSalary: string;
   maxSalary: string;
 }
+
+export interface Message {
+  senderId: number;
+  message: string;
+  roomId: number;
+  createdAt?: string;
+}
+
+export interface Chat {
+  recruiterId: number;
+  jobSeekerId: number;
+}

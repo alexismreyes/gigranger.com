@@ -26,7 +26,7 @@ import {
 import HasRole from '../HasRole';
 import { useEffect, useState } from 'react';
 import { usePaginationManagement } from '../../hooks/usePaginationManagement';
-import JobApplicationDetails from './jobApplicationDetails';
+import JobApplicationDetails from './JobApplicationDetails';
 
 interface JobApplicationTableProps {
   jobApplications: JobApplication[];

@@ -9,18 +9,24 @@ import { SnackBarProvider } from './context/SnackBarContext.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
 import { MyOwnProvider } from './context/MyOwnContext.tsx';
 import { LoadingProvider } from './context/LoadingContext.tsx';
+import { ChatNotificationProvider } from './context/ChatNotificationContext.tsx';
+import { FloatingChatProvider } from './context/FloatingChatContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <LoadingProvider>
         <SnackBarProvider>
-          <ThemeProvider theme={eyecandyTheme}>
-            <CssBaseline />
-            <MyOwnProvider>
-              <App />
-            </MyOwnProvider>
-          </ThemeProvider>
+          <FloatingChatProvider>
+            <ChatNotificationProvider>
+              <ThemeProvider theme={eyecandyTheme}>
+                <CssBaseline />
+                <MyOwnProvider>
+                  <App />
+                </MyOwnProvider>
+              </ThemeProvider>
+            </ChatNotificationProvider>
+          </FloatingChatProvider>
         </SnackBarProvider>
       </LoadingProvider>
     </AuthProvider>

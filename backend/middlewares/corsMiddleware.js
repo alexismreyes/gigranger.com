@@ -4,13 +4,6 @@
 
 const cors = require('cors');
 
-/* const allowedOrigins = [
-  'http://localhost:5173',
-  'http://employmentapps3.s3-website.us-east-2.amazonaws.com',
-  'https://gigranger.com',
-  'https://www.gigranger.com' 
-];
- */
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
 
 const corsMiddleware = cors({

@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Table,
@@ -14,6 +15,7 @@ import {
 import { Job, JobApplication, Status, User } from '../../interfaces/interfaces';
 import { useJobApplicationHistoryManagement } from '../../hooks/useJobApplicationHistoryManagement';
 import { useEffect } from 'react';
+import JobApplicationChat from './JobApplicationChat';
 
 interface JobApplicationDetailsProps {
   open: boolean;
@@ -44,6 +46,10 @@ const JobApplicationDetails: React.FC<JobApplicationDetailsProps> = ({
   const filteredjobsApplicationsHistory = jobApplicationsHistory.filter(
     (app) => app.jobAppId === selectedJobApplication?.id
   );
+
+  const lastUpdate = filteredjobsApplicationsHistory.slice(-1)[0] || []; // Get latest history
+  const recruiterId = lastUpdate.updatedBy ?? null;
+  const jobSeekerId = selectedJobApplication.userId;
 
   return (
     <>
@@ -88,6 +94,7 @@ const JobApplicationDetails: React.FC<JobApplicationDetailsProps> = ({
                       (status) => status.id === app.updatedStatus
                     )?.name;
 
+                    //recruiter name
                     const firstName = users.find(
                       (u) => u.id === app.updatedBy
                     )?.firstName;
@@ -119,9 +126,18 @@ const JobApplicationDetails: React.FC<JobApplicationDetailsProps> = ({
               </TableBody>
             </Table>
           </TableContainer>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button onClick={onClose}>Close</Button>
-          </Box>
+          <DialogActions>
+            <Button onClick={onClose} variant="contained" color="error">
+              Close
+            </Button>
+            {filteredjobsApplicationsHistory.length > 0 &&
+              lastUpdate.updatedStatus === 2 && ( //si el status de la aplicacion esta en progreso muestre el boton para chat
+                <JobApplicationChat
+                  recruiterId={recruiterId}
+                  jobSeekerId={jobSeekerId}
+                />
+              )}
+          </DialogActions>
         </DialogContent>
       </Dialog>
     </>

@@ -1,7 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const dotenv = require('dotenv');
 
-//dotenv.config({ path: '.env.development' });
 require('dotenv').config({
   path:
     process.env.NODE_ENV === 'production'
@@ -33,6 +31,12 @@ const JobApplicationHistory = require('./JobApplicationHistory')(
 );
 const Status = require('./Status')(sequelize, DataTypes);
 const EmailVerification = require('./EmailVerification')(sequelize, DataTypes);
+const ChatRoom = require('./ChatRoom')(sequelize, DataTypes);
+const ChatMessage = require('./ChatMessage')(sequelize, DataTypes);
+
+//Associations added to show participant names in the multiple chat rooms modal
+ChatRoom.belongsTo(User, { as: 'recruiter', foreignKey: 'recruiterId' });
+ChatRoom.belongsTo(User, { as: 'jobSeeker', foreignKey: 'jobSeekerId' });
 
 module.exports = {
   sequelize,
@@ -45,4 +49,6 @@ module.exports = {
   JobApplicationHistory,
   Status,
   EmailVerification,
+  ChatRoom,
+  ChatMessage,
 };
