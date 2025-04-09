@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import socket from '../sockets/socket';
-import { Message } from '../interfaces/interfaces';
 import { useChatNotificationContext } from '../context/ChatNotificationContext';
 import { Button, Typography } from '@mui/material';
+import { useChatManagement } from '../hooks/useChatManagement';
+import { Message } from '../interfaces/interfaces';
 
 interface ChatBoxProps {
   currentUserId: number;
@@ -10,46 +11,50 @@ interface ChatBoxProps {
 }
 
 const ChatBox: React.FC<ChatBoxProps> = ({ currentUserId, roomId }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
   const [newMsg, setNewMsg] = useState('');
-  const [userMap, setUserMap] = useState<Record<number, string>>({});
   const { clearUnreadRoom } = useChatNotificationContext();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const {
+    userMap,
+    getUsersInRoom,
+    messages,
+    getMessagesInRoom,
+    handleNewMessage,
+  } = useChatManagement();
 
   useEffect(() => {
     clearUnreadRoom(roomId);
     socket.emit('joinRoom', roomId);
 
     const fetchUserMap = async () => {
-      const res = await fetch(
-        `http://localhost:4000/api/v1/chat/room-users/${roomId}`
-      );
-      const data = await res.json();
-      setUserMap(data);
+      try {
+        await getUsersInRoom(roomId);
+      } catch (error) {
+        console.error('Failed to fetch users in room', error);
+      }
     };
 
     const fetchMessages = async () => {
-      const res = await fetch(
-        `http://localhost:4000/api/v1/chat/messages/${roomId}`
-      );
-      const msgs = await res.json();
-      setMessages(msgs);
+      try {
+        await getMessagesInRoom(roomId);
+      } catch (error) {
+        console.error('Failed to fetch messages in room', error);
+      }
     };
 
     fetchUserMap();
     fetchMessages();
 
-    const handleNewMessage = (msg: Message) => {
-      if (msg.roomId === roomId) {
-        setMessages((prev) => [...prev, msg]);
-        clearUnreadRoom(roomId);
-      }
+    const listener = (msg: Message) => {
+      handleNewMessage(msg, roomId); // ⬅️ roomId passed explicitly
     };
 
-    socket.on('messageReceived', handleNewMessage);
+    socket.on('messageReceived', listener);
+
     return () => {
       socket.emit('leaveRoom', roomId);
-      socket.off('messageReceived', handleNewMessage);
+      socket.off('messageReceived', listener);
     };
   }, [roomId]);
 

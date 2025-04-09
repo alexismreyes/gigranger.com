@@ -65,8 +65,8 @@ exports.getUsersInRoom = async (req, res) => {
   }
 };
 
-exports.getUsersInfo = async (req, res) => {
-  const { roomIds } = req.body;
+exports.chatUsersInfo = async (req, res) => {
+  const roomIds = req.body;
 
   if (!Array.isArray(roomIds)) {
     return res.status(400).json({ error: 'roomIds must be an array' });

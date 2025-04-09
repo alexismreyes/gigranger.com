@@ -5,9 +5,7 @@ const chatEndpoint = '/chat';
 
 export const startChat = async (newChat: Chat) => {
   try {
-    //console.log(`newChat->`, newChat);
     const response = await api.post(`${chatEndpoint}/start`, newChat);
-    //console.log(`returned from start->`, response.data);
     return response.data;
   } catch (error) {
     console.error('Something went wrong within the service->', error);
@@ -15,9 +13,9 @@ export const startChat = async (newChat: Chat) => {
   }
 };
 
-/* export const createCompany = async (newCompany: Company): Promise<Company> => {
+export const chatUsersInfo = async (roomIds: number[]) => {
   try {
-    const response = await api.post<Company>(companiesEndpoint, newCompany);
+    const response = await api.post(`${chatEndpoint}/room-usernames`, roomIds);
     return response.data;
   } catch (error) {
     console.error('Something went wrong within the service->', error);
@@ -25,12 +23,9 @@ export const startChat = async (newChat: Chat) => {
   }
 };
 
-export const updateCompany = async (company: Company): Promise<Company> => {
+export const getUsersInRoom = async (roomId: number) => {
   try {
-    const response = await api.put(
-      `${companiesEndpoint}/${company.id}`,
-      company
-    );
+    const response = await api.get(`${chatEndpoint}/room-users/${roomId}`);
     return response.data;
   } catch (error) {
     console.error('Something went wrong within the service->', error);
@@ -38,12 +33,12 @@ export const updateCompany = async (company: Company): Promise<Company> => {
   }
 };
 
-export const deleteCompany = async (companyId: number): Promise<void> => {
+export const getMessagesInRoom = async (roomId: number) => {
   try {
-    await api.delete(`${companiesEndpoint}/${companyId}`);
+    const response = await api.get(`${chatEndpoint}/messages/${roomId}`);
+    return response.data;
   } catch (error) {
     console.error('Something went wrong within the service->', error);
     throw error;
   }
 };
- */

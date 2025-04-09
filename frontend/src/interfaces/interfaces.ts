@@ -106,3 +106,11 @@ export interface Chat {
   recruiterId: number;
   jobSeekerId: number;
 }
+
+export interface RoomDetails {
+  roomId: number;
+  participants: {
+    recruiter: string;
+    jobSeeker: string;
+  };
+}

@@ -1,73 +1,72 @@
-import { useEffect, useState } from 'react';
-import { startChat as startChatAPI } from '../services/chatService';
-import { Chat } from '../interfaces/interfaces';
+import { useState } from 'react';
+import {
+  startChat as startChatAPI,
+  chatUsersInfo as chatUsersInfoAPI,
+  getUsersInRoom as getUsersInRoomAPI,
+  getMessagesInRoom as getMessagesInRoomAPI,
+} from '../services/chatService';
+import { Chat, Message, RoomDetails } from '../interfaces/interfaces';
+import { useChatNotificationContext } from '../context/ChatNotificationContext';
 
 export const useChatManagement = () => {
   const [roomId, setRoomId] = useState<number | null>(null);
-
-  /*   useEffect(() => {
-    fetchCompanies();
-  }, []); */
+  const [roomDetails, setRoomDetails] = useState<RoomDetails[] | null>(null);
+  const [userMap, setUserMap] = useState<Record<number, string>>({});
+  const [messages, setMessages] = useState<Message[]>([]);
+  const { clearUnreadRoom } = useChatNotificationContext();
 
   const startChat = async (newChat: Chat) => {
     try {
       const data = await startChatAPI(newChat);
       setRoomId(data.roomId);
+      return data;
     } catch (error) {
       console.error('Error within the hook->', error);
     }
   };
 
-  /* const createCompany = async (company: Company) => {
+  const chatUsersInfo = async (roomIds: number[]) => {
     try {
-      const newCompany = await createCompanyAPI(company);
-      setCompanies((prev) => [...prev, newCompany]);
-      setSnackStatus({
-        open: true,
-        action: 'created',
-        source: 'CompaniesList',
-        severity: 'success',
-      });
-      return newCompany; //to be able to retrieve its id for auto select it in the add company from creating a new job
+      const data = await chatUsersInfoAPI(roomIds);
+      //console.log('roomdetails->', data);
+      setRoomDetails(data);
     } catch (error) {
       console.error('Error within the hook->', error);
     }
   };
 
-  const updateCompany = async (company: Company) => {
+  const getUsersInRoom = async (roomId: number) => {
     try {
-      const updatedCompany = await updateCompanyAPI(company);
-      setCompanies((prev) =>
-        prev.map((com) => (com.id === updatedCompany.id ? updatedCompany : com))
-      );
-      setSnackStatus({
-        open: true,
-        action: 'updated',
-        source: 'CompaniesList',
-        severity: 'success',
-      });
+      const data = await getUsersInRoomAPI(roomId);
+      setUserMap(data);
     } catch (error) {
       console.error('Error within the hook->', error);
     }
   };
 
-  const deleteCompany = async (companyId: number) => {
+  const getMessagesInRoom = async (roomId: number) => {
     try {
-      await deleteCompanyAPI(companyId);
-      setCompanies((prev) => prev.filter((com) => com.id !== companyId));
-      setSnackStatus({
-        open: true,
-        action: 'deleted',
-        source: 'CompaniesList',
-        severity: 'success',
-      });
+      const data = await getMessagesInRoomAPI(roomId);
+      setMessages(data);
     } catch (error) {
       console.error('Error within the hook->', error);
     }
-  }; */
+  };
+
+  const handleNewMessage = (msg: Message, roomId: number) => {
+    setMessages((prev) => [...prev, msg]);
+    clearUnreadRoom(roomId);
+  };
 
   return {
     roomId,
     startChat,
+    chatUsersInfo,
+    roomDetails,
+    userMap,
+    getUsersInRoom,
+    messages,
+    getMessagesInRoom,
+    handleNewMessage,
   };
 };
