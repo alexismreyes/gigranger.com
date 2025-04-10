@@ -1,14 +1,15 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useChatManagement } from '../hooks/useChatManagement';
+import { UnreadMessages } from '../interfaces/interfaces';
+import useAuthContext from '../hooks/useAuthContext';
 
 interface ChatNotificationType {
-  //unreadRoomIds: number[];
-  unreadMessages: Record<number, number>; // roomId -> count
+  unreadMessages: Record<number, number>;
   addUnreadRoom: (roomId: number) => void;
   clearUnreadRoom: (roomId: number) => void;
 }
 
 const ChatNotificationContext = createContext<ChatNotificationType>({
-  //  unreadRoomIds: [],
   unreadMessages: {},
   addUnreadRoom: () => {},
   clearUnreadRoom: () => {},
@@ -19,17 +20,34 @@ export const ChatNotificationProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  //const [unreadRoomIds, setUnreadRoomIds] = useState<number[]>([]);
   const [unreadMessages, setUnreadMessages] = useState<Record<number, number>>(
     {}
   );
 
-  /* const addUnreadRoom = (roomId: number) => {
-    setUnreadRoomIds((prev) =>
-      prev.includes(roomId) ? prev : [...prev, roomId]
-    );
-    console.log('unreadRoomIds->', unreadRoomIds);
-  }; */
+  const { getUnreadMessages } = useChatManagement();
+  const { user } = useAuthContext();
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchUnreadMessages();
+    }
+  }, [user?.id]);
+
+  const fetchUnreadMessages = async () => {
+    try {
+      const data = await getUnreadMessages();
+
+      const mapped: Record<number, number> = {};
+
+      data.forEach((item: UnreadMessages) => {
+        mapped[item.roomId] = item.count;
+      });
+
+      setUnreadMessages(mapped); // this will update the badge
+    } catch (err) {
+      console.error('Failed to load offline unread messages:', err);
+    }
+  };
 
   const addUnreadRoom = (roomId: number) => {
     setUnreadMessages((prev) => ({
@@ -37,10 +55,6 @@ export const ChatNotificationProvider = ({
       [roomId]: prev[roomId] ? prev[roomId] + 1 : 1,
     }));
   };
-
-  /* const clearUnreadRoom = (roomId: number) => {
-    setUnreadRoomIds((prev) => prev.filter((id) => id != roomId));
-  }; */
 
   const clearUnreadRoom = (roomId: number) => {
     setUnreadMessages((prev) => {
@@ -53,7 +67,7 @@ export const ChatNotificationProvider = ({
   return (
     <ChatNotificationContext.Provider
       value={{
-        /* unreadRoomIds */ unreadMessages,
+        unreadMessages,
         addUnreadRoom,
         clearUnreadRoom,
       }}

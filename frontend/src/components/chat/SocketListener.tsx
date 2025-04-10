@@ -2,48 +2,40 @@ import { useEffect } from 'react';
 import { Message } from '../../interfaces/interfaces';
 import { useChatNotificationContext } from '../../context/ChatNotificationContext';
 import socket from '../../sockets/socket';
-import { useLocation } from 'react-router-dom';
 import useAuthContext from '../../hooks/useAuthContext';
+import { useFloatingChatContext } from '../../context/FloatingChatContext';
 
 // Listen to messages
 // 🧠 Global listener to catch messages when NOT inside ChatBox
 // This ensures the Layout — which is always rendered and includes this component— listens to incoming messages regardless of current page.
 const SocketListener = () => {
   const { addUnreadRoom } = useChatNotificationContext();
-  const location = useLocation(); // ✅ Reactively track route
   const { user } = useAuthContext();
-
-  //console.log('✅ SocketListener loaded - User ID:', user?.id);
+  const { activeRoomId } = useFloatingChatContext();
 
   useEffect(() => {
-    const handleMessageReceived = (msg: Message) => {
-      console.log('📨 messageReceived triggered in SocketListener'); // ⬅️ must show
-      console.log('📍 location.pathname:', location.pathname);
-      console.log('📍 expected match:', `/chat/${msg.roomId}`);
+    const handleNotify = (msg: Message) => {
+      if (msg.senderId === user?.id) return;
 
-      if (msg.senderId === user?.id) return; // ✅ don't notify sender
+      const isInActiveRoom = msg.roomId === activeRoomId;
 
-      // Check if user is not inside the chat room
-
-      //const isInChatRoom = location.pathname === `/chat/${msg.roomId}`;
-      const isInChatRoom =
-        location.pathname.startsWith(`/chat/`) &&
-        location.pathname.includes(`${msg.roomId}`);
-
-      if (!isInChatRoom) {
-        addUnreadRoom(msg.roomId); // Trigger badge update
-        console.log('🔴 New message in another room:', msg.roomId);
-      } /* else {
-        alert('no addUnreadRoom executed');
-      } */
+      if (!isInActiveRoom) {
+        addUnreadRoom(msg.roomId);
+        console.log('🔴 [notify] Badge added for room', msg.roomId);
+      } else {
+        console.log(
+          '✅ [notify] Skipped badge — user is already in room',
+          msg.roomId
+        );
+      }
     };
 
-    socket.on('messageReceived', handleMessageReceived);
+    socket.on('notify', handleNotify);
 
     return () => {
-      socket.off('messageReceived', handleMessageReceived);
+      socket.off('notify', handleNotify);
     };
-  }, [location, user?.id]);
+  }, [activeRoomId, user?.id]);
 
   return <></>;
 };

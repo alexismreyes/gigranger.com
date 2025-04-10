@@ -58,7 +58,9 @@ const initializeSocket = (server) => {
         const saved = await ChatMessage.create({
           roomId: data.roomId,
           senderId: data.senderId,
+          receiverId: data.receiverId,
           message: data.message,
+          isRead: false,
         });
 
         // Emit to clients

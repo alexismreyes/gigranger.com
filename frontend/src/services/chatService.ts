@@ -42,3 +42,23 @@ export const getMessagesInRoom = async (roomId: number) => {
     throw error;
   }
 };
+
+export const getUnreadMessages = async () => {
+  try {
+    const response = await api.get(`${chatEndpoint}/unread-messages`);
+    return response.data;
+  } catch (error) {
+    console.error('Something went wrong within the service->', error);
+    throw error;
+  }
+};
+
+export const markMessagesAsRead = async (roomId: number) => {
+  try {
+    const response = await api.get(`${chatEndpoint}/mark-as-read/${roomId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Something went wrong within the service->', error);
+    throw error;
+  }
+};

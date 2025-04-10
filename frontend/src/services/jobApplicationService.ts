@@ -20,7 +20,7 @@ export const createJobApplication = async (
   newJobApplication: JobApplication
 ): Promise<JobApplication> => {
   try {
-    console.log(newJobApplication);
+    //console.log(newJobApplication);
 
     const response = await api.post<JobApplication>(
       jobApplicationEndpoint,

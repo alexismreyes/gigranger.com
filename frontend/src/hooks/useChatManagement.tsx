@@ -4,6 +4,8 @@ import {
   chatUsersInfo as chatUsersInfoAPI,
   getUsersInRoom as getUsersInRoomAPI,
   getMessagesInRoom as getMessagesInRoomAPI,
+  getUnreadMessages as getUnreadMessagesAPI,
+  markMessagesAsRead as markMessagesAsReadAPI,
 } from '../services/chatService';
 import { Chat, Message, RoomDetails } from '../interfaces/interfaces';
 import { useChatNotificationContext } from '../context/ChatNotificationContext';
@@ -28,7 +30,6 @@ export const useChatManagement = () => {
   const chatUsersInfo = async (roomIds: number[]) => {
     try {
       const data = await chatUsersInfoAPI(roomIds);
-      //console.log('roomdetails->', data);
       setRoomDetails(data);
     } catch (error) {
       console.error('Error within the hook->', error);
@@ -38,6 +39,9 @@ export const useChatManagement = () => {
   const getUsersInRoom = async (roomId: number) => {
     try {
       const data = await getUsersInRoomAPI(roomId);
+      console.log('userMap->', data);
+      console.log('✅ userMap set from getUsersInRoom:', data);
+
       setUserMap(data);
     } catch (error) {
       console.error('Error within the hook->', error);
@@ -48,6 +52,25 @@ export const useChatManagement = () => {
     try {
       const data = await getMessagesInRoomAPI(roomId);
       setMessages(data);
+    } catch (error) {
+      console.error('Error within the hook->', error);
+    }
+  };
+
+  const getUnreadMessages = async () => {
+    try {
+      const data = await getUnreadMessagesAPI();
+      return data;
+    } catch (error) {
+      console.error('Error within the hook->', error);
+      return []; // ✅ this avoids undefined in context
+    }
+  };
+
+  const markMessagesAsRead = async (roomId: number) => {
+    try {
+      const data = await markMessagesAsReadAPI(roomId);
+      console.log('Message marked as read print this->', data);
     } catch (error) {
       console.error('Error within the hook->', error);
     }
@@ -68,5 +91,7 @@ export const useChatManagement = () => {
     messages,
     getMessagesInRoom,
     handleNewMessage,
+    getUnreadMessages,
+    markMessagesAsRead,
   };
 };

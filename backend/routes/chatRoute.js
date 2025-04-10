@@ -15,4 +15,10 @@ router.get('/room-users/:roomId', verifyToken, chatController.getUsersInRoom);
 // Get basic user info for multiple roomIds
 router.post('/room-usernames', verifyToken, chatController.chatUsersInfo);
 
+//retrieve unread messages for offline fallback
+router.get('/unread-messages', verifyToken, chatController.getUnreadMessages);
+
+//mark messages as read
+router.get('/mark-as-read/:roomId', verifyToken, chatController.markAsRead);
+
 module.exports = router;

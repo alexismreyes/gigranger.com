@@ -14,6 +14,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ currentUserId, roomId }) => {
   const [newMsg, setNewMsg] = useState('');
   const { clearUnreadRoom } = useChatNotificationContext();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [receiverId, setReceiverId] = useState<number | null>(null);
 
   const {
     userMap,
@@ -21,6 +22,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ currentUserId, roomId }) => {
     messages,
     getMessagesInRoom,
     handleNewMessage,
+    markMessagesAsRead,
   } = useChatManagement();
 
   useEffect(() => {
@@ -45,6 +47,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ currentUserId, roomId }) => {
 
     fetchUserMap();
     fetchMessages();
+    markMessagesAsRead(roomId); //added to mark messages as read
 
     const listener = (msg: Message) => {
       handleNewMessage(msg, roomId); // ⬅️ roomId passed explicitly
@@ -62,12 +65,22 @@ const ChatBox: React.FC<ChatBoxProps> = ({ currentUserId, roomId }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  useEffect(() => {
+    if (userMap && currentUserId) {
+      const id = Object.keys(userMap)
+        .map(Number)
+        .find((id) => id !== currentUserId);
+      setReceiverId(id ?? null);
+    }
+  }, [userMap, currentUserId]);
+
   const sendMessage = () => {
     if (!newMsg.trim()) return;
 
-    const receiverId = Object.keys(userMap)
-      .map((id) => parseInt(id))
-      .find((id) => id !== currentUserId);
+    if (!receiverId) {
+      console.warn('❌ Cannot send message — receiverId is missing');
+      return;
+    }
 
     socket.emit('sendMessage', {
       roomId,

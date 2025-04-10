@@ -28,6 +28,8 @@ import SocketListener from './chat/SocketListener';
 import UnreadChatListModal from './chat/UnreadChatListModal';
 import FloatingChatWindow from './chat/FloatingChatWindow';
 import { useFloatingChatContext } from '../context/FloatingChatContext';
+import SnackBar from './SnackBar';
+import useSnackBarContext from '../hooks/useSnackBarContext';
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
@@ -38,7 +40,8 @@ const Layout: React.FC = () => {
   const collapsedDrawerWidth = 0;
   const { user } = useAuthContext();
   const { roles } = useRolesManagement();
-  //const { unreadRoomIds, addUnreadRoom } = useChatNotificationContext();
+  const { snackStatus, handleCloseSnack, setSnackStatus } =
+    useSnackBarContext();
   const { unreadMessages } = useChatNotificationContext();
   const totalUnread = Object.values(unreadMessages).reduce(
     (sum, count) => sum + count,
@@ -49,7 +52,6 @@ const Layout: React.FC = () => {
   );
   const [chatModalOpen, setChatModalOpen] = useState(false);
 
-  //const [activeRoomId, setActiveRoomId] = useState<number | null>(null);
   const { activeRoomId, setActiveRoomId } = useFloatingChatContext();
 
   const theme = useTheme();
@@ -64,7 +66,7 @@ const Layout: React.FC = () => {
     if (user?.id) {
       registerUser(user.id);
     }
-  }, [user]);
+  }, [user?.id]);
 
   const drawer = (
     <List>
@@ -88,7 +90,6 @@ const Layout: React.FC = () => {
         <ListItemText primary="Users" />
       </ListItemButton>
 
-      {/* <ListItemButton onClick={() => navigate('/logout')}> */}
       <ListItemButton onClick={() => setOpenDialogLogout(true)}>
         <ListItemText primary="Logout" />
       </ListItemButton>
@@ -98,7 +99,6 @@ const Layout: React.FC = () => {
   return (
     <>
       <SocketListener />
-
       <Box sx={{ display: 'flex' }}>
         {' '}
         {/* display flex to allow children to align properly when drawer closes or opens */}
@@ -149,8 +149,8 @@ const Layout: React.FC = () => {
                   sx={{
                     '& .MuiBadge-badge': {
                       fontSize: '0.75rem',
-                      color: '#fff', // ✅ force white text
-                      backgroundColor: '#f44336', // ✅ strong red background
+                      color: '#fff',
+                      backgroundColor: '#f44336',
                       height: 20,
                       minWidth: 20,
                       padding: '0 6px',
@@ -162,12 +162,16 @@ const Layout: React.FC = () => {
                     sx={{ cursor: 'pointer', fontSize: 28 }}
                     onClick={() => {
                       if (unreadRoomIds.length === 1) {
-                        //navigate(`/chat/${unreadRoomIds[0]}`);
                         setActiveRoomId(unreadRoomIds[0]);
                       } else if (unreadRoomIds.length > 1) {
                         setChatModalOpen(true);
                       } else {
-                        alert('No unread messages yet');
+                        setSnackStatus({
+                          open: true,
+                          action: 'nonewchat',
+                          source: 'Chat',
+                          severity: 'warning',
+                        });
                       }
                     }}
                   />
@@ -202,7 +206,7 @@ const Layout: React.FC = () => {
             padding: '16px',
             ml: {
               sm: drawerOpen
-                ? `${openDrawerWidth + 30}px` //30 is an additional spacing between the drawer and the main content
+                ? `${openDrawerWidth + 30}px`
                 : `${collapsedDrawerWidth}px`,
             },
             transition: 'margin-left 0.3s ease-in-out',
@@ -233,6 +237,12 @@ const Layout: React.FC = () => {
           onClose={() => setActiveRoomId(null)}
         />
       )}
+      <SnackBar
+        parentComponent="Chat"
+        handleCloseSnack={handleCloseSnack}
+        snackStatus={snackStatus}
+      />
+      ;
     </>
   );
 };

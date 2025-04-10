@@ -22,7 +22,7 @@ export interface SnackStatus {
   open: boolean;
   action?: string;
   message?: string;
-  severity?: 'success' | 'error';
+  severity?: 'success' | 'error' | 'warning';
   source?: string;
 }
 
@@ -113,4 +113,9 @@ export interface RoomDetails {
     recruiter: string;
     jobSeeker: string;
   };
+}
+
+export interface UnreadMessages {
+  roomId: number;
+  count: number;
 }

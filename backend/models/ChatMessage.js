@@ -22,9 +22,21 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         field: 'sender_id',
       },
+
       message: {
         type: DataTypes.TEXT,
         allowNull: false,
+      },
+      isRead: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        field: 'is_read',
+      },
+      receiverId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'receiver_id',
       },
     },
     {

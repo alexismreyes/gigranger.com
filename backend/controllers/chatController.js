@@ -38,18 +38,13 @@ exports.getUsersInRoom = async (req, res) => {
   try {
     const roomId = req.params.roomId;
 
-    const messages = await ChatMessage.findAll({
-      where: { roomId },
-      attributes: ['senderId'],
-      group: ['senderId'],
-    });
+    const room = await ChatRoom.findByPk(roomId);
+    if (!room) return res.status(404).json({ error: 'Chat room not found' });
 
-    const senderIds = messages.map((m) => m.senderId);
+    const participantIds = [room.recruiterId, room.jobSeekerId];
 
     const users = await User.findAll({
-      where: {
-        id: senderIds,
-      },
+      where: { id: participantIds },
       attributes: ['id', 'firstName', 'lastName'],
     });
 
@@ -101,5 +96,60 @@ exports.chatUsersInfo = async (req, res) => {
   } catch (error) {
     console.error('❌ Failed to fetch room participants:', error);
     res.status(500).json({ error: 'Failed to fetch chat participants' });
+  }
+};
+
+exports.getUnreadMessages = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const unreadMessages = await ChatMessage.findAll({
+      where: {
+        receiverId: userId,
+        isRead: false,
+      },
+      attributes: ['roomId'],
+    });
+
+    const unreadRoomIds = [...new Set(unreadMessages.map((msg) => msg.roomId))];
+
+    // Group by room and count
+    const unreadCounts = unreadRoomIds.map((roomId) => {
+      const count = unreadMessages.filter(
+        (msg) => msg.roomId === roomId
+      ).length;
+      return { roomId, count };
+    });
+
+    res.json(unreadCounts);
+  } catch (err) {
+    console.error('❌ Failed to fetch unread messages:', err);
+    res.status(500).json({ error: 'Failed to fetch unread messages' });
+  }
+};
+
+exports.markAsRead = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const roomId = req.params.roomId;
+
+    console.log('userId->', userId);
+    console.log('roomId->', roomId);
+
+    await ChatMessage.update(
+      { isRead: true },
+      {
+        where: {
+          roomId,
+          receiverId: userId,
+          isRead: false,
+        },
+      }
+    );
+
+    res.json({ message: 'Messages marked as read' });
+  } catch (err) {
+    console.error('❌ Failed to mark as read:', err);
+    res.status(500).json({ error: 'Failed to mark as read' });
   }
 };
