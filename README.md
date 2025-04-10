@@ -1,14 +1,14 @@
 ## gigranger.com - A Employment Platform🧑‍💼
 
-A full-featured job portal application that allows recruiters to post and manage job listings, and job seekers to find, apply, and track job applications. This project showcases real-world features such as authentication, role-based access, file uploads, filtering, email notifications, and application history tracking — built with production-ready technologies.
+A full-featured job portal application that allows recruiters to post and manage job listings, and job seekers to find, apply, and track job applications, it also allows chat communication between them. This project showcases real-world features such as authentication, role-based access, file uploads, filtering, email notifications, and application history tracking — built with production-ready technologies.
 
 ## 📌 Disclaimer
 
 This app began as a personal initiative to practice and explore full-stack development concepts using modern tools like React, Node.js, MySQL, and AWS. While it may not follow a single strict standard across all components — for instance, some forms use Dialogs while others use Formik, and error handling varies between Axios responses and `console.error` — this was intentional.
 
-The goal has always been to build a progressively enhanced application while experimenting with different patterns, tools, and technologies. As it evolved, I incorporated more real-world features such as file uploads, email notifications, role-based access control, protected routes, and application history.
+The goal has always been to build a progressively enhanced application while experimenting with different patterns, tools, and technologies. As it evolved, I incorporated more real-world features such as file uploads, email notifications, realtime chat, role-based access control, protected routes, and application history.
 
-It is not yet fully optimized nor finalized, and I plan to continue improving it with technologies like RabbitMQ, WebSockets, and more advanced backend patterns. This app is meant to be a learning-driven, functional foundation of a job portal, reflecting growth, curiosity, and hands-on problem solving.
+I plan to continue improving it with technologies like RabbitMQ, Docker Containerization, and more advanced patterns. This app is meant to be a learning-driven, functional foundation of a job portal, reflecting growth, curiosity, and hands-on problem solving.
 
 So don’t judge it by perfection 😄
 
@@ -56,13 +56,23 @@ So don’t judge it by perfection 😄
 
 - Email alerts via Nodemailer (for both recruiters and applicants)
 
+💬 **Real-Time Chat System**
+
+This app features a **floating real-time chat system** powered by **WebSockets (Socket.IO)**, allowing recruiters and job seekers to communicate instantly — even across different sessions.
+
+_✨ Key Features_
+
+- Floating Chat Window: Opens as a modal for smooth access from anywhere in the app.
+- Notification Badges: Displays the count of unread messages across chat rooms, even when the user is offline.
+- Offline Message Sync: Messages sent while a user is logged out are tracked and displayed with a badge upon next login.
+- Read Status: Messages are marked as read when the chat window is opened.
+- Dynamic Chat Rooms: Created automatically based on job application interactions (1:1 between recruiter and job seeker).
+
 📊 **User Interface**
 
 - Responsive layout using **Material UI**
 
-- Intuitive admin panel with Drawer navigation, modals, tables, and
-
-pagination
+- Intuitive admin panel with Drawer navigation, modals, tables, and pagination
 
 - Inline feedback using Snackbars and confirmation dialogs
 
@@ -80,7 +90,7 @@ pagination
 
 | **Frontend** | React + Vite, TypeScript, Material UI, Axios |
 
-| **Backend** | Node.js, Express, Sequelize ORM, Multer, JWT |
+| **Backend** | Node.js, Express, Sequelize ORM, Multer, JWT, WebSockets |
 
 | **Database** | MySQL (AWS RDS) |
 
@@ -94,73 +104,146 @@ pagination
 
 ```plaintext
 
+
+
 employment-app/
+
+
 
 │ README.md
 
+
+
 ├── backend/
+
+
 
 │ ├── controllers/
 
+
+
 │ ├── models/
+
+
 
 │ ├── routes/
 
+
+
 │ ├── config/
+
+
 
 │ ├── middlewares/
 
+
 │ ├── test/
+
+
+│ ├── sockets/
+
 
 │ ├── uploads/ # Resume storage
 
+
+
 │ ├── utils/
+
+
 
 │ ├── app.js
 
+
+
 │ ├── server.js
+
+
 
 │ ├── package.json
 
+
+
 │ └── .env.*
+
+
 
 │
 
+
+
 ├── frontend/
+
+
 
 │ ├── src/
 
+
+
 │ │ ├── components/
+
+
 
 │ │ ├── pages/
 
+
+
 │ │ ├── hooks/
+
+
 
 │ │ ├── services/
 
+
+│ │ ├── sockets/
+
+
 │ │ ├── validations/
+
+
 
 │ │ ├── interfaces/
 
+
+
 │ │ ├── context/
+
+
 
 │ │ ├── utils/
 
+
+
 │ │ ├── themes/
+
+
 
 │ │ ├── App.tsx
 
+
+
 │ │ ├── index.css
+
+
 
 │ │ └── main.tsx
 
+
+
 │ ├── public/
+
+
 
 │ ├── index.html
 
+
+
 │ ├── package.json
 
+
+
 │ └── .env.*
+
+
 
 ```
 
@@ -230,19 +313,25 @@ Make sure the employment_db exists or create it first:
 
 You can try out the app here:
 
-🔗 [https://gigranger.com](https://gigranger.com) — Main frontend  
+🔗 [https://gigranger.com](https://gigranger.com) — Main frontend
+
 🔗 [https://api.gigranger.com](https://api.gigranger.com) — Backend API
 
 ---
 
 ### ✅ Deployment Stack
 
-| Component              | Details                                                                                                                                                                |
+| Component | Details |
+
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Frontend**           | React app hosted on **AWS S3** and served via **CloudFront** with custom domain and HTTPS (`gigranger.com`)                                                            |
-| **Subdomain Redirect** | `www.gigranger.com` redirects to the root domain using **S3 redirect + CloudFront**                                                                                    |
-| **Backend API**        | Node.js + Express app deployed to **Elastic Beanstalk** (single-instance, no load balancer), reverse-proxied with **Nginx + Let's Encrypt SSL** at `api.gigranger.com` |
-| **Database**           | **AWS RDS** using **MySQL**                                                                                                                                            |
+
+| **Frontend** | React app hosted on **AWS S3** and served via **CloudFront** with custom domain and HTTPS (`gigranger.com`) |
+
+| **Subdomain Redirect** | `www.gigranger.com` redirects to the root domain using **S3 redirect + CloudFront** |
+
+| **Backend API** | Node.js + Express app deployed to **Elastic Beanstalk** (single-instance, no load balancer), reverse-proxied with **Nginx + Let's Encrypt SSL** at `api.gigranger.com` |
+
+| **Database** | **AWS RDS** using **MySQL** |
 
 ## 📄 Resume Upload Feature
 
@@ -252,47 +341,61 @@ This project includes a file upload functionality for user resumes, which suppor
 
 The app automatically switches between **local disk storage** and **S3 cloud storage** depending on the environment configuration:
 
-| Environment | Storage Method         | Trigger                               |
+| Environment | Storage Method | Trigger |
+
 | ----------- | ---------------------- | ------------------------------------- |
+
 | Development | Local (project folder) | No `S3_BUCKET_NAME` defined in `.env` |
-| Production  | Amazon S3              | `S3_BUCKET_NAME` is defined in `.env` |
+
+| Production | Amazon S3 | `S3_BUCKET_NAME` is defined in `.env` |
 
 ---
 
 ### 📂 Local Storage (Development)
 
-- Files are saved under:  
-  `backend/uploads/resumes/`
+- Files are saved under:
 
-- Accessible during development via:  
-  `http://localhost:4000/uploads/resumes/<filename>`
+`backend/uploads/resumes/`
+
+- Accessible during development via:
+
+`http://localhost:4000/uploads/resumes/<filename>`
 
 - Ensure the following line is active in `app.js`:
 
-  ```js
-  app.use(
-    '/uploads/resumes',
-    express.static(path.join(__dirname, 'uploads/resumes'))
-  );
-  ```
+```js
+app.use(
+  '/uploads/resumes',
+
+  express.static(path.join(__dirname, 'uploads/resumes'))
+);
+```
 
 ### ☁️ Amazon S3 Storage (Production)
 
 When the application is deployed in production and the environment is properly configured, resumes are uploaded to **Amazon S3** instead of being stored locally.
 
 - Files are saved inside the `resumes/` folder within your S3 bucket.
+
 - The uploaded file is publicly accessible using the returned S3 URL.
-- Example of a stored file URL:  
-   `https://your-bucket-name.s3.amazonaws.com/resumes/123456-resume.pdf`
+
+- Example of a stored file URL:
+
+`https://your-bucket-name.s3.amazonaws.com/resumes/123456-resume.pdf`
 
 To enable S3 uploads, ensure the following environment variables are defined in your `.env.production`:
 
-| Variable                | Description                    |
+| Variable | Description |
+
 | ----------------------- | ------------------------------ |
-| `AWS_ACCESS_KEY_ID`     | Your AWS access key            |
-| `AWS_SECRET_ACCESS_KEY` | Your AWS secret access key     |
-| `AWS_REGION`            | AWS region (e.g., `us-east-2`) |
-| `S3_BUCKET_NAME`        | Your S3 bucket name            |
+
+| `AWS_ACCESS_KEY_ID` | Your AWS access key |
+
+| `AWS_SECRET_ACCESS_KEY` | Your AWS secret access key |
+
+| `AWS_REGION` | AWS region (e.g., `us-east-2`) |
+
+| `S3_BUCKET_NAME` | Your S3 bucket name |
 
 If any of these are missing, the app will **automatically fallback to local storage**.
 

@@ -16,6 +16,40 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`employment_db` /*!40100 DEFAULT CHARACT
 
 USE `employment_db`;
 
+/*Table structure for table `chat_messages` */
+
+DROP TABLE IF EXISTS `chat_messages`;
+
+CREATE TABLE `chat_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `room_id` int(11) DEFAULT NULL,
+  `sender_id` int(11) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_read` tinyint(1) NOT NULL,
+  `receiver_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_CHATROOM` (`room_id`),
+  CONSTRAINT `FK_CHATROOM` FOREIGN KEY (`room_id`) REFERENCES `chat_rooms` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=233 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `chat_messages` */
+
+/*Table structure for table `chat_rooms` */
+
+DROP TABLE IF EXISTS `chat_rooms`;
+
+CREATE TABLE `chat_rooms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `recruiter_id` int(11) DEFAULT NULL,
+  `job_seeker_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_chat` (`recruiter_id`,`job_seeker_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `chat_rooms` */
+
 /*Table structure for table `companies` */
 
 DROP TABLE IF EXISTS `companies`;
@@ -35,7 +69,7 @@ CREATE TABLE `companies` (
 
 /*Data for the table `companies` */
 
-insert  into `companies`(`id`,`name`,`address`,`description`,`email`,`phone`,`website`,`foundation_date`,`employees_avgnumber`) values (1,'TechNova Solutions','123 Silicon Ave, San Salvador','Software solutions provider','info@technova.com','2222-1234','www.technova.com','2010-06-15 00:00:00',120),(2,'HealthLink','45 Wellness Blvd, Santa Tecla','Healthcare IT systems','contact@healthlink.com','2333-5566','www.healthlink.com','2005-03-20 00:00:00',80),(3,'AgroSmart','78 Greenway, Sonsonate','Agri-tech and smart farming tools','admin@agrosmart.com','2444-7890','www.agrosmart.com','2012-09-01 00:00:00',60),(4,'EduCore','12 Learning Rd, San Miguel','E-learning solutions for schools','support@educore.com','2555-1122','www.educore.com','2014-02-10 00:00:00',50),(5,'FinTech Global','7 Finance Ave, La Libertad','Digital banking and fintech services','team@fintechglobal.com','2666-7788','www.fintechglobal.com','2008-11-22 00:00:00',200),(6,'SoftLogix','9 Developer St, San Salvador','Custom enterprise software development','hello@softlogix.com','2111-3322','www.softlogix.com','2011-04-18 00:00:00',75),(7,'BuildWise','65 Concrete Ln, Santa Ana','Construction project management software','contact@buildwise.com','2777-8899','www.buildwise.com','2013-12-01 00:00:00',40),(8,'GreenWorld Energy','32 Eco Park, Ahuachapán','Renewable energy systems and monitoring','eco@greenworld.com','2999-1234','www.greenworld.com','2016-07-30 00:00:00',35),(9,'MediTrack','29 Clinic Dr, San Salvador','Patient tracking and medical records','info@meditrack.com','2112-3344','www.meditrack.com','2009-05-25 00:00:00',90),(10,'SecureNet','14 Cybersec St, La Unión','Cybersecurity and network auditing','security@securenet.com','2888-5566','www.securenet.com','2018-01-05 00:00:00',65),(11,'FreshFarm Co.','77 Harvest Rd, Usulután','Organic farming and produce distribution','contact@freshfarm.com','2100-4567','www.freshfarm.com','2013-03-01 00:00:00',25),(12,'CloudEdge','22 DevCloud Ave, San Salvador','Cloud architecture and SaaS','info@cloudedge.com','2122-8899','www.cloudedge.com','2017-08-14 00:00:00',100),(13,'AeroDyn','56 AirTech Park, La Paz','Aerospace engineering and aircraft testing','support@aerodyn.com','2345-6789','www.aerodyn.com','2006-04-23 00:00:00',150),(14,'BrightPath Education','9 Scholars Ln, Santa Tecla','Private tutoring and e-learning solutions','hello@brightpath.com','2200-3344','www.brightpath.com','2015-06-10 00:00:00',45),(15,'SunStream Energy','101 Solar Blvd, Chalatenango','Renewable solar panel solutions','contact@sunstream.com','2225-9988','www.sunstream.com','2019-03-22 00:00:00',38),(16,'LegalTrust Group','303 Justice Ave, San Vicente','Legal consulting and compliance services','info@legaltrust.com','2990-1122','www.legaltrust.com','2010-10-01 00:00:00',30),(17,'SafeTrack Logistics','44 Cargo Way, San Salvador','Supply chain and logistics optimization','jobs@safetrack.com','2877-0099','www.safetrack.com','2003-07-19 00:00:00',110),(18,'Foodies United','11 Bistro Street, La Libertad','Restaurant group with multi-brand kitchens','jobs@foodiesunited.com','2567-1234','www.foodiesunited.com','2018-11-09 00:00:00',150),(19,'CoreFit Wellness','99 Muscle Ave, Santa Ana','Fitness centers and wellness programs','coach@corefit.com','2011-4444','www.corefit.com','2016-01-01 00:00:00',60),(20,'GlobeSecure','500 SafeNet Drive, La Unión','Security audits and personal protection','security@globesecure.com','2110-2345','www.globesecure.com','2011-09-13 00:00:00',70),(21,'AutoPulse Motors','31 Engine Rd, Sonsonate','Vehicle manufacturing and parts distribution','jobs@autopulse.com','2144-5678','www.autopulse.com','2005-05-11 00:00:00',170),(22,'Inspire Events','42 Fiesta Plaza, San Miguel','Event planning, weddings, and corporate retreats','events@inspire.com','2455-9988','www.inspireevents.com','2012-10-20 00:00:00',30),(23,'EduBridge Academy','61 University Blvd, La Libertad','Private university and training center','admin@edubridge.com','2444-1111','www.edubridge.com','2004-01-15 00:00:00',220),(24,'Pixellence Media','38 Design St, San Salvador','Multimedia, digital publishing, and marketing','jobs@pixellence.com','2789-0000','www.pixellence.com','2017-06-06 00:00:00',48),(25,'Farmacia El Bienestar','88 Pharma Lane, Usulután','Pharmacy chain and drug distribution','hr@bienestar.com','2677-4343','www.bienestar.com','2001-02-28 00:00:00',130),(26,'ResQ Health','74 Health Rd, San Miguel','Emergency healthcare, ambulance services','contact@resqhealth.com','2500-1111','www.resqhealth.com','2009-12-12 00:00:00',80),(27,'SafeKids Center','18 Nanny St, Santa Tecla','Childcare, after-school, and babysitting services','jobs@safekids.com','2012-2121','www.safekids.com','2013-04-30 00:00:00',25),(28,'WorldAid NGO','5 Humanitarian Rd, La Libertad','Non-profit for education and food security','jobs@worldaid.org','2666-2200','www.worldaid.org','2010-08-08 00:00:00',60),(29,'ElSal Courier Express','23 Delivery Blvd, San Salvador','Nationwide shipping and courier services','hr@courierexpress.com','2777-0011','www.elsalcourier.com','2014-05-01 00:00:00',75),(30,'Hotel Sol Tropical','102 Beachfront Ave, La Libertad','Beachside resort and hospitality services','careers@soltropical.com','2999-4455','www.soltropical.com','2011-07-21 00:00:00',120),(32,'Miners DK','Dakota','A mining company','minersdakota@us.com','+12572625142','www.minersdakota.com','2022-06-22 06:00:00',500),(33,'World Gym','San Salvador, Colonia Miralvalle','The biggest gym at the world','worldgym@gmail.com','+503 25251414','www.worldgym.com','2018-02-06 06:00:00',400),(38,'Miner DK','Dakota','A mining company','minersdakota@us.com','343433333','http://www.minersdakota.com','2023-06-06 06:00:00',500);
+insert  into `companies`(`id`,`name`,`address`,`description`,`email`,`phone`,`website`,`foundation_date`,`employees_avgnumber`) values (1,'TechNova Solutions','123 Silicon Ave, San Salvador','Software solutions provider','info@technova.com','2222-1234','http://www.technova.com','2010-06-14 06:00:00',130),(2,'HealthLink','45 Wellness Blvd, Santa Tecla','Healthcare IT systems','contact@healthlink.com','2333-5566','http://healthlink.com','2005-03-19 06:00:00',100),(3,'AgroSmart','78 Greenway, Sonsonate','Agri-tech and smart farming tools','admin@agrosmart.com','2444-7890','www.agrosmart.com','2012-09-01 00:00:00',60),(4,'EduCore','12 Learning Rd, San Miguel','E-learning solutions for schools','support@educore.com','2555-1122','https://www.educore.com','2014-02-09 06:00:00',50),(5,'FinTech Global','7 Finance Ave, La Libertad','Digital banking and fintech services','team@fintechglobal.com','2666-7788','www.fintechglobal.com','2008-11-22 00:00:00',200),(6,'SoftLogix','9 Developer St, San Salvador','Custom enterprise software development','hello@softlogix.com','2111-3322','www.softlogix.com','2011-04-18 00:00:00',75),(7,'BuildWise','65 Concrete Ln, Santa Ana','Construction project management software','contact@buildwise.com','2777-8899','www.buildwise.com','2013-12-01 00:00:00',40),(8,'GreenWorld Energy','32 Eco Park, Ahuachapán','Renewable energy systems and monitoring','eco@greenworld.com','2999-1234','www.greenworld.com','2016-07-30 00:00:00',35),(9,'MediTrack','29 Clinic Dr, San Salvador','Patient tracking and medical records','info@meditrack.com','2112-3344','www.meditrack.com','2009-05-25 00:00:00',90),(10,'SecureNet','14 Cybersec St, La Unión','Cybersecurity and network auditing','security@securenet.com','2888-5566','www.securenet.com','2018-01-05 00:00:00',65),(11,'FreshFarm Co.','77 Harvest Rd, Usulután','Organic farming and produce distribution','contact@freshfarm.com','2100-4567','www.freshfarm.com','2013-03-01 00:00:00',25),(12,'CloudEdge','22 DevCloud Ave, San Salvador','Cloud architecture and SaaS','info@cloudedge.com','2122-8899','www.cloudedge.com','2017-08-14 00:00:00',100),(13,'AeroDyn','56 AirTech Park, La Paz','Aerospace engineering and aircraft testing','support@aerodyn.com','2345-6789','www.aerodyn.com','2006-04-23 00:00:00',150),(14,'BrightPath Education','9 Scholars Ln, Santa Tecla','Private tutoring and e-learning solutions','hello@brightpath.com','2200-3344','www.brightpath.com','2015-06-10 00:00:00',45),(15,'SunStream Energy','101 Solar Blvd, Chalatenango','Renewable solar panel solutions','contact@sunstream.com','2225-9988','www.sunstream.com','2019-03-22 00:00:00',38),(16,'LegalTrust Group','303 Justice Ave, San Vicente','Legal consulting and compliance services','info@legaltrust.com','2990-1122','www.legaltrust.com','2010-10-01 00:00:00',30),(17,'SafeTrack Logistics','44 Cargo Way, San Salvador','Supply chain and logistics optimization','jobs@safetrack.com','2877-0099','www.safetrack.com','2003-07-19 00:00:00',110),(18,'Foodies United','11 Bistro Street, La Libertad','Restaurant group with multi-brand kitchens','jobs@foodiesunited.com','2567-1234','www.foodiesunited.com','2018-11-09 00:00:00',150),(19,'CoreFit Wellness','99 Muscle Ave, Santa Ana','Fitness centers and wellness programs','coach@corefit.com','2011-4444','www.corefit.com','2016-01-01 00:00:00',60),(20,'GlobeSecure','500 SafeNet Drive, La Unión','Security audits and personal protection','security@globesecure.com','2110-2345','www.globesecure.com','2011-09-13 00:00:00',70),(21,'AutoPulse Motors','31 Engine Rd, Sonsonate','Vehicle manufacturing and parts distribution','jobs@autopulse.com','2144-5678','www.autopulse.com','2005-05-11 00:00:00',170),(22,'Inspire Events','42 Fiesta Plaza, San Miguel','Event planning, weddings, and corporate retreats','events@inspire.com','2455-9988','www.inspireevents.com','2012-10-20 00:00:00',30),(23,'EduBridge Academy','61 University Blvd, La Libertad','Private university and training center','admin@edubridge.com','2444-1111','www.edubridge.com','2004-01-15 00:00:00',220),(24,'Pixellence Media','38 Design St, San Salvador','Multimedia, digital publishing, and marketing','jobs@pixellence.com','2789-0000','www.pixellence.com','2017-06-06 00:00:00',48),(25,'Farmacia El Bienestar','88 Pharma Lane, Usulután','Pharmacy chain and drug distribution','hr@bienestar.com','2677-4343','www.bienestar.com','2001-02-28 00:00:00',130),(26,'ResQ Health','74 Health Rd, San Miguel','Emergency healthcare, ambulance services','contact@resqhealth.com','2500-1111','www.resqhealth.com','2009-12-12 00:00:00',80),(27,'SafeKids Center','18 Nanny St, Santa Tecla','Childcare, after-school, and babysitting services','jobs@safekids.com','2012-2121','www.safekids.com','2013-04-30 00:00:00',25),(28,'WorldAid NGO','5 Humanitarian Rd, La Libertad','Non-profit for education and food security','jobs@worldaid.org','2666-2200','www.worldaid.org','2010-08-08 00:00:00',60),(29,'ElSal Courier Express','23 Delivery Blvd, San Salvador','Nationwide shipping and courier services','hr@courierexpress.com','2777-0011','www.elsalcourier.com','2014-05-01 00:00:00',75),(30,'Hotel Sol Tropical','102 Beachfront Ave, La Libertad','Beachside resort and hospitality services','careers@soltropical.com','2999-4455','www.soltropical.com','2011-07-21 00:00:00',120),(32,'Miners DK','Dakota','A mining company','minersdakota@us.com','+12572625142','www.minersdakota.com','2022-06-22 06:00:00',500),(33,'World Gym','San Salvador, Colonia Miralvalle','The biggest gym at the world','worldgym@gmail.com','+503 25251414','www.worldgym.com','2018-02-06 06:00:00',400),(38,'Miner DK','Dakota','A mining company','minersdakota@us.com','343433333','http://www.minersdakota.com','2023-06-06 06:00:00',500);
 
 /*Table structure for table `email_verifications` */
 
@@ -76,7 +110,7 @@ CREATE TABLE `job_application` (
   CONSTRAINT `JOBID_FK` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`),
   CONSTRAINT `STATUSID_FK` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
   CONSTRAINT `USERID_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `job_application` */
 
@@ -98,7 +132,7 @@ CREATE TABLE `job_application_history` (
   CONSTRAINT `JOBAPP_FK` FOREIGN KEY (`job_app_id`) REFERENCES `job_application` (`id`),
   CONSTRAINT `STATUS_FK` FOREIGN KEY (`updated_status`) REFERENCES `status` (`id`),
   CONSTRAINT `UPDATEDBY_FK` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `job_application_history` */
 
@@ -191,11 +225,11 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   KEY `ROLE_FK` (`role_id`),
   CONSTRAINT `ROLE_FK` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `user` */
 
-insert  into `user`(`id`,`first_name`,`last_name`,`role_id`,`email`,`password`,`resume_url`) values (1,'Alexis','Reyes',1,'alexis@icloud.com','$2b$10$rJ9AV5RA/iKyWYF.37uSDu3IdP99ibrImMg0jAS9RbdRkTdMwZ0dW',''),(15,'Hector','Salamanca',3,'hectorsalamanca@breakingbad.com','$2b$10$QWSXmLhNVsH4VH1bPM1Zq.opycD43qu4MFwZJ9wm/etoAskrqYf8m',''),(24,'Grand','Elf',3,'gandalf@lor.com','$2b$10$Zo7nAl0zCk0fTMk9e9IBre7j9dqsO2tbJCnakuzqlBnkETloBGAR.',''),(39,'Donald','Trump',2,'realdonaldtrump@whitehouse.com','$2b$10$i.m6QE805MggMvoyKHvzRuDcv2vgbkPDpADiUSgRnGXciidTTZGFC','');
+insert  into `user`(`id`,`first_name`,`last_name`,`role_id`,`email`,`password`,`resume_url`) values (1,'Alexis','Reyes',1,'alexis@icloud.com','$2b$10$rJ9AV5RA/iKyWYF.37uSDu3IdP99ibrImMg0jAS9RbdRkTdMwZ0dW',''),(15,'Hector','Salamanca',3,'hectorsalamanca@breakingbad.com','$2b$10$QWSXmLhNVsH4VH1bPM1Zq.opycD43qu4MFwZJ9wm/etoAskrqYf8m',''),(24,'Grand','Elf',3,'gandalf@lor.com','$2b$10$Zo7nAl0zCk0fTMk9e9IBre7j9dqsO2tbJCnakuzqlBnkETloBGAR.',''),(39,'Donald','Trump',2,'realdonaldtrump@whitehouse.com','$2b$10$QWSXmLhNVsH4VH1bPM1Zq.opycD43qu4MFwZJ9wm/etoAskrqYf8m',''),(48,'Genaro','Martinez',2,'genaromartinez@tesla.com','$2b$10$6evhbDtKu6lk/NCVcEefcuSV/AYyrvUzNXqlKIbXtUId7eC3OI32i',''),(49,'Katherine','Saldivar',2,'katherines503012@hotmail.com','$2b$10$PdbnMeIeNBkx4UvYSKREt.GAb5B2ZjLCohhlCRdrQ0/N7BNna8atO','');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
