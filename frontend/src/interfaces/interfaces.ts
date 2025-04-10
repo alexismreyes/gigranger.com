@@ -22,7 +22,7 @@ export interface SnackStatus {
   open: boolean;
   action?: string;
   message?: string;
-  severity?: 'success' | 'error';
+  severity?: 'success' | 'error' | 'warning';
   source?: string;
 }
 
@@ -93,4 +93,29 @@ export interface JobFilterState {
   selectedCompany: string;
   minSalary: string;
   maxSalary: string;
+}
+
+export interface Message {
+  senderId: number;
+  message: string;
+  roomId: number;
+  createdAt?: string;
+}
+
+export interface Chat {
+  recruiterId: number;
+  jobSeekerId: number;
+}
+
+export interface RoomDetails {
+  roomId: number;
+  participants: {
+    recruiter: string;
+    jobSeeker: string;
+  };
+}
+
+export interface UnreadMessages {
+  roomId: number;
+  count: number;
 }

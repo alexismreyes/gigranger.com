@@ -60,7 +60,7 @@ const Home: React.FC = () => {
             },
           }}
         >
-          Welcome to the Employment App
+          Welcome to GIGRANGER
         </Typography>
         <Typography
           variant="h5"
@@ -81,7 +81,7 @@ const Home: React.FC = () => {
             },
           }}
         >
-          Job seeking made easy.
+          Job posting & seeking made easy.
         </Typography>
       </Container>
     </Box>

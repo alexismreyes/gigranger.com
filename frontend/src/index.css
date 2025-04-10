@@ -21,3 +21,15 @@
     box-shadow: 0 0 12px rgba(0, 255, 0, 0.4);
   }
 }
+
+@keyframes glowPulseYellow {
+  0% {
+    box-shadow: 0 0 8px rgba(255, 223, 0, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 223, 0, 1);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(255, 223, 0, 0.6);
+  }
+}

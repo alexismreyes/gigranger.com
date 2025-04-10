@@ -21,31 +21,25 @@ export const useJobApplicationManagement = () => {
   const { setLoading } = useLoadingContext();
 
   useEffect(() => {
-    if (!user) return; // 🚨 Ensure `user` is available before running
+    if (!user) return;
 
     switch (user.roleId) {
       case 1: //admin
         fetchJobApplications();
-        console.log('role admin');
+        //console.log('role admin');
 
         break;
       case 2: //job seeker
         getJobApplicationsByUser();
-        console.log('role job seeker');
+        //console.log('role job seeker');
         break;
       case 3: //recruiters
         getJobApplicationsByRecruiter();
-        console.log('role recruiter');
+        //console.log('role recruiter');
         break;
       default:
         throw new Error('No role defined');
     }
-
-    /* if (user.roleId === 1) {
-      fetchJobApplications();
-    } else {
-      getJobApplicationsByUser();
-    } */
   }, [user]); // ✅ Run when `user` changes
 
   const fetchJobApplications = async () => {
@@ -71,7 +65,6 @@ export const useJobApplicationManagement = () => {
       setLoading(true);
       const newJobApplication = await createJobApplicationAPI(jobApplication);
       setJobApplications((prev) => [...prev, newJobApplication]);
-      /* jobs applications come from JobDetails */
       setSnackStatus({
         open: true,
         action: 'created',

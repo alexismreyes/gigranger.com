@@ -8,11 +8,11 @@ export const CompanySchema = Yup.object().shape({
     .email('Invalid email format')
     .required('Email is required'),
   phone: Yup.string().required('Phone number is required'),
-  website: Yup.string().url('Invalid website URL'),
+  website: Yup.string().url(
+    'Invalid website URL - must use http:// or https:// prepend to the website url. Example: https://www.website.com'
+  ),
   foundationDate: Yup.string().required('Foundation date is required'),
   employeesAvgNumber: Yup.number()
     .typeError('Must be a number')
     .required('Number of employees is required'),
-  /* active: Yup.boolean().required('active or not, is required'),
-  logoUrl: Yup.string().url('Invalid logo URL').nullable(), */
 });

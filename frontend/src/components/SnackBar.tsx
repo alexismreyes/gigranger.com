@@ -27,12 +27,14 @@ const SnackBar: React.FC<SnackBarProps> = ({
       ? 'Job Application'
       : parentComponent === 'JobApplicationsHistoryList'
       ? 'Job Application History'
+      : parentComponent === 'Chat'
+      ? 'Chat service'
       : undefined;
 
   return (
     <Snackbar
       open={snackStatus.open && snackStatus.source === parentComponent} // ✅ Control visibility here
-      autoHideDuration={5000}
+      autoHideDuration={15000}
       onClose={handleCloseSnack}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
@@ -43,15 +45,23 @@ const SnackBar: React.FC<SnackBarProps> = ({
           boxShadow:
             snackStatus.severity === 'success'
               ? '0 0 12px rgba(0, 255, 0, 0.4)'
-              : '0 0 12px rgba(255, 0, 0, 0.4)',
+              : snackStatus.severity === 'error'
+              ? '0 0 12px rgba(255, 0, 0, 0.4)'
+              : '0 0 16px rgba(255, 223, 0, 0.9)',
+
           animation:
             snackStatus.severity === 'success'
               ? 'glowPulseGreen 1.8s infinite ease-in-out'
-              : 'glowPulseRed 1.8s infinite ease-in-out',
+              : snackStatus.severity === 'error'
+              ? 'glowPulseRed 1.8s infinite ease-in-out'
+              : 'glowPulseYellow 1.8s infinite ease-in-out',
+
           border:
             snackStatus.severity === 'success'
               ? '1px solid #4CAF50'
-              : '1px solid #f44336',
+              : snackStatus.severity === 'error'
+              ? '1px solid #f44336'
+              : '1px solid rgba(255, 223, 0, 1)',
         }}
       >
         {snackStatus.action === 'created'
@@ -60,6 +70,9 @@ const SnackBar: React.FC<SnackBarProps> = ({
           ? `${parent} updated successfully`
           : snackStatus.action === 'deleted'
           ? `${parent} deleted successfully`
+          : snackStatus.action === 'nonewchat'
+          ? `${parent} - No unread chats yet. Go to a job application and click "💬 Start Chat"
+          to continue your conversation.`
           : snackStatus.message || 'An error ocurred'}
       </Alert>
     </Snackbar>
