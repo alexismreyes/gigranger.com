@@ -22,8 +22,10 @@ jobs:
         run: npm install
         working-directory: frontend
 
-      - name: ⚙️ Inject VITE_API_URL
-        run: echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env.production
+      - name: ⚙️ Inject Environment Variables
+        run: |
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env.production
+          echo "VITE_SOCKET_URL=${{ secrets.VITE_SOCKET_URL }}" >> .env.production
         working-directory: frontend
 
       - name: 🛠️ Build App
