@@ -39,8 +39,8 @@ export const useChatManagement = () => {
   const getUsersInRoom = async (roomId: number) => {
     try {
       const data = await getUsersInRoomAPI(roomId);
-      console.log('userMap->', data);
-      console.log('✅ userMap set from getUsersInRoom:', data);
+      /* console.log('userMap->', data);
+      console.log('✅ userMap set from getUsersInRoom:', data); */
 
       setUserMap(data);
     } catch (error) {
@@ -69,8 +69,9 @@ export const useChatManagement = () => {
 
   const markMessagesAsRead = async (roomId: number) => {
     try {
-      const data = await markMessagesAsReadAPI(roomId);
-      console.log('Message marked as read print this->', data);
+      await markMessagesAsReadAPI(roomId);
+      /* const data = await markMessagesAsReadAPI(roomId);
+      console.log('Message marked as read print this->', data); */
     } catch (error) {
       console.error('Error within the hook->', error);
     }
