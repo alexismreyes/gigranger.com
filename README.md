@@ -267,7 +267,7 @@ Copy and adjust the `.env.development` files in both `backend` and `frontend` fo
 
 ## 🔐 Environment Variables
 
-Backend .env.development
+**Backend .env.development:**
 
 PORT=4000
 
@@ -287,9 +287,15 @@ EMAIL_PASS=your_email_password #The password from that main email account
 
 FRONTEND_URL=http://localhost:5173
 
-Frontend .env.development
+NODE_ENV=development
+
+ALLOWED_ORIGINS=http://localhost:5174 #Add allowed origins as needed comma separated
+
+**Frontend .env.development:**
 
 VITE_API_URL=http://localhost:4000/api/v1
+
+VITE_SOCKET_URL=http://localhost:4000
 
 ✅ Use .env.production files for deployment, replacing localhost URLs with actual production domains or IPs.
 
