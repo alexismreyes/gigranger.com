@@ -8,7 +8,7 @@ You can now run the entire application using Docker without needing to install N
 
 1.  **Clone the Repository**
 
-> git clone https://github.com/alexismreyes/gigranger.com.git
+> git clone https://github.com/alexismreyes/gigranger.com.git ><br>
 > cd gigranger.com
 
 2.  **Configure Environment Files**
@@ -52,49 +52,39 @@ This script will show a menu with options to run, stop, reset, or rebuild the ap
 
 **_Backend .env.development_**
 
-PORT=4000
+    PORT=4000
 
-DB_HOST=localhost
+    DB_HOST=gigranger-database-service
 
-DB_NAME=employment_db
+    DB_NAME=employment_db
 
-DB_USER=root #your DB user
+    DB_USER=root #your DB user
 
-DB_PASSWORD=yourpassword #your DB password
+    DB_PASS=yourpassword #your DB password
 
-JWT_SECRET=your_jwt_secret
+    JWT_SECRET=your_jwt_secret
 
-EMAIL_USER=your_email@example.com #The main email account from which app will send the emails
+    EMAIL_USER=your_email@example.com #The main email account from which app will send the emails
 
-EMAIL_PASS=your_email_password #The password from that main email account
+    EMAIL_PASS=your_email_password #The password from that main email account
 
-FRONTEND_URL=http://localhost:5173
+    FRONTEND_URL=http://localhost:5173
 
-NODE_ENV=development
+    NODE_ENV=development
 
-ALLOWED_ORIGINS=http://localhost:5173 #Add multiple allowed origins as needed comma separated
+    ALLOWED_ORIGINS=http://localhost:5173  #Add multiple allowed origins as needed comma separated
 
 <br>
 
 **_Frontend .env.development_**
 
-VITE_API_URL=http://localhost:4000/api/v1
+    VITE_API_URL=http://localhost:4000/api/v1
 
-VITE_SOCKET_URL=http://localhost:4000
+    VITE_SOCKET_URL=http://localhost:4000
 
   <br>
 
 ✅ Use .env.production files for deployment, replacing localhost URLs with actual production domains or IPs.
-
-## 🐳 Docker Containers Overview
-
-Running the app with Docker Compose will start the following containers:
-
-| Container Name       | Description                     | Exposed Port | Docker Service Name          |
-| -------------------- | ------------------------------- | ------------ | ---------------------------- |
-| `gigranger-frontend` | React frontend served with Vite | `5173`       | `gigranger-frontend-service` |
-| `gigranger-backend`  | Node.js + Express backend API   | `4000`       | `gigranger-backend-service`  |
-| `gigranger-database` | MySQL 8.0 database              | `3306`       | `gigranger-database-service` |
 
 ## 🚀 Features
 
@@ -107,6 +97,7 @@ Running the app with Docker Compose will start the following containers:
 - Role-based access (Admin, Recruiter, Job Seeker)
 
 - Route protection with dynamic rendering based on user role
+  <br>
 
 🡳 **Recruiter Functionality**
 
@@ -120,6 +111,8 @@ Running the app with Docker Compose will start the following containers:
 
 - Receive email notifications when a candidate applies
 
+  <br>
+
 🡩‍🎓 **Job Seeker Functionality**
 
 - View available jobs and filter by category, company, or keyword
@@ -130,15 +123,20 @@ Running the app with Docker Compose will start the following containers:
 
 - Receive email notifications on status updates
 
+  <br>
+
 📄 **File Handling**
 
 - Resume upload with file storage via Multer
 
 - View resumes directly from job applications list
+  <br>
 
 📬 **Notifications**
 
 - Email alerts via Nodemailer (for both recruiters and applicants)
+
+  <br>
 
 💬 **Real-Time Chat System**
 
@@ -166,9 +164,13 @@ _✨ Key Features_
 
 - Inline feedback using Snackbars and confirmation dialogs
 
+<br>
+
 📄 **Resume Upload Feature**
 
 This project includes a file upload functionality for user resumes, which supports **both local storage (for development)** and **Amazon S3 storage (for production)**.
+
+<br>
 
 ⚙️ **Admin Functionality**
 
@@ -176,9 +178,7 @@ This project includes a file upload functionality for user resumes, which suppor
 
 - Filter and search functionality for easier record management
 
-
 ## 💠 Tech Stack
-
 
 | Layer                | Technology                                                           |
 | -------------------- | -------------------------------------------------------------------- |
@@ -189,7 +189,6 @@ This project includes a file upload functionality for user resumes, which suppor
 | **Containerization** | Docker, Docker Compose                                               |
 | **Deployment**       | S3 + CloudFront (frontend), Elastic Beanstalk (backend), RDS (MySQL) |
 | **Dev Tools**        | Postman, Jest, Supertest, ESLint, Prettier                           |
-
 
 ## 🧪 Testing & Authentication
 
@@ -209,7 +208,7 @@ You can try out the app here:
 
 ---
 
-## ✅ Deployment Stack
+### ✅ Deployment Stack
 
 | Component              | Details                                                                                                                                                                |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
