@@ -8,7 +8,7 @@ You can now run the entire application using Docker without needing to install N
 
 1.  **Clone the Repository**
 
-> git clone https://github.com/alexismreyes/gigranger.com.git ><br>
+> git clone https://github.com/alexismreyes/gigranger.com.git <br>
 > cd gigranger.com
 
 2.  **Configure Environment Files**
@@ -20,7 +20,12 @@ You can now run the entire application using Docker without needing to install N
 
 Use the sample variables shown in the [🔐 Environment Variables](#-environment-variables) section below to configure them.
 
-> ⚠️ **Important:** Use a real email address to receive application notifications. All preloaded users in the database use the password `123456789`.
+> ⚠️ **Important:**
+>
+> - Use a real email address to receive application notifications. All preloaded users in the database use the password `123456789`.
+>
+> - Use the MySQL username and password defined in the /database/init.sql file, or create your own credentials — just make sure to update them accordingly in the same file.
+>   <br><br>
 
 3.  **Run the App Using Docker**
 
@@ -58,9 +63,9 @@ This script will show a menu with options to run, stop, reset, or rebuild the ap
 
     DB_NAME=employment_db
 
-    DB_USER=root #your DB user
+    DB_USER=gigranger_user #DB user
 
-    DB_PASS=yourpassword #your DB password
+    DB_PASS=gigranger_user_pass #DB password
 
     JWT_SECRET=your_jwt_secret
 
@@ -97,7 +102,6 @@ This script will show a menu with options to run, stop, reset, or rebuild the ap
 - Role-based access (Admin, Recruiter, Job Seeker)
 
 - Route protection with dynamic rendering based on user role
-  <br>
 
 🡳 **Recruiter Functionality**
 
@@ -111,8 +115,6 @@ This script will show a menu with options to run, stop, reset, or rebuild the ap
 
 - Receive email notifications when a candidate applies
 
-  <br>
-
 🡩‍🎓 **Job Seeker Functionality**
 
 - View available jobs and filter by category, company, or keyword
@@ -123,20 +125,15 @@ This script will show a menu with options to run, stop, reset, or rebuild the ap
 
 - Receive email notifications on status updates
 
-  <br>
-
 📄 **File Handling**
 
 - Resume upload with file storage via Multer
 
 - View resumes directly from job applications list
-  <br>
 
 📬 **Notifications**
 
 - Email alerts via Nodemailer (for both recruiters and applicants)
-
-  <br>
 
 💬 **Real-Time Chat System**
 
@@ -154,8 +151,6 @@ _✨ Key Features_
 
 - Dynamic Chat Rooms: Created automatically based on job application interactions (1:1 between recruiter and job seeker).
 
-  <br>
-
 📊 **User Interface**
 
 - Responsive layout using **Material UI**
@@ -164,13 +159,9 @@ _✨ Key Features_
 
 - Inline feedback using Snackbars and confirmation dialogs
 
-<br>
-
 📄 **Resume Upload Feature**
 
 This project includes a file upload functionality for user resumes, which supports **both local storage (for development)** and **Amazon S3 storage (for production)**.
-
-<br>
 
 ⚙️ **Admin Functionality**
 
