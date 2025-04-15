@@ -1,5 +1,5 @@
 const express = require('express');
-const initializeDB = require('./config/database');
+//const initializeDB = require('./config/database');
 const { initializeRoutes } = require('./routes');
 const corsMiddleware = require('./middlewares/corsMiddleware');
 const path = require('path');
@@ -7,7 +7,7 @@ const path = require('path');
 const app = express();
 
 // Initialize DB
-initializeDB();
+//initializeDB();
 
 //CORS Handling
 app.use(corsMiddleware);
