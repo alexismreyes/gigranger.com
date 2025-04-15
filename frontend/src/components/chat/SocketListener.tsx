@@ -21,7 +21,7 @@ const SocketListener = () => {
 
       if (!isInActiveRoom) {
         addUnreadRoom(msg.roomId);
-        console.log('🔴 [notify] Badge added for room', msg.roomId);
+        /* console.log('🔴 [notify] Badge added for room', msg.roomId); */
       } else {
         console.log(
           '✅ [notify] Skipped badge — user is already in room',

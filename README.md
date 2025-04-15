@@ -176,7 +176,9 @@ This project includes a file upload functionality for user resumes, which suppor
 
 - Filter and search functionality for easier record management
 
+
 ## 💠 Tech Stack
+
 
 | Layer                | Technology                                                           |
 | -------------------- | -------------------------------------------------------------------- |
@@ -187,6 +189,7 @@ This project includes a file upload functionality for user resumes, which suppor
 | **Containerization** | Docker, Docker Compose                                               |
 | **Deployment**       | S3 + CloudFront (frontend), Elastic Beanstalk (backend), RDS (MySQL) |
 | **Dev Tools**        | Postman, Jest, Supertest, ESLint, Prettier                           |
+
 
 ## 🧪 Testing & Authentication
 
