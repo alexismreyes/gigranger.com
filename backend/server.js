@@ -11,18 +11,24 @@ const app = require('./app');
 
 const http = require('http');
 const { initializeSocket } = require('./sockets/chatSocket');
-
-const server = http.createServer(app);
-
-//webSocket setup
-initializeSocket(server);
+const initializeDB = require('./config/database');
 
 const PORT = process.env.PORT;
 
-/* app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-}); */
+(async () => {
+  try {
+    await initializeDB(); // ✅ Wait for DB to connect first
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+    const server = http.createServer(app);
+
+    // ✅ Only initialize sockets once DB is connected
+    initializeSocket(server);
+
+    server.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('❌ Failed to start app:', err);
+    process.exit(1);
+  }
+})();

@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  gigranger-frontend-service:
+    container_name: gigranger-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - '5173:5173'
+    env_file:
+      - ./frontend/.env.development
+    networks:
+      - gigranger-network
+    volumes:
+      - ./frontend:/app/gigranger.com/frontend
+      - /app/gigranger.com/frontend/node_modules
+
+  gigranger-database-service:
+    container_name: gigranger-database
+    image: mysql:8.0.32 #This version still supports mysql_native_password fully and has no issues with that plugin.
+    ports:
+      - '3306:3306'
+    networks:
+      - gigranger-network
+    environment:
+      MYSQL_ROOT_PASSWORD: gigranger_root_pass
+      MYSQL_DATABASE: employment_db
+    volumes:
+      - mysql-data:/var/lib/mysql:rw
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql #This tells MySQL to run this SQL during initial container setup, and it will correctly change the auth plugin.
+      - ./database/employment_db.sql:/docker-entrypoint-initdb.d/employment_db.sql # Mount the initial data for the DB
+      #All .sql files in /docker-entrypoint-initdb.d/ get automatically executed once, on first DB startup (when the volume is empty).
+  gigranger-backend-service:
+    container_name: gigranger-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '4000:4000'
+    env_file:
+      - ./backend/.env.development
+    networks:
+      - gigranger-network
+    volumes:
+      - ./backend:/app/gigranger.com/backend
+      - /app/gigranger.com/backend/node_modules
+    depends_on:
+      - gigranger-database-service
+
+volumes:
+  mysql-data:
+
+networks:
+  gigranger-network:
+    driver: bridge
