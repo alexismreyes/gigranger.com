@@ -1,8 +1,7 @@
 const { where } = require('sequelize');
 const { JobApplication, Jobs } = require('../models');
-const {
-  notifyRecruiterOfJobApplication,
-} = require('../utils/jobApplicationNotifier');
+const { publishToQueue } = require('../utils/rabbitMQPublisher');
+const { userInfoForJobApplication } = require('../utils/retrieveUserInfo');
 
 exports.getAllJobsApplications = async (req, res) => {
   try {
@@ -58,12 +57,28 @@ exports.createJobApplication = async (req, res) => {
       requestDate,
     });
 
-    // ✅ Notify the user via email
-    await notifyRecruiterOfJobApplication(
+    // ✅ Notify the user via email - previous approach
+    /* await notifyRecruiterOfJobApplication(
       newJobApplication.userId,
       newJobApplication.jobId,
       newJobApplication.requestDate
     );
+ */
+
+    //Fetch recruiter/applicant/job info for the email
+    const { recruiter, job, applicant } = await userInfoForJobApplication(
+      userId,
+      jobId
+    );
+
+    await publishToQueue({
+      type: 'notifyRecruiter',
+      to: recruiter.email,
+      recruiterName: recruiter.firstName,
+      jobName: job.name,
+      applicantName: `${applicant.firstName} ${applicant.lastName}`,
+      requestDate,
+    });
 
     res.status(201).json(newJobApplication);
   } catch (error) {

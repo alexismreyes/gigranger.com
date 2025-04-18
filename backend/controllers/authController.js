@@ -3,7 +3,7 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const moment = require('moment');
-const { sendVerificationEmail } = require('../utils/emailService');
+const { publishToQueue } = require('../utils/rabbitMQPublisher');
 
 exports.login = async (req, res) => {
   const JWT_SECRET = process.env.JWT_SECRET;
@@ -22,10 +22,6 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid Password!!!' });
     }
-
-    /* const token = jwt.sign({ id: user.id, role_id: user.role_id }, JWT_SECRET, {
-      expiresIn: '1h',
-    }); */
 
     const token = jwt.sign({ id: user.id, roleId: user.roleId }, JWT_SECRET, {
       expiresIn: '6h',
@@ -47,20 +43,6 @@ exports.requestVerification = async (req, res) => {
     const user = await User.findOne({ where: { email } });
     if (user) return res.status(400).json({ error: 'email already exists' });
 
-    /*  const saltRounds = 10;
-    const hashedPassword = await bcryptjs.hash(password, saltRounds);
-    const newUser = await User.create({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-      roleId,
-    });
-
-    res
-      .status(201)
-      .json({ message: 'User created successfully', user: newUser }); */
-
     // Check if verification already exists (optional: clean up old ones)
     await EmailVerification.destroy({ where: { email } });
 
@@ -81,11 +63,17 @@ exports.requestVerification = async (req, res) => {
     });
 
     // Send verification email
-    //const link = `http://localhost:4000/api/v1/auth/verifyemail?token=${token}`;
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     const link = `${frontendUrl}/verifyemail?token=${token}`;
 
-    await sendVerificationEmail(email, link);
+    //previous approach direct mailing
+    //await sendVerificationEmail(email, link);
+
+    await publishToQueue({
+      type: 'verifyEmail',
+      to: email,
+      link,
+    });
 
     return res.status(200).json({ message: 'Verification email sent!' });
   } catch (error) {
