@@ -55,9 +55,8 @@ services:
     ports:
       - '5672:5672' # AMQP port
       - '15672:15672' # Web UI
-    environment:
-      RABBITMQ_DEFAULT_USER: gigranger_rabbitmq_user
-      RABBITMQ_DEFAULT_PASS: gigranger_rabbitmq_pass
+    env_file:
+      - ./backend/.env.development
     networks:
       - gigranger-network
 

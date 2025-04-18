@@ -10,9 +10,10 @@ const connectWithRetry = async (retries = 20, delay = 3000) => {
     try {
       const rabbitUser = process.env.RABBITMQ_DEFAULT_USER;
       const rabbitPass = process.env.RABBITMQ_DEFAULT_PASS;
+      const rabbitHost = process.env.RABBITMQ_HOST;
 
       const connection = await amqp.connect(
-        `amqp://${rabbitUser}:${rabbitPass}@rabbitmq:5672`
+        `amqp://${rabbitUser}:${rabbitPass}@${rabbitHost}:5672`
       );
       const channel = await connection.createChannel();
       await channel.assertQueue('email_queue');
