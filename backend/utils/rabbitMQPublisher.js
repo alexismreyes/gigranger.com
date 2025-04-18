@@ -12,6 +12,10 @@ const rabbitUser = process.env.RABBITMQ_DEFAULT_USER;
 const rabbitPass = process.env.RABBITMQ_DEFAULT_PASS;
 const rabbitHost = process.env.RABBITMQ_HOST || 'rabbitmq';
 
+console.log(
+  `🔌 Connecting to RabbitMQ at: amqp://${rabbitUser}:${rabbitPass}@${rabbitHost}:5672`
+);
+
 const connectRabbitMQ = async () => {
   const connection = await amqp.connect(
     `amqp://${rabbitUser}:${rabbitPass}@${rabbitHost}:5672`
