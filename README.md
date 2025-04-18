@@ -13,10 +13,11 @@ You can now run the entire application using Docker without needing to install N
 
 2.  **Configure Environment Files**
 
-    Create two files:
+    Create three files:
 
 - `./backend/.env.development`
 - `./frontend/.env.development`
+- `./email-service/.env`
 
 Use the sample variables shown in the [🔐 Environment Variables](#-environment-variables) section below to configure them.
 
@@ -58,38 +59,52 @@ This script will show a menu with options to run, stop, reset, or rebuild the ap
 **_Backend .env.development_**
 
     PORT=4000
-
     DB_HOST=gigranger-database-service
-
     DB_NAME=employment_db
-
     DB_USER=gigranger_user #DB user
-
     DB_PASS=gigranger_user_pass #DB password
-
     JWT_SECRET=your_jwt_secret
-
     EMAIL_USER=your_email@example.com #The main email account from which app will send the emails
-
     EMAIL_PASS=your_email_password #The password from that main email account
-
     FRONTEND_URL=http://localhost:5173
-
     NODE_ENV=development
-
     ALLOWED_ORIGINS=http://localhost:5173  #Add multiple allowed origins as needed comma separated
+    RABBITMQ_DEFAULT_USER=rabbitmq_user #user for rabbitmq - you may use your own
+    RABBITMQ_DEFAULT_PASS=rabbitmq_pass #password for rabbitmq - you may use your own
+    RABBITMQ_HOST=rabbitmq
 
 <br>
 
 **_Frontend .env.development_**
 
     VITE_API_URL=http://localhost:4000/api/v1
-
     VITE_SOCKET_URL=http://localhost:4000
+
+**_Email-service microservice .env_**
+
+    EMAIL_USER=your_email@example.com #The main email account from which app will send the emails
+    EMAIL_PASS=your_email_password #The password from that main email account
+    RABBITMQ_DEFAULT_USER=rabbitmq_user
+    RABBITMQ_DEFAULT_PASS=rabbitmq_pass
+    RABBITMQ_HOST=rabbitmq
 
   <br>
 
 ✅ Use .env.production files for deployment, replacing localhost URLs with actual production domains or IPs.
+
+## 🐳 Dockerized Microservices
+
+As of the latest version, the app has been modularized using a microservices approach. Two new containers have been added, one dedicated to RabbitMQ message broker and one Node.js email microservice container:
+
+| Container Name            | Description                                              |
+| ------------------------- | -------------------------------------------------------- |
+| `gigranger-frontend`      | React frontend                                           |
+| `gigranger-backend`       | Node.js + Express backend API                            |
+| `gigranger-database`      | MySQL instance with init + seed                          |
+| `rabbitmq`                | RabbitMQ message broker with management UI               |
+| `gigranger-email-service` | Node-based microservice that processes queued email jobs |
+
+These containers are orchestrated using Docker Compose. All communication between services (e.g., backend → RabbitMQ → email-service) is handled asynchronously.
 
 ## 🚀 Features
 
@@ -169,20 +184,18 @@ This project includes a file upload functionality for user resumes, which suppor
 
 - Filter and search functionality for easier record management
 
-
 ## 💠 Tech Stack
 
-
-| Layer                | Technology                                                           |
-| -------------------- | -------------------------------------------------------------------- |
-| **Frontend**         | React + Vite, TypeScript, Material UI, Axios                         |
-| **Backend**          | Node.js, Express, Sequelize ORM, Multer, JWT, WebSockets             |
-| **Database**         | MySQL (AWS RDS or Dockerized locally)                                |
-| **Authentication**   | JWT + Bcrypt, Context API                                            |
-| **Containerization** | Docker, Docker Compose                                               |
-| **Deployment**       | S3 + CloudFront (frontend), Elastic Beanstalk (backend), RDS (MySQL) |
-| **Dev Tools**        | Postman, Jest, Supertest, ESLint, Prettier                           |
-
+| Layer                | Technology                                                                                           |
+| -------------------- | ---------------------------------------------------------------------------------------------------- |
+| **Frontend**         | React + Vite, TypeScript, Material UI, Axios                                                         |
+| **Backend**          | Node.js, Express, Sequelize ORM, Multer, JWT, WebSockets                                             |
+| **Database**         | MySQL (AWS RDS or Dockerized locally)                                                                |
+| **Messaging Queue**  | RabbitMQ (used for decoupled email notification microservice)                                        |
+| **Authentication**   | JWT + Bcrypt, Context API                                                                            |
+| **Containerization** | Docker, Docker Compose                                                                               |
+| **Deployment**       | S3 + CloudFront (frontend), Elastic Beanstalk (backend), RDS (MySQL), EC2 (RabbitMQ & Email Service) |
+| **Dev Tools**        | Postman, Jest, Supertest, ESLint, Prettier                                                           |
 
 ## 🧪 Testing & Authentication
 
@@ -202,14 +215,17 @@ You can try out the app here:
 
 ---
 
-### ✅ Deployment Stack
+## ✅ Deployment Stack
 
-| Component              | Details                                                                                                                                                                |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Frontend**           | React app hosted on **AWS S3** and served via **CloudFront** with custom domain and HTTPS (`gigranger.com`)                                                            |
-| **Subdomain Redirect** | `www.gigranger.com` redirects to the root domain using **S3 redirect + CloudFront**                                                                                    |
-| **Backend API**        | Node.js + Express app deployed to **Elastic Beanstalk** (single-instance, no load balancer), reverse-proxied with **Nginx + Let's Encrypt SSL** at `api.gigranger.com` |
-| **Database**           | **AWS RDS** using **MySQL**                                                                                                                                            |
+| Component                   | Details                                                                                                                                                        |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Frontend**                | React app hosted on AWS S3 and served via CloudFront with custom domain and HTTPS (`gigranger.com`)                                                            |
+| **Subdomain Redirect**      | `www.gigranger.com` redirects to the root domain using S3 redirect + CloudFront                                                                                |
+| **Backend API**             | Node.js + Express app deployed to Elastic Beanstalk (single-instance, no load balancer), reverse-proxied with Nginx + Let's Encrypt SSL at `api.gigranger.com` |
+| **Database**                | AWS RDS using MySQL                                                                                                                                            |
+| **EC2-Based Microservices** | RabbitMQ and `gigranger-email-service` run on a dedicated AWS EC2 instance using Docker Compose for persistent, external communication                         |
+| → RabbitMQ URL              | Exposed at `mq.gigranger.com` (custom Route 53 subdomain)                                                                                                      |
+| → Backend Connection        | Communicates via environment variables (host, port, credentials)                                                                                               |
 
 <br>
 
