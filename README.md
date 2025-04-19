@@ -146,9 +146,11 @@ These containers are orchestrated using Docker Compose. All communication betwee
 
 - View resumes directly from job applications list
 
-📬 **Notifications**
+📬 Notifications
 
-- Email alerts via Nodemailer (for both recruiters and applicants)
+- Email alerts are handled by a dedicated `gigranger-email-service` microservice.
+- Messages are published to a RabbitMQ queue by the backend and processed asynchronously.
+- Uses Nodemailer to send notifications to both recruiters and applicants.
 
 💬 **Real-Time Chat System**
 
@@ -297,7 +299,7 @@ This modular pattern improves reusability, testing, and clarity across the UI co
 
 ## ⚙️ Backend Architecture
 
-The backend is structured following **Modular API Design** principles using Express and Sequelize. This design allows for scalability, separation of concerns, and maintainability.
+The backend is structured following Modular API Design principles using Express and Sequelize. This design allows for scalability, separation of concerns, and maintainability.
 
 - **Controllers** handle business logic for each domain (e.g., `authController`, `jobController`, `chatController`).
 
@@ -309,11 +311,13 @@ The backend is structured following **Modular API Design** principles using Expr
 
 - **Sockets** enable real-time features like live chat using Socket.IO. Includes logic for joining rooms, broadcasting messages, and notifying users.
 
-- **Utils** and **Services** provide shared utilities (e.g., email sending with Nodemailer, file uploads with Multer, or S3 integration).
+- **Utils and Services** provide shared utilities (e.g., file uploads with Multer, email publishing via RabbitMQ, and S3 integration).
 
-- **Test** folder contains backend unit/integration tests using **Jest** and **Supertest**.
+- **Microservices**: The backend publishes events (e.g., email notifications) to RabbitMQ, which are consumed by the `gigranger-email-service` running on a separate EC2 instance. This decouples the main app from background job processing.
 
-This backend structure supports full API lifecycle management — from secure user authentication to real-time communication — and enables feature scaling through modular service expansion (e.g., microservices or background jobs).
+- **Test folder** contains backend unit/integration tests using Jest and Supertest.
+
+This backend structure supports full API lifecycle management — from secure user authentication to real-time communication — and enables scalable feature development through modular services and message-driven architecture.
 
 ## 📌 Disclaimer
 
