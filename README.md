@@ -1,6 +1,6 @@
 ## gigranger.com - A Employment Platform🧑‍💼
 
-A full-featured job portal application that allows recruiters to post and manage job listings, and job seekers to find, apply, and track job applications, it also allows chat communication between them. This project showcases real-world features such as authentication, role-based access, file uploads, filtering, email notifications, and application history tracking — built with production-ready technologies.
+A full-featured job portal application that allows recruiters to post and manage job listings, and job seekers to find, apply, and track job applications. It also enables real-time chat communication between them. This project showcases real-world features such as authentication, role-based access, file uploads, filtering, email notifications, and application history tracking — all built with production-ready technologies. Additionally, the backend leverages microservice architecture by offloading email notifications to a dedicated RabbitMQ-powered microservice, improving scalability and decoupling long-running background tasks from the main application.
 
 ## 🧩 Installation Guide
 
