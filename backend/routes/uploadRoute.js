@@ -7,17 +7,16 @@ router.post('/resumes', upload.single('resume'), (req, res) => {
     return res.status(400).json({ error: 'File upload failed' });
   }
 
-  // ✅ S3 upload: fix domain issue if needed
-  if (req.file.location) {
-    return res.status(200).json({ resumeUrl: req.file.location });
+  // ✅ Return CloudFront-compatible URL
+  if (req.savedResumeUrl) {
+    return res.status(200).json({ resumeUrl: req.savedResumeUrl });
   }
 
-  // ✅ Local disk fallback
+  // ✅ Fallback for development
   const fileUrl = `${req.protocol}://${req.get('host')}/uploads/resumes/${
     req.file.filename
   }`;
-  //return res.status(200).json({ resumeUrl: fileUrl });
-  return res.status(200).json({ resumeUrl: req.savedResumeUrl });
+  return res.status(200).json({ resumeUrl: fileUrl });
 });
 
 module.exports = router;
