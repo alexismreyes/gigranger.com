@@ -22,13 +22,31 @@ exports.matchJobs = async (req, res) => {
 
     const resumePath = user.resumeUrl;
 
-    const absolutePath = path.resolve(
+    /*     const absolutePath = path.resolve(
       __dirname,
       '../uploads/resumes',
       path.basename(resumePath)
     ); //This ensures the path resolves from the actual backend folder, not the root of the container filesystem.
 
     const buffer = fs.readFileSync(absolutePath);
+ */
+    let buffer;
+
+    if (resumePath.startsWith('http')) {
+      // Resume is stored in S3 or another remote location
+      const fileResponse = await axios.get(resumePath, {
+        responseType: 'arraybuffer',
+      });
+      buffer = fileResponse.data;
+    } else {
+      // Resume is stored locally (useful for local dev/testing)
+      const absolutePath = path.resolve(
+        __dirname,
+        '../uploads/resumes',
+        path.basename(resumePath)
+      ); //This ensures the path resolves from the actual backend folder, not the root of the container filesystem.
+      buffer = fs.readFileSync(absolutePath);
+    }
 
     // ✅ Step 2: Parse resume text
     const resumeText = (await pdfParse(buffer)).text;
