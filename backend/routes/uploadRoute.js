@@ -23,7 +23,8 @@ router.post('/resumes', upload.single('resume'), (req, res) => {
   const fileUrl = `${req.protocol}://${req.get('host')}/uploads/resumes/${
     req.file.filename
   }`;
-  return res.status(200).json({ resumeUrl: fileUrl });
+  //return res.status(200).json({ resumeUrl: fileUrl });
+  return res.status(200).json({ resumeUrl: req.savedResumeUrl });
 });
 
 module.exports = router;

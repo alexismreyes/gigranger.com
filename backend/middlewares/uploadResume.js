@@ -23,6 +23,8 @@ if (process.env.NODE_ENV === 'production') {
     bucket: process.env.S3_BUCKET_NAME,
     key: (req, file, cb) => {
       const fileName = `resumes/${Date.now()}-${file.originalname}`;
+      // ✅ Store the CloudFront-compatible resume URL in the request
+      req.savedResumeUrl = `https://${process.env.CLOUDFRONT_DOMAIN}/resumes/${fileName}`;
       cb(null, fileName);
     },
   });
