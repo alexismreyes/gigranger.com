@@ -2,8 +2,10 @@ FROM node:21
 
 WORKDIR /app/gigranger.com/frontend
 
-COPY package*.json ./
+# Copy everything including package.json
+COPY . .
 
-RUN npm i
+# 🛠 Install after mounting to ensure correct native deps
+RUN npm install
 
-CMD npm run dev
+CMD ["npm", "run", "dev"]

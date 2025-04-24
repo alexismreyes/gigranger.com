@@ -27,6 +27,8 @@ const SnackBar: React.FC<SnackBarProps> = ({
       ? 'Job Application'
       : parentComponent === 'JobApplicationsHistoryList'
       ? 'Job Application History'
+      : parentComponent === 'JobMatchingList'
+      ? 'Job Matching Service'
       : parentComponent === 'Chat'
       ? 'Chat service'
       : undefined;
@@ -73,6 +75,8 @@ const SnackBar: React.FC<SnackBarProps> = ({
           : snackStatus.action === 'nonewchat'
           ? `${parent} - No unread chats yet. Go to a job application and click "💬 Start Chat"
           to continue your conversation.`
+          : snackStatus.action === 'no-resume'
+          ? `${parent} - ${snackStatus.message}`
           : snackStatus.message || 'An error ocurred'}
       </Alert>
     </Snackbar>

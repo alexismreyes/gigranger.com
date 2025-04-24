@@ -30,6 +30,7 @@ import FloatingChatWindow from './chat/FloatingChatWindow';
 import { useFloatingChatContext } from '../context/FloatingChatContext';
 import SnackBar from './SnackBar';
 import useSnackBarContext from '../hooks/useSnackBarContext';
+import HasRole from './HasRole';
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
@@ -85,11 +86,14 @@ const Layout: React.FC = () => {
       <ListItemButton onClick={() => navigate('/jobapplications')}>
         <ListItemText primary="Job Applications" />
       </ListItemButton>
-
+      <HasRole role={[1, 2]}>
+        <ListItemButton onClick={() => navigate('/jobmatching')}>
+          <ListItemText primary="Job Matcher" />
+        </ListItemButton>
+      </HasRole>
       <ListItemButton onClick={() => navigate('/users')}>
         <ListItemText primary="Users" />
       </ListItemButton>
-
       <ListItemButton onClick={() => setOpenDialogLogout(true)}>
         <ListItemText primary="Logout" />
       </ListItemButton>
