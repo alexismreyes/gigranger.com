@@ -89,7 +89,10 @@ const JobMatchingList = () => {
       </Typography>
 
       <Typography variant="body1" sx={{ mt: 4, mb: 2 }}>
-        <strong>Click the button bellow to start the matching process</strong>
+        <strong>
+          Select a Job Category and Click the button bellow to start the
+          matching process
+        </strong>
       </Typography>
 
       <Stack spacing={2} sx={{ width: '100%', maxWidth: 400 }}>
