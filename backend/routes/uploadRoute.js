@@ -7,12 +7,19 @@ router.post('/resumes', upload.single('resume'), (req, res) => {
     return res.status(400).json({ error: 'File upload failed' });
   }
 
-  // If using S3 (req.file.location will exist)
+  // ✅ S3 upload: fix domain issue if needed
   if (req.file.location) {
-    return res.status(200).json({ resumeUrl: req.file.location });
+    let resumeUrl = req.file.location;
+
+    // 🛠 Patch invalid subdomain pattern caused by dot in bucket name
+    if (resumeUrl.includes('gigranger.com.s3')) {
+      resumeUrl = resumeUrl.replace('gigranger.com.s3', 'gigranger.s3');
+    }
+
+    return res.status(200).json({ resumeUrl });
   }
 
-  // If using local disk, manually construct the URL
+  // ✅ Local disk fallback
   const fileUrl = `${req.protocol}://${req.get('host')}/uploads/resumes/${
     req.file.filename
   }`;
