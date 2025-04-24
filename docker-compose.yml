@@ -33,6 +33,17 @@ services:
       - ./database/employment_db.sql:/docker-entrypoint-initdb.d/employment_db.sql # Mount the initial data for the DB
       #All .sql files in /docker-entrypoint-initdb.d/ get automatically executed once, on first DB startup (when the volume is empty).
 
+  jobmatching-service:
+    build:
+      context: ./jobmatching-service
+    container_name: gigranger-jobmatching
+    ports:
+      - '5000:5000'
+    env_file:
+      - ./jobmatching-service/.env
+    networks:
+      - gigranger-network
+
   gigranger-backend-service:
     container_name: gigranger-backend
     build:
@@ -49,6 +60,7 @@ services:
       - /app/gigranger.com/backend/node_modules
     depends_on:
       - gigranger-database-service
+      - jobmatching-service
 
   rabbitmq:
     image: rabbitmq:3-management

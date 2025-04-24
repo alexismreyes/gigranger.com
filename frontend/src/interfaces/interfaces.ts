@@ -16,6 +16,7 @@ export interface Job {
   phoneContact: string;
   vacancies: number;
   createdBy: number;
+  score?: string;
 }
 
 export interface SnackStatus {

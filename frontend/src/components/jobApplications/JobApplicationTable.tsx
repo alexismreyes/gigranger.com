@@ -196,7 +196,7 @@ const JobApplicationTable: React.FC<JobApplicationTableProps> = ({
                 </TableCell>
 
                 <TableCell align="right">
-                  <HasRole role={1 | 3}>
+                  <HasRole role={[1, 3]}>
                     <IconButton color="primary" onClick={() => onEdit(app)}>
                       <Edit />
                     </IconButton>

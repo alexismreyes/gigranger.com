@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export const usePaginationManagement = () => {
   const [page, setPage] = useState(0); // Current page
-  const [rowsPerPage, setRowsPerPage] = useState(5); // Rows per page
+  const [rowsPerPage, setRowsPerPage] = useState(10); // Rows per page
 
   // Handle page change
   const handleChangePage = (_event: unknown, newPage: number) => {
