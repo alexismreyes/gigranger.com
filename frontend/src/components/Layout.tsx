@@ -134,7 +134,7 @@ const Layout: React.FC = () => {
               </Typography>
             </Box>
 
-            {/* Right Side: User Info */}
+            {/* Right Side: User Information */}
 
             {user && (
               <Box
