@@ -51,7 +51,7 @@ Use the sample variables listed in the [🔐 Environment Variables](#-environmen
 >
 > - Use a real email address to receive application notifications. All preloaded users in the database use the password `123456789`.
 > - Use the MySQL username and password defined in the `/database/init.sql` file, or set your own credentials — just ensure they match across all relevant `.env` files.
-> - The `jobmatching-service` requires proper API access to Hugging Face so you need to request yours at the huggingface site https://huggingface.co and use it at the .evn file from the /job-matching-service folder
+> - The `jobmatching-service` requires proper API access to Hugging Face so you need to request yours at the huggingface site https://huggingface.co and use it at the .evn file from the /jobmatching-service folder
 >   <br><br>
 
 3.  **Run the App Using Docker**
@@ -128,6 +128,8 @@ VITE_API_URL=http://localhost:4000/api/v1
 
 VITE_SOCKET_URL=http://localhost:4000
 
+<br>
+
 **_Email-service microservice .env_**
 
 EMAIL_USER=your_email@example.com #The main email account from which app will send the emails
@@ -139,6 +141,8 @@ RABBITMQ_DEFAULT_USER=rabbitmq_user
 RABBITMQ_DEFAULT_PASS=rabbitmq_pass
 
 RABBITMQ_HOST=rabbitmq
+
+<br>
 
 **_Job matching microservice .env_**
 
