@@ -1,6 +1,30 @@
 ## gigranger.com - A Employment Platform🧑‍💼
 
-A full-featured job portal application that allows recruiters to post and manage job listings, and job seekers to find, apply, and track job applications. It also enables real-time chat communication between them. This project showcases real-world features such as authentication, role-based access, file uploads, filtering, email notifications, and application history tracking — all built with production-ready technologies. Additionally, the backend leverages microservice architecture by offloading email notifications to a dedicated RabbitMQ-powered microservice, improving scalability and decoupling long-running background tasks from the main application.
+A full-featured job portal application that allows **recruiters** to post and manage job listings, and **job seekers** to find, apply, and track job applications — with a seamless real-time chat system connecting them.
+
+This project showcases real-world, production-ready features such as:
+
+- 🔐 **Authentication and role-based access**
+
+- 📄 **Resume uploads with automatic S3/local detection**
+
+- 📬 **Email notifications via RabbitMQ-based microservice**
+
+- 🧠 **AI-powered resume-to-job matching using Hugging Face**
+
+- 🗂️ **Application status tracking with history and comments**
+
+- 🔎 **Filtering, pagination, and admin-level CRUD operations**
+
+- 💬 **Live chat with offline message sync and unread badges**
+
+The backend leverages a **modular microservices architecture** for improved scalability:
+
+- Email notifications are offloaded to a dedicated **RabbitMQ-powered email microservice**.
+
+- Resume-job matching is powered by a standalone **LLM-based microservice**, deployed securely and independently.
+
+These design choices decouple long-running or compute-heavy tasks from the main app, improving responsiveness and enabling future scalability.
 
 ## 🧩 Installation Guide
 
@@ -9,23 +33,25 @@ You can now run the entire application using Docker without needing to install N
 1.  **Clone the Repository**
 
 > git clone https://github.com/alexismreyes/gigranger.com.git <br>
+
 > cd gigranger.com
 
-2.  **Configure Environment Files**
+2. **Configure Environment Files**
 
-    Create three files:
+Create the following `.env` files for your local development environment:
 
 - `./backend/.env.development`
 - `./frontend/.env.development`
 - `./email-service/.env`
+- `./job-matching-service/.env`
 
-Use the sample variables shown in the [🔐 Environment Variables](#-environment-variables) section below to configure them.
+Use the sample variables listed in the [🔐 Environment Variables](#-environment-variables) section to fill out each file correctly.
 
-> ⚠️ **Important:**
+> ⚠️ **Important Notes:**
 >
 > - Use a real email address to receive application notifications. All preloaded users in the database use the password `123456789`.
->
-> - Use the MySQL username and password defined in the /database/init.sql file, or create your own credentials — just make sure to update them accordingly in the same file.
+> - Use the MySQL username and password defined in the `/database/init.sql` file, or set your own credentials — just ensure they match across all relevant `.env` files.
+> - The `job-matching-service` requires proper API access to Hugging Face so you need to request yours at the huggingface site https://huggingface.co and use it at the .evn file from the /job-matching-service folder
 >   <br><br>
 
 3.  **Run the App Using Docker**
@@ -34,75 +60,116 @@ _🐧 For Linux/macOS:_
 
 Use the provided Makefile:
 
-    make run         # Start all containers
-    make stop        # Stop containers (keep data)
-    make reset       # Remove everything and reinitialize from SQL dump
-    make rebuild     # Full clean + rebuild + launch
+make run # Start all containers
+
+make stop # Stop containers (keep data)
+
+make reset # Remove everything and reinitialize from SQL dump
+
+make rebuild # Full clean + rebuild + launch
 
 _🪟 For Windows:_
 
 Use the interactive script:
 
-    manage.bat
+manage.bat
 
 This script will show a menu with options to run, stop, reset, or rebuild the app using Docker Compose.
 
 ### Notes on Database Initialization
 
 - The database will be automatically created and seeded using the included `employment_db.sql` file included within the database folder.
+
 - You do **not** need to import the SQL file manually.
+
 - Data is persisted across runs using Docker volumes depending the option you choose from the make file or manage.bat file.
+
 - Running a full reset (`make reset` or option 3 in `manage.bat`) will wipe all data and reload the schema from `employment_db.sql`.
 
 ## 🔐 Environment Variables
 
 **_Backend .env.development_**
 
-    PORT=4000
-    DB_HOST=gigranger-database-service
-    DB_NAME=employment_db
-    DB_USER=gigranger_user #DB user
-    DB_PASS=gigranger_user_pass #DB password
-    JWT_SECRET=your_jwt_secret
-    EMAIL_USER=your_email@example.com #The main email account from which app will send the emails
-    EMAIL_PASS=your_email_password #The password from that main email account
-    FRONTEND_URL=http://localhost:5173
-    NODE_ENV=development
-    ALLOWED_ORIGINS=http://localhost:5173  #Add multiple allowed origins as needed comma separated
-    RABBITMQ_DEFAULT_USER=rabbitmq_user #user for rabbitmq - you may use your own
-    RABBITMQ_DEFAULT_PASS=rabbitmq_pass #password for rabbitmq - you may use your own
-    RABBITMQ_HOST=rabbitmq
+PORT=4000
+
+DB_HOST=gigranger-database-service
+
+DB_NAME=employment_db
+
+DB_USER=gigranger_user #DB user
+
+DB_PASS=gigranger_user_pass #DB password
+
+JWT_SECRET=your_jwt_secret
+
+EMAIL_USER=your_email@example.com #The main email account from which app will send the emails
+
+EMAIL_PASS=your_email_password #The password from that main email account
+
+FRONTEND_URL=http://localhost:5173
+
+NODE_ENV=development
+
+ALLOWED_ORIGINS=http://localhost:5173 #Add multiple allowed origins as needed comma separated
+
+RABBITMQ_DEFAULT_USER=rabbitmq_user #user for rabbitmq - you may use your own
+
+RABBITMQ_DEFAULT_PASS=rabbitmq_pass #password for rabbitmq - you may use your own
+
+RABBITMQ_HOST=rabbitmq
+
+JOBMATCHINGSERVICEURL=http://gigranger-jobmatching:5000/jobmatching #running inside a container
 
 <br>
 
 **_Frontend .env.development_**
 
-    VITE_API_URL=http://localhost:4000/api/v1
-    VITE_SOCKET_URL=http://localhost:4000
+VITE_API_URL=http://localhost:4000/api/v1
+
+VITE_SOCKET_URL=http://localhost:4000
 
 **_Email-service microservice .env_**
 
-    EMAIL_USER=your_email@example.com #The main email account from which app will send the emails
-    EMAIL_PASS=your_email_password #The password from that main email account
-    RABBITMQ_DEFAULT_USER=rabbitmq_user
-    RABBITMQ_DEFAULT_PASS=rabbitmq_pass
-    RABBITMQ_HOST=rabbitmq
+EMAIL_USER=your_email@example.com #The main email account from which app will send the emails
 
-  <br>
+EMAIL_PASS=your_email_password #The password from that main email account
 
-✅ Use .env.production files for deployment, replacing localhost URLs with actual production domains or IPs.
+RABBITMQ_DEFAULT_USER=rabbitmq_user
+
+RABBITMQ_DEFAULT_PASS=rabbitmq_pass
+
+RABBITMQ_HOST=rabbitmq
+
+**_Job matching microservice .env_**
+
+HUGGINGFACE_API_KEY=_YOUR_HUGGINGFACE_API_KEY_
+
+MODEL_URL=https://api-inference.huggingface.co/models/facebook/bart-large-mnli
+
+PORT=5000
+
+<br>
+
 
 ## 🐳 Dockerized Microservices
 
-As of the latest version, the app has been modularized using a microservices approach. Two new containers have been added, one dedicated to RabbitMQ message broker and one Node.js email microservice container:
+As of the latest version, the app has been modularized using a microservices approach. Three new containers have been added, one dedicated to RabbitMQ message broker, another one Node.js email microservice container plus one more node container holding the job matching microservice:
 
-| Container Name            | Description                                              |
-| ------------------------- | -------------------------------------------------------- |
-| `gigranger-frontend`      | React frontend                                           |
-| `gigranger-backend`       | Node.js + Express backend API                            |
-| `gigranger-database`      | MySQL instance with init + seed                          |
-| `rabbitmq`                | RabbitMQ message broker with management UI               |
+| Container Name | Description |
+
+| ------------------------- | --------------------------------------------------------------------------------------------- |
+
+| `gigranger-frontend` | React frontend |
+
+| `gigranger-backend` | Node.js + Express backend API |
+
+| `gigranger-database` | MySQL instance with init + seed |
+
+| `rabbitmq` | RabbitMQ message broker with management UI |
+
 | `gigranger-email-service` | Node-based microservice that processes queued email jobs |
+
+| `gigranger-jobmatching` | Node-based microservice that uses a Hugging Face model to analyze resume-to-job compatibility |
 
 These containers are orchestrated using Docker Compose. All communication between services (e.g., backend → RabbitMQ → email-service) is handled asynchronously.
 
@@ -149,7 +216,9 @@ These containers are orchestrated using Docker Compose. All communication betwee
 📬 Notifications
 
 - Email alerts are handled by a dedicated `gigranger-email-service` microservice.
+
 - Messages are published to a RabbitMQ queue by the backend and processed asynchronously.
+
 - Uses Nodemailer to send notifications to both recruiters and applicants.
 
 💬 **Real-Time Chat System**
@@ -180,6 +249,16 @@ _✨ Key Features_
 
 This project includes a file upload functionality for user resumes, which supports **both local storage (for development)** and **Amazon S3 storage (for production)**.
 
+**🔎 AI-Powered Job Matching Microservice**
+
+This app includes a resume-to-job matching microservice using a Hugging Face-hosted LLM to find the most relevant job listings based on the content of your resume.
+
+⚙️ Backend reads resumes (from S3 in production or disk locally), extracts their text with pdf-parse, and calls the AI service.
+
+🤖 Job descriptions are passed to a Hugging Face model (facebook/bart-large-mnli) for zero-shot classification.
+
+📊 Results are scored and color-coded based on compatibility percentage.
+
 ⚙️ **Admin Functionality**
 
 - Full CRUD for users, companies, jobs, categories, statuses
@@ -188,16 +267,25 @@ This project includes a file upload functionality for user resumes, which suppor
 
 ## 💠 Tech Stack
 
-| Layer                | Technology                                                                                           |
+| Layer | Technology |
+
 | -------------------- | ---------------------------------------------------------------------------------------------------- |
-| **Frontend**         | React + Vite, TypeScript, Material UI, Axios                                                         |
-| **Backend**          | Node.js, Express, Sequelize ORM, Multer, JWT, WebSockets                                             |
-| **Database**         | MySQL (AWS RDS or Dockerized locally)                                                                |
-| **Messaging Queue**  | RabbitMQ (used for decoupled email notification microservice)                                        |
-| **Authentication**   | JWT + Bcrypt, Context API                                                                            |
-| **Containerization** | Docker, Docker Compose                                                                               |
-| **Deployment**       | S3 + CloudFront (frontend), Elastic Beanstalk (backend), RDS (MySQL), EC2 (RabbitMQ & Email Service) |
-| **Dev Tools**        | Postman, Jest, Supertest, ESLint, Prettier                                                           |
+
+| **Frontend** | React + Vite, TypeScript, Material UI, Axios |
+
+| **Backend** | Node.js, Express, Sequelize ORM, Multer, JWT, WebSockets |
+
+| **Database** | MySQL (AWS RDS or Dockerized locally) |
+
+| **Messaging Queue** | RabbitMQ (used for decoupled email notification microservice) |
+
+| **Authentication** | JWT + Bcrypt, Context API |
+
+| **Containerization** | Docker, Docker Compose |
+
+| **Deployment** | S3 + CloudFront (frontend), Elastic Beanstalk (backend), RDS (MySQL), EC2 (RabbitMQ & Email Service & Job Matching Service) |
+
+| **Dev Tools** | Postman, Jest, Supertest, ESLint, Prettier |
 
 ## 🧪 Testing & Authentication
 
@@ -219,15 +307,19 @@ You can try out the app here:
 
 ## ✅ Deployment Stack
 
-| Component                   | Details                                                                                                                                                        |
+| Component | Details |
+
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Frontend**                | React app hosted on AWS S3 and served via CloudFront with custom domain and HTTPS (`gigranger.com`)                                                            |
-| **Subdomain Redirect**      | `www.gigranger.com` redirects to the root domain using S3 redirect + CloudFront                                                                                |
-| **Backend API**             | Node.js + Express app deployed to Elastic Beanstalk (single-instance, no load balancer), reverse-proxied with Nginx + Let's Encrypt SSL at `api.gigranger.com` |
-| **Database**                | AWS RDS using MySQL                                                                                                                                            |
-| **EC2-Based Microservices** | RabbitMQ and `gigranger-email-service` run on a dedicated AWS EC2 instance using Docker Compose for persistent, external communication                         |
-| → RabbitMQ URL              | Exposed at `mq.gigranger.com` (custom Route 53 subdomain)                                                                                                      |
-| → Backend Connection        | Communicates via environment variables (host, port, credentials)                                                                                               |
+
+| **Frontend** | React app hosted on AWS S3 and served via CloudFront with custom domain and HTTPS (`gigranger.com`) |
+
+| **Subdomain Redirect** | `www.gigranger.com` redirects to the root domain using S3 redirect + CloudFront |
+
+| **Backend API** | Node.js + Express app deployed to Elastic Beanstalk (single-instance, no load balancer), reverse-proxied with Nginx + Let's Encrypt SSL at `api.gigranger.com` |
+
+| **Database** | AWS RDS using MySQL |
+
+| **EC2-Based Microservices** | **RabbitMQ**, **the email service** and **the job matching service** run on a dedicated AWS EC2 instance using Docker Compose for persistent, external communication |
 
 <br>
 
@@ -239,10 +331,13 @@ As mentioned above, this project includes a file upload functionality for user r
 
 The app automatically switches between **local disk storage** and **S3 cloud storage** depending on the environment configuration:
 
-| Environment | Storage Method         | Trigger                               |
+| Environment | Storage Method | Trigger |
+
 | ----------- | ---------------------- | ------------------------------------- |
+
 | Development | Local (project folder) | No `S3_BUCKET_NAME` defined in `.env` |
-| Production  | Amazon S3              | `S3_BUCKET_NAME` is defined in `.env` |
+
+| Production | Amazon S3 | `S3_BUCKET_NAME` is defined in `.env` |
 
 ### 📂 Local Storage (Development)
 
@@ -270,16 +365,21 @@ When the application is deployed in production and the environment is properly c
 
 - Example of a stored file URL:
 
-`https://your-bucket-name.s3.amazonaws.com/resumes/123456-resume.pdf`
+`https://gigranger.com/resumes/1745539929008-customerserviceresume.pdf`
 
 To enable S3 uploads, ensure the following environment variables are defined in your `.env.production`:
 
-| Variable                | Description                    |
+| Variable | Description |
+
 | ----------------------- | ------------------------------ |
-| `AWS_ACCESS_KEY_ID`     | Your AWS access key            |
-| `AWS_SECRET_ACCESS_KEY` | Your AWS secret access key     |
-| `AWS_REGION`            | AWS region (e.g., `us-east-2`) |
-| `S3_BUCKET_NAME`        | Your S3 bucket name            |
+
+| `AWS_ACCESS_KEY_ID` | Your AWS access key |
+
+| `AWS_SECRET_ACCESS_KEY` | Your AWS secret access key |
+
+| `AWS_REGION` | AWS region (e.g., `us-east-2`) |
+
+| `S3_BUCKET_NAME` | Your S3 bucket name |
 
 If any of these are missing, the app will **automatically fallback to local storage**.
 
@@ -313,7 +413,7 @@ The backend is structured following Modular API Design principles using Express 
 
 - **Utils and Services** provide shared utilities (e.g., file uploads with Multer, email publishing via RabbitMQ, and S3 integration).
 
-- **Microservices**: The backend publishes events (e.g., email notifications) to RabbitMQ, which are consumed by the `gigranger-email-service` running on a separate EC2 instance. This decouples the main app from background job processing.
+- **Microservices**: The backend publishes events (e.g., email notifications) to RabbitMQ, which are consumed by the `gigranger-email-service` running on a separate EC2 instance. This decouples the main app from background job processing. - **Job Matching Microservice**: The backend integrates with a dedicated microservice to evaluate job-resume compatibility using an AI model from Hugging Face. This service runs independently on a Dockerized EC2 instance and is accessed securely via `mq.gigranger.com`. Resume files are parsed from either disk or S3 depending on the environment.
 
 - **Test folder** contains backend unit/integration tests using Jest and Supertest.
 
