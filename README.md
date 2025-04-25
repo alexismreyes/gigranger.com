@@ -43,7 +43,7 @@ Create the following `.env` files for your local development environment:
 - `./backend/.env.development`
 - `./frontend/.env.development`
 - `./email-service/.env`
-- `./job-matching-service/.env`
+- `./jobmatching-service/.env`
 
 Use the sample variables listed in the [🔐 Environment Variables](#-environment-variables) section to fill out each file correctly.
 
@@ -51,7 +51,7 @@ Use the sample variables listed in the [🔐 Environment Variables](#-environmen
 >
 > - Use a real email address to receive application notifications. All preloaded users in the database use the password `123456789`.
 > - Use the MySQL username and password defined in the `/database/init.sql` file, or set your own credentials — just ensure they match across all relevant `.env` files.
-> - The `job-matching-service` requires proper API access to Hugging Face so you need to request yours at the huggingface site https://huggingface.co and use it at the .evn file from the /job-matching-service folder
+> - The `jobmatching-service` requires proper API access to Hugging Face so you need to request yours at the huggingface site https://huggingface.co and use it at the .evn file from the /job-matching-service folder
 >   <br><br>
 
 3.  **Run the App Using Docker**
@@ -142,14 +142,13 @@ RABBITMQ_HOST=rabbitmq
 
 **_Job matching microservice .env_**
 
-HUGGINGFACE_API_KEY=_YOUR_HUGGINGFACE_API_KEY_
+HUGGINGFACE*API_KEY=\_YOUR_HUGGINGFACE_API_KEY*
 
 MODEL_URL=https://api-inference.huggingface.co/models/facebook/bart-large-mnli
 
 PORT=5000
 
 <br>
-
 
 ## 🐳 Dockerized Microservices
 
