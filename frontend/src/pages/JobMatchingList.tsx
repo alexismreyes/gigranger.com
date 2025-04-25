@@ -85,6 +85,12 @@ const JobMatchingList = () => {
             accuracy. For now, this microservice illustrates the core
             functionality of automated resume-to-job matching.
           </li>
+          <li>
+            If you receive an error you may try to choose an specific category
+            or just feel free to try again, sometimes requesting a response from
+            the model takes more than 30 seconds and the connection is finished
+            so we just need to try again.
+          </li>
         </ul>
       </Typography>
 
