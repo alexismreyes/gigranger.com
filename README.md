@@ -154,6 +154,8 @@ PORT=5000
 
 <br>
 
+![Job Category Chart](gigranger_architecture.png)
+
 ## 🐳 Dockerized Microservices
 
 As of the latest version, the app has been modularized using a microservices approach. Three new containers have been added, one dedicated to RabbitMQ message broker, another one Node.js email microservice container plus one more node container holding the job matching microservice:
