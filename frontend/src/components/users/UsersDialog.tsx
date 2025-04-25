@@ -137,14 +137,17 @@ const UsersDialog: React.FC<JobsDialogProps> = ({
 
         {role === 2 && (
           <Box sx={{ mt: 2 }}>
-            <Typography variant="subtitle2">Upload Resume</Typography>
+            <Typography variant="subtitle2">
+              Upload Resume (PDF format)
+            </Typography>
 
             <Button variant="outlined" component="label">
               {resumeFile ? 'Change File' : 'Choose File'}
               <input
                 type="file"
                 hidden
-                accept=".pdf,.doc,.docx"
+                /* accept=".pdf,.doc,.docx" */
+                accept=".pdf"
                 onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
               />
             </Button>
