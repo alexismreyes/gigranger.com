@@ -22,6 +22,7 @@ import JobApplicationDialog from '../components/jobApplications/JobApplicationDi
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import { useJobApplicationHistoryManagement } from '../hooks/useJobApplicationHistoryManagement';
 import useAuthContext from '../hooks/useAuthContext';
+import { useTranslation } from 'react-i18next';
 
 const JobApplicationsList: React.FC = () => {
   const { jobApplications, updateJobApplication, deleteJobApplication } =
@@ -44,6 +45,8 @@ const JobApplicationsList: React.FC = () => {
     useState<boolean>(false);
   const [jobApplicationToDelete, setJobApplicationToDelete] =
     useState<number>(0);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (
@@ -122,11 +125,10 @@ const JobApplicationsList: React.FC = () => {
           }}
         >
           <AlertTitle>Missing Resume</AlertTitle>
-          Please upload your resume from the Users edit menu to apply for this
-          job.
+          {t('job-application-upload-resume')}
         </Alert>
       )}
-      <Typography variant="h5">JOB APPLICATION LIST</Typography>
+      <Typography variant="h5">{t('job-application-title')}</Typography>
 
       <Button
         variant="contained"
@@ -134,7 +136,7 @@ const JobApplicationsList: React.FC = () => {
         sx={{ ml: 1 }}
         color="info"
       >
-        {showFilters ? 'Hide' : 'Show'} filters
+        {showFilters ? t('filters_hide') : t('filters_show')}
       </Button>
 
       <JobApplicationTable
@@ -158,8 +160,8 @@ const JobApplicationsList: React.FC = () => {
 
       <ConfirmationDialog
         open={confirmationDialogOpen}
-        title="Confirm Deletion"
-        message="Are you sure you want to delete the selected Job Application?"
+        title={t('confirm-deletion')}
+        message={t('jobs-application-dialog-delete-content')}
         onConfirm={handleDelete}
         onCancel={handleCancelDelete}
       />

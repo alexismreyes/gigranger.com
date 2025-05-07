@@ -15,12 +15,18 @@ exports.login = async (req, res) => {
 
     //console.log(user);
 
-    if (!user) return res.status(401).json({ error: 'User not found' });
+    if (!user)
+      return res
+        .status(401)
+        .json({ error: 'auth.userNotFound', message: 'User not found' });
 
     const isMatch = await bcryptjs.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid Password!!!' });
+      return res.status(401).json({
+        error: 'auth.invalidPassword',
+        message: 'Invalid Password!!!',
+      });
     }
 
     const token = jwt.sign({ id: user.id, roleId: user.roleId }, JWT_SECRET, {
@@ -41,7 +47,11 @@ exports.requestVerification = async (req, res) => {
 
     // 1. Check if user already exists
     const user = await User.findOne({ where: { email } });
-    if (user) return res.status(400).json({ error: 'email already exists' });
+    if (user)
+      return res.status(400).json({
+        error: 'auth.emailExists',
+        message: 'Email already exists',
+      });
 
     // Check if verification already exists (optional: clean up old ones)
     await EmailVerification.destroy({ where: { email } });
@@ -94,7 +104,12 @@ exports.verifyEmail = async (req, res) => {
     const verification = await EmailVerification.findOne({ where: { token } });
 
     if (!verification) {
-      return res.status(404).json({ error: 'Token not found or already used' });
+      return res
+        .status(404)
+        .json({
+          error: 'auth.tokenNotFound',
+          message: 'Token not found or already used',
+        });
     }
 
     if (verification.verified === 1) {
@@ -110,7 +125,10 @@ exports.verifyEmail = async (req, res) => {
     // Check if user already exists (double safety)
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
+      return res.status(400).json({
+        error: 'auth.userAlreadyExists',
+        message: 'User already exists',
+      });
     }
 
     const hashedPassword = await bcryptjs.hash(password, 10);
@@ -129,9 +147,10 @@ exports.verifyEmail = async (req, res) => {
 
     //await EmailVerification.destroy({ where: { email } }); //destroy the record
 
-    return res
-      .status(201)
-      .json({ message: 'Email verified and user created successfully!' });
+    return res.status(201).json({
+      message: 'verifiedEmail',
+      rawMessage: 'Email verified and user created successfully!',
+    });
   } catch (error) {
     console.error('Email verification error:', error);
     return res

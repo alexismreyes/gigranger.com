@@ -13,12 +13,14 @@ import { JobApplication } from '../interfaces/interfaces';
 import useAuthContext from './useAuthContext';
 import { AxiosError } from 'axios';
 import useLoadingContext from './useLoadingContext';
+import { useTranslation } from 'react-i18next';
 
 export const useJobApplicationManagement = () => {
   const [jobApplications, setJobApplications] = useState<JobApplication[]>([]);
   const { setSnackStatus } = useSnackBarContext();
   const { user } = useAuthContext();
   const { setLoading } = useLoadingContext();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!user) return;
@@ -49,10 +51,14 @@ export const useJobApplicationManagement = () => {
     } catch (error) {
       if (error instanceof AxiosError) {
         const message = error.response?.data.error;
+        const errorMessage = error.response?.data.message;
         console.error(message);
+        const translated = t(message || 'server-failure', {
+          defaultValue: errorMessage,
+        });
         setSnackStatus({
           open: true,
-          message: message,
+          message: translated,
           severity: 'error',
           source: 'JobApplicationsList',
         });
@@ -116,10 +122,14 @@ export const useJobApplicationManagement = () => {
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const message = error.response?.data.error;
+        const errorMessage = error.response?.data.message;
         console.error(message);
+        const translated = t(message || 'server-failure', {
+          defaultValue: errorMessage,
+        });
         setSnackStatus({
           open: true,
-          message: message,
+          message: translated,
           severity: 'error',
           source: 'JobApplicationsList',
         });
@@ -134,10 +144,14 @@ export const useJobApplicationManagement = () => {
     } catch (error) {
       if (error instanceof AxiosError) {
         const message = error.response?.data.error;
+        const errorMessage = error.response?.data.message;
         console.error(message);
+        const translated = t(message || 'server-failure', {
+          defaultValue: errorMessage,
+        });
         setSnackStatus({
           open: true,
-          message: message,
+          message: translated,
           severity: 'error',
           source: 'JobApplicationsList',
         });
@@ -152,10 +166,14 @@ export const useJobApplicationManagement = () => {
     } catch (error) {
       if (error instanceof AxiosError) {
         const message = error.response?.data.error;
+        const errorMessage = error.response?.data.message;
         console.error(message);
+        const translated = t(message || 'server-failure', {
+          defaultValue: errorMessage,
+        });
         setSnackStatus({
           open: true,
-          message: message,
+          message: translated,
           severity: 'error',
           source: 'JobApplicationsList',
         });

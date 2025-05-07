@@ -12,6 +12,7 @@ import { useJobCategoriesManagement } from '../hooks/useJobCategoriesMangement';
 import { useCompaniesManagement } from '../hooks/useCompaniesManagement';
 import useAuthContext from '../hooks/useAuthContext';
 import HasRole from '../components/HasRole';
+import { useTranslation } from 'react-i18next';
 
 const JobsList: React.FC = () => {
   const { jobs, createJob, updateJob, deleteJob } = useJobsManagement();
@@ -27,6 +28,7 @@ const JobsList: React.FC = () => {
   const { snackStatus, handleCloseSnack } = useSnackBarContext();
   const { user } = useAuthContext();
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const handleOpenDialog = (job?: Job | null) => {
     setCurrentJob(job);
@@ -64,11 +66,11 @@ const JobsList: React.FC = () => {
   return (
     <>
       <Container>
-        <Typography variant="h5">JOBS LIST</Typography>
+        <Typography variant="h5">{t('jobs-title')}</Typography>
 
         <HasRole role={[1, 3]}>
           <Button variant="contained" onClick={() => handleOpenDialog()}>
-            Add Job
+            {t('jobs-add')}
           </Button>
         </HasRole>
 
@@ -78,7 +80,7 @@ const JobsList: React.FC = () => {
           sx={{ ml: 1 }}
           color="info"
         >
-          {showFilters ? 'Hide' : 'Show'} filters
+          {showFilters ? t('filters_hide') : t('filters_show')}
         </Button>
 
         <JobsTable
@@ -102,8 +104,8 @@ const JobsList: React.FC = () => {
 
         <ConfirmationDialog
           open={confirmationDialogOpen}
-          title="Confirm Deletion"
-          message="Are you sure you want to delete the selected Job?"
+          title={t('confirm-deletion')}
+          message={t('jobs-dialog-delete-content')}
           onConfirm={handleDelete}
           onCancel={handleCancelDelete}
         />

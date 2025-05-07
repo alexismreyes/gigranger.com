@@ -1,22 +1,23 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
 import useLoadingContext from '../hooks/useLoadingContext';
+import { useTranslation } from 'react-i18next';
 
 interface GlobalLoaderProps {
   context: string;
   inline?: boolean; // to support spinner inside buttons
 }
 
-const loadingMessages: Record<string, string> = {
-  'job-matching':
-    'Matching your resume to jobs...This process may take from few to several seconds',
-  default: 'Fetching your data...',
-};
-
 const GlobalLoader: React.FC<GlobalLoaderProps> = ({
   context,
   inline = false,
 }) => {
   const { isLoading } = useLoadingContext();
+  const { t } = useTranslation();
+
+  const loadingMessages: Record<string, string> = {
+    'job-matching': t('job-matching-researching'),
+    default: t('retrieving-data'),
+  };
 
   const message = loadingMessages[context] || loadingMessages.default;
 

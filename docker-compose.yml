@@ -15,7 +15,8 @@ services:
       - gigranger-network
     volumes:
       - ./frontend:/app/gigranger.com/frontend
-      - /app/gigranger.com/frontend/node_modules
+      #- /app/gigranger.com/frontend/node_modules
+      - gigranger-frontend-node-modules:/app/gigranger.com/frontend/node_modules #named_volume
 
   gigranger-database-service:
     container_name: gigranger-database
@@ -86,6 +87,7 @@ services:
 
 volumes:
   mysql-data:
+  gigranger-frontend-node-modules:
 
 networks:
   gigranger-network:

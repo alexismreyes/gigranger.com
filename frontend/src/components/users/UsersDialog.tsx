@@ -13,6 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 import { Role, User } from '../../interfaces/interfaces';
 import HasRole from '../HasRole';
+import { useTranslation } from 'react-i18next';
 
 interface JobsDialogProps {
   open: boolean;
@@ -37,9 +38,11 @@ const UsersDialog: React.FC<JobsDialogProps> = ({
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>(''); // Add password state
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [passwordError, setPasswordError] = useState<string>('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [role, setRole] = useState<number | string>(0);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const { t } = useTranslation();
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -57,11 +60,32 @@ const UsersDialog: React.FC<JobsDialogProps> = ({
       setConfirmPassword('');
       setRole(0);
     }
-  }, [currentUser]);
+
+    setFormError(null); // Clear previous errors
+    setPasswordError(null);
+  }, [currentUser, open]);
 
   const handleSave = async () => {
+    if (
+      !firstName.trim() ||
+      !lastName.trim() ||
+      !role ||
+      !email.trim() ||
+      !password.trim()
+    ) {
+      setFormError(
+        t('users-dialog-missing-fields') ||
+          'Please fill in all required fields.'
+      );
+      return;
+    }
+
+    setFormError(null); // Clear previous errors
+
     if (password !== confirmPassword && (password || '').length > 0) {
-      setPasswordError('Passwords do not match');
+      const passwordConfirm = t('users-dialog-password-confirm');
+      //setPasswordError('Passwords do not match');
+      setPasswordError(passwordConfirm);
       return;
     }
 
@@ -95,17 +119,19 @@ const UsersDialog: React.FC<JobsDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{currentUser ? 'Edit a User' : 'Add a User'}</DialogTitle>
+      <DialogTitle>
+        {currentUser ? t('users-edit-title') : t('users-add-title')}
+      </DialogTitle>
       <DialogContent>
         <TextField
-          label="First Name"
+          label={t('users-first-name')}
           margin="dense"
           fullWidth
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
         />
         <TextField
-          label="Last Name"
+          label={t('users-last-name')}
           margin="dense"
           fullWidth
           value={lastName}
@@ -121,11 +147,11 @@ const UsersDialog: React.FC<JobsDialogProps> = ({
             renderValue={(selected) =>
               selected
                 ? roles.find((role) => role.id === Number(selected))?.name
-                : 'Select Role'
+                : t('users-select-role')
             }
           >
             <MenuItem value="" disabled>
-              Select Role
+              {t('users-select-role')}
             </MenuItem>
             {roles.map((role) => (
               <MenuItem key={role.id} value={role.id}>
@@ -138,11 +164,11 @@ const UsersDialog: React.FC<JobsDialogProps> = ({
         {role === 2 && (
           <Box sx={{ mt: 2 }}>
             <Typography variant="subtitle2">
-              Upload Resume (PDF format)
+              {t('users-upload-resume')}
             </Typography>
 
             <Button variant="outlined" component="label">
-              {resumeFile ? 'Change File' : 'Choose File'}
+              {resumeFile ? t('users-change-file') : t('users-choose-file')}
               <input
                 type="file"
                 hidden
@@ -161,18 +187,14 @@ const UsersDialog: React.FC<JobsDialogProps> = ({
         )}
 
         <TextField
-          label="Email"
+          label={t('email')}
           margin="dense"
           fullWidth
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
-          label={
-            currentUser
-              ? 'password - leave it empty to keep the same password'
-              : 'Password'
-          }
+          label={currentUser ? t('users-update-password') : t('password')}
           margin="dense"
           type="password"
           fullWidth
@@ -181,7 +203,7 @@ const UsersDialog: React.FC<JobsDialogProps> = ({
         />
 
         <TextField
-          label="Confirm Password"
+          label={t('users-update-confirm-password')}
           margin="dense"
           type="password"
           fullWidth
@@ -190,10 +212,21 @@ const UsersDialog: React.FC<JobsDialogProps> = ({
           error={!!passwordError}
           helperText={passwordError}
         />
+
+        {formError && (
+          <Typography
+            sx={{
+              color: 'red',
+              fontSize: '1rem',
+            }}
+          >
+            {formError}
+          </Typography>
+        )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>CANCEL</Button>
-        <Button onClick={handleSave}>SAVE</Button>
+        <Button onClick={onClose}>{t('cancel')}</Button>
+        <Button onClick={handleSave}>{t('save')}</Button>
       </DialogActions>
     </Dialog>
   );

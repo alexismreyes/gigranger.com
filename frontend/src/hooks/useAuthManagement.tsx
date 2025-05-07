@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { LoggedUser, User } from '../interfaces/interfaces';
 import {
   login as loginAPI,
@@ -8,6 +9,7 @@ import useSnackBarContext from './useSnackBarContext';
 
 export const useAuthManagement = () => {
   const { setSnackStatus } = useSnackBarContext();
+  const { t } = useTranslation();
 
   const fetchLoggedUser = async (
     email: string,
@@ -37,23 +39,13 @@ export const useAuthManagement = () => {
       await requestUserVerificationAPI(user);
       setSnackStatus({
         open: true,
-        message: 'Check your email to verify your account',
+        message: t('checkEmail'),
         severity: 'success',
         source: 'Login',
       });
     } catch (error: unknown) {
       console.error('Something went wrong within the service->', error);
       throw error;
-      /* if (error instanceof AxiosError) {
-        const message = error.response?.data.error;
-        console.error(message);
-        setSnackStatus({
-          open: true,
-          message: message,
-          severity: 'error',
-          source: 'Login',
-        }); */
-      //handleCloseDialog();
     }
   };
 

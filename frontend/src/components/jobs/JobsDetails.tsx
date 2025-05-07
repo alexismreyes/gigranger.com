@@ -16,6 +16,7 @@ import useSnackBarContext from '../../hooks/useSnackBarContext';
 import { AxiosError } from 'axios';
 import HasRole from '../HasRole';
 import useLoadingContext from '../../hooks/useLoadingContext';
+import { useTranslation } from 'react-i18next';
 
 interface JobDetailsProps {
   open: boolean;
@@ -38,6 +39,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({
   const { handleCloseSnack, snackStatus, setSnackStatus } =
     useSnackBarContext();
   const { isLoading } = useLoadingContext();
+  const { t } = useTranslation();
 
   if (!job) return null; // If no job is selected, don't render anything
 
@@ -55,23 +57,18 @@ const JobDetails: React.FC<JobDetailsProps> = ({
           statusId: 1,
           requestDate: now,
         });
-
-        // ✅ Set Snackbar Message when the job application is successful
-        /* setSnackStatus({
-          open: true,
-          action: 'created',
-          source: 'JobsDetails',
-        }); */
       }
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const message = error.response?.data.error;
+        const errorMessage = error.response?.data.message;
         console.error(message);
-        /* setError(message); */
-
+        const translated = t(message || 'server-failure', {
+          defaultValue: errorMessage,
+        });
         setSnackStatus({
           open: true,
-          message: message,
+          message: translated,
           severity: 'error',
           source: 'JobsDetails',
         });
@@ -122,7 +119,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({
               {/* ✅ Category */}
               <Grid item xs={12}>
                 <Typography variant="subtitle1" fontWeight="bold">
-                  Category:
+                  {t('category')}
                 </Typography>
                 {category && <Chip label={category} color="primary" />}
               </Grid>
@@ -130,7 +127,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({
               {/* ✅ Description */}
               <Grid item xs={12}>
                 <Typography variant="body1" fontWeight="bold">
-                  Description:
+                  {t('description')}
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
                   {job.description}
@@ -140,7 +137,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({
               {/* ✅ Company Name */}
               <Grid item xs={12}>
                 <Typography variant="body1" fontWeight="bold">
-                  Company:
+                  {t('company')}
                 </Typography>
                 <Typography variant="body1">{companyName}</Typography>
               </Grid>
@@ -148,7 +145,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({
               {/* ✅ Salary */}
               <Grid item xs={12}>
                 <Typography variant="body1" fontWeight="bold">
-                  Salary:
+                  {t('jobs-salary')}
                 </Typography>
                 <Typography variant="h6" color="green" fontWeight="bold">
                   ${job.salary.toLocaleString()}
@@ -158,13 +155,13 @@ const JobDetails: React.FC<JobDetailsProps> = ({
               {/* ✅ Contact Details */}
               <Grid item xs={12}>
                 <Typography variant="body1" fontWeight="bold">
-                  Email:
+                  {t('email')}
                 </Typography>
                 <Typography variant="body1">{job.emailContact}</Typography>
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="body1" fontWeight="bold">
-                  Phone:
+                  {t('phone')}
                 </Typography>
                 <Typography variant="body1">{job.phoneContact}</Typography>
               </Grid>
@@ -172,7 +169,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({
               {/* ✅ Number of Vacancies */}
               <Grid item xs={6}>
                 <Typography variant="body1" fontWeight="bold">
-                  # Vacancies:
+                  # {t('jobs-dialog-vacancies')}
                 </Typography>
                 <Typography variant="body1">{job.vacancies}</Typography>
               </Grid>
@@ -180,7 +177,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({
               {/* ✅ Requirements */}
               <Grid item xs={12}>
                 <Typography variant="body1" fontWeight="bold">
-                  Requirements:
+                  {t('jobs-dialog-requirements')}
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
                   {job.requirements}
@@ -216,16 +213,16 @@ const JobDetails: React.FC<JobDetailsProps> = ({
                         thickness={10}
                         color="warning"
                       />{' '}
-                      'Applying...'{' '}
+                      {t('jobs-applying')}
                     </>
                   ) : (
-                    'Apply'
+                    t('jobs-apply')
                   )}
                 </Button>
               </HasRole>
             )}
             <Button onClick={onClose} variant="contained" color="error">
-              Close
+              {t('close')}
             </Button>
           </CardActions>
         </Card>

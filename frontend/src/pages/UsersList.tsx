@@ -10,6 +10,7 @@ import useAuthContext from '../hooks/useAuthContext';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import SnackBar from '../components/SnackBar';
 import useSnackBarContext from '../hooks/useSnackBarContext';
+import { useTranslation } from 'react-i18next';
 
 const UsersList: React.FC = () => {
   const { user, token, login } = useAuthContext();
@@ -30,6 +31,7 @@ const UsersList: React.FC = () => {
     useState<boolean>(false);
   const [userToDelete, setUserToDelete] = useState<number>(0);
   const { snackStatus, handleCloseSnack } = useSnackBarContext();
+  const { t } = useTranslation();
 
   const handleOpenDialog = (user?: User | undefined) => {
     setCurrentUser(user);
@@ -76,11 +78,14 @@ const UsersList: React.FC = () => {
 
   return (
     <Container>
-      <Typography variant="h5">USERS LIST</Typography>
+      <Typography variant="h5">
+        <HasRole role={1}>{t('users-title')}</HasRole>
+        <HasRole role={[2, 3]}>{t('user-title')}</HasRole>
+      </Typography>
 
       <HasRole role={1}>
         <Button variant="contained" onClick={() => handleOpenDialog()}>
-          Add User
+          {t('users-add')}
         </Button>
       </HasRole>
 
@@ -103,8 +108,8 @@ const UsersList: React.FC = () => {
 
       <ConfirmationDialog
         open={confirmationDialogOpen}
-        title="Confirm Deletion"
-        message="Are you sure you want to delete the selected User?"
+        title={t('confirm-deletion')}
+        message={t('users-dialog-content')}
         onConfirm={handleDelete}
         onCancel={handleCancelDelete}
       />

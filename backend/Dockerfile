@@ -4,6 +4,6 @@ WORKDIR /app/gigranger.com/backend
 
 COPY package*.json ./
 
-RUN npm i
+RUN npm i -g nodemon && npm install
 
 CMD npm run start

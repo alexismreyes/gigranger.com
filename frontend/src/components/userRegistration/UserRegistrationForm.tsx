@@ -1,7 +1,8 @@
 import { Formik, Form, FormikHelpers } from 'formik';
 import { Role, User } from '../../interfaces/interfaces';
-import { UserSchema } from '../../validations/userSchema';
 import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { getUserSchema } from '../../validations/yupLocaleHelper';
 
 interface UserRegistrationFormProps {
   onSave: (user: User) => void;
@@ -18,6 +19,9 @@ const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
   onClose,
   roles,
 }) => {
+  const { t } = useTranslation();
+  const validationSchema = getUserSchema(t);
+
   const handleSubmit = async (
     values: UserFormValues,
     actions: FormikHelpers<UserFormValues>
@@ -41,7 +45,8 @@ const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
   return (
     <Formik
       initialValues={{ ...initialValues, confirmPassword: '' }}
-      validationSchema={UserSchema}
+      //validationSchema={UserSchema}
+      validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
       {({ isSubmitting, handleChange, values, touched, errors }) => (
@@ -57,7 +62,7 @@ const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
             }}
           >
             <TextField
-              label="First Name"
+              label={t('users-first-name')}
               name="firstName"
               value={values.firstName}
               onChange={handleChange}
@@ -65,7 +70,7 @@ const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
               helperText={touched.firstName && errors.firstName}
             />
             <TextField
-              label="Last Name"
+              label={t('users-last-name')}
               name="lastName"
               value={values.lastName}
               onChange={handleChange}
@@ -83,16 +88,19 @@ const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
               renderValue={(selected) =>
                 selected
                   ? roles.find((role) => role.id === Number(selected))?.name
-                  : 'Select Role'
+                  : t('users-select-role')
               }
             >
               <MenuItem value="" disabled>
-                Select Role
+                {t('users-select-role')}
               </MenuItem>
               {roles.map((role) => (
                 <MenuItem key={role.id} value={role.id}>
-                  {role.name} - &nbsp;{'  '}
-                  <span style={{ color: 'orange' }}>{role.description}</span>
+                  {role.name} - &nbsp;
+                  <span style={{ color: 'orange' }}>
+                    {/* admin role excluded in the backend query */}
+                    {role.id === 2 ? t('job-seeker') : t('recruiter')}
+                  </span>
                 </MenuItem>
               ))}
             </Select>
@@ -103,7 +111,7 @@ const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
             )}
 
             <TextField
-              label="Email"
+              label={t('email')}
               name="email"
               type="email"
               value={values.email}
@@ -112,7 +120,7 @@ const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
               helperText={touched.email && errors.email}
             />
             <TextField
-              label="password"
+              label={t('password')}
               name="password"
               type="password"
               value={values.password}
@@ -122,7 +130,7 @@ const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
             />
 
             <TextField
-              label="Confirm Password"
+              label={t('users-update-confirm-password')}
               name="confirmPassword"
               type="password"
               value={values.confirmPassword}
@@ -145,8 +153,7 @@ const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
                 onClick={onClose}
                 sx={{ width: '50%' }}
               >
-                {' '}
-                Cancel{' '}
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"
@@ -154,7 +161,7 @@ const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
                 disabled={isSubmitting}
                 sx={{ width: '50%' }}
               >
-                {isSubmitting ? 'Submiting...' : 'Submit'}
+                {isSubmitting ? t('sending') : t('send')}
               </Button>
             </Box>
           </Box>

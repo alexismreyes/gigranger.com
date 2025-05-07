@@ -15,6 +15,7 @@ import { Job, JobApplication, Status, User } from '../../interfaces/interfaces';
 import { useJobApplicationHistoryManagement } from '../../hooks/useJobApplicationHistoryManagement';
 import { useEffect } from 'react';
 import JobApplicationChat from './JobApplicationChat';
+import { useTranslation } from 'react-i18next';
 
 interface JobApplicationDetailsProps {
   open: boolean;
@@ -35,6 +36,8 @@ const JobApplicationDetails: React.FC<JobApplicationDetailsProps> = ({
 }) => {
   const { jobApplicationsHistory, fetchJobApplicationsHistory } =
     useJobApplicationHistoryManagement();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchJobApplicationsHistory();
@@ -67,20 +70,22 @@ const JobApplicationDetails: React.FC<JobApplicationDetailsProps> = ({
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Position</TableCell>
-                  <TableCell>Current Status</TableCell>
-                  <TableCell>Updated By</TableCell>
-                  <TableCell>Updated At</TableCell>
-                  <TableCell>Comment</TableCell>
+                  <TableCell>{t('job-application-position')}</TableCell>
+                  <TableCell>{t('job-application-history-status')}</TableCell>
+                  <TableCell>
+                    {t('job-application-history-updated-by')}
+                  </TableCell>
+                  <TableCell>
+                    {t('job-application-history-updated-at')}
+                  </TableCell>
+                  <TableCell>{t('job-application-history-comment')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {filteredjobsApplicationsHistory.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} style={{ color: 'red' }}>
-                      <h4>
-                        This job application has not been reviewed just yet
-                      </h4>
+                      <h4>{t('job-application-history-content')}</h4>
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -89,9 +94,28 @@ const JobApplicationDetails: React.FC<JobApplicationDetailsProps> = ({
                       (job) => job.id === selectedJobApplication.jobId
                     )?.name;
 
-                    const currentStatus = statuses.find(
+                    /* const currentStatus = statuses.find(
                       (status) => status.id === app.updatedStatus
-                    )?.name;
+                    )?.name; */
+
+                    let currentStatus = '';
+                    switch (app.updatedStatus) {
+                      case 1:
+                        currentStatus = t('requested');
+                        break;
+                      case 2:
+                        currentStatus = t('in-progress');
+                        break;
+                      case 3:
+                        currentStatus = t('hired');
+                        break;
+                      case 4:
+                        currentStatus = t('rejected');
+                        break;
+                      case 5:
+                        currentStatus = t('resume-pending');
+                        break;
+                    }
 
                     //recruiter name
                     const firstName = users.find(
@@ -127,7 +151,7 @@ const JobApplicationDetails: React.FC<JobApplicationDetailsProps> = ({
           </TableContainer>
           <DialogActions>
             <Button onClick={onClose} variant="contained" color="error">
-              Close
+              {t('close')}
             </Button>
             {filteredjobsApplicationsHistory.length > 0 &&
               lastUpdate.updatedStatus === 2 && ( //si el status de la aplicacion esta en progreso muestre el boton para chat

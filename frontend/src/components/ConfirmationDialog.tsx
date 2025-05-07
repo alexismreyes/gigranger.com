@@ -6,6 +6,7 @@ import {
   DialogTitle,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 interface ConfirmationDialogProps {
   open: boolean;
@@ -22,14 +23,16 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Dialog open={open}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <Typography>{message}</Typography>
         <DialogActions>
-          <Button onClick={() => onCancel()}>CANCEL</Button>
-          <Button onClick={() => onConfirm()}>PROCEED</Button>
+          <Button onClick={() => onCancel()}>{t('cancel')}</Button>
+          <Button onClick={() => onConfirm()}>{t('confirm')}</Button>
         </DialogActions>
       </DialogContent>
     </Dialog>

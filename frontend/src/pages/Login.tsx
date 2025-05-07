@@ -16,6 +16,8 @@ import { User } from '../interfaces/interfaces';
 import { AxiosError } from 'axios';
 import useSnackBarContext from '../hooks/useSnackBarContext';
 import SnackBar from '../components/SnackBar';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const Login = () => {
   const { login } = useAuthContext();
@@ -27,6 +29,7 @@ const Login = () => {
   const [openNewUserDialog, setOpenNewUserDialog] = useState<boolean>(false);
   const { fetchLoggedUser, requestUserVerification } = useAuthManagement();
   const { snackStatus, handleCloseSnack } = useSnackBarContext();
+  const { t } = useTranslation();
 
   useEffect(() => {
     //console.log('Error state updated:', error);
@@ -46,25 +49,15 @@ const Login = () => {
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const message = error.response?.data.error;
+        const errorMessage = error.response?.data.message;
         console.error('this->', message);
-        setError(message);
+        const translated = t(message || 'server-failure', {
+          defaultValue: errorMessage,
+        });
+        setError(translated);
       }
     }
   };
-
-  /* const handleRegisterUser = async (user: User) => {
-    try {
-      await registerNewUser(user);
-      handleCloseDialog();
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        const message = error.response?.data.error;
-        console.error(message);
-        setError(message);
-        handleCloseDialog();
-      }
-    }
-  }; */
 
   const handleRegisterUser = async (user: User) => {
     try {
@@ -73,8 +66,12 @@ const Login = () => {
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const message = error.response?.data.error;
+        const errorMessage = error.response?.data.message;
         console.error(message);
-        setError(message);
+        const translated = t(message || 'server-failure', {
+          defaultValue: errorMessage,
+        });
+        setError(translated);
         handleCloseDialog();
       }
     }
@@ -127,6 +124,17 @@ const Login = () => {
         }}
       />
 
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 20,
+          right: 20,
+          zIndex: 2,
+        }}
+      >
+        <LanguageSwitcher />
+      </Box>
+
       {/* Login form box - stays on top */}
       <Box
         sx={{
@@ -140,7 +148,7 @@ const Login = () => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          LOGIN
+          {t('login-title')}
         </Typography>
 
         <form onSubmit={handleSubmit}>
@@ -148,7 +156,8 @@ const Login = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Email"
+                /* label="Email" */
+                label={t('email')}
                 value={email}
                 type="email"
                 onChange={(e) => setEmail(e.target.value)}
@@ -158,7 +167,7 @@ const Login = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Password"
+                label={t('password')}
                 value={password}
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
@@ -178,16 +187,16 @@ const Login = () => {
                 color="primary"
                 /* size="large" */
               >
-                Login
+                {t('login')}
               </Button>
             </Grid>
           </Grid>
           <a onClick={() => setOpenNewUserDialog(true)} href="#">
-            {' '}
-            Register new user
+            {t('newuser')}
           </a>
         </form>
       </Box>
+
       <UserRegistrationDialog
         open={openNewUserDialog}
         onClose={handleCloseDialog}

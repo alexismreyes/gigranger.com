@@ -13,6 +13,7 @@ import {
   JobCategory,
   JobFilterState,
 } from '../../interfaces/interfaces';
+import { useTranslation } from 'react-i18next';
 
 interface JobsFiltersProps {
   jobCategories: JobCategory[];
@@ -31,6 +32,8 @@ const JobsFilters: React.FC<JobsFiltersProps> = ({
     onFilterChange({ [key]: value });
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       <Box
@@ -44,7 +47,7 @@ const JobsFilters: React.FC<JobsFiltersProps> = ({
 
           <Grid item xs={12}>
             <TextField
-              label="Search for Jobs - use any keyword to search for job name, description, company"
+              label={t('filters_search')}
               variant="outlined"
               fullWidth
               margin="dense"
@@ -56,7 +59,7 @@ const JobsFilters: React.FC<JobsFiltersProps> = ({
 
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth margin="dense" size="small">
-              <InputLabel>Category</InputLabel>
+              <InputLabel>{t('category')}</InputLabel>
               <Select
                 value={filters.selectedCategory}
                 onChange={(e: SelectChangeEvent) =>
@@ -64,7 +67,7 @@ const JobsFilters: React.FC<JobsFiltersProps> = ({
                 }
                 label="Category"
               >
-                <MenuItem value="">All Categories</MenuItem>
+                <MenuItem value="">{t('filters_all_categories')}</MenuItem>
                 {jobCategories.map((cat) => (
                   <MenuItem key={cat.id} value={cat.id}>
                     {cat.name}
@@ -76,7 +79,7 @@ const JobsFilters: React.FC<JobsFiltersProps> = ({
 
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth margin="dense" size="small">
-              <InputLabel>Company</InputLabel>
+              <InputLabel>{t('company')}</InputLabel>
               <Select
                 value={filters.selectedCompany}
                 onChange={(e: SelectChangeEvent) =>
@@ -84,7 +87,7 @@ const JobsFilters: React.FC<JobsFiltersProps> = ({
                 }
                 label="Company"
               >
-                <MenuItem value="">All Companies</MenuItem>
+                <MenuItem value="">{t('filters_all_companies')}</MenuItem>
                 {companies.map((com) => (
                   <MenuItem key={com.id} value={com.id}>
                     {com.name}
@@ -96,7 +99,7 @@ const JobsFilters: React.FC<JobsFiltersProps> = ({
 
           <Grid item xs={6} sm={2}>
             <TextField
-              label="Min Salary"
+              label={t('filters_min_salary')}
               type="number"
               value={filters.minSalary}
               onChange={(e) => handleChange('minSalary', e.target.value)}
@@ -107,7 +110,7 @@ const JobsFilters: React.FC<JobsFiltersProps> = ({
           </Grid>
           <Grid item xs={6} sm={2}>
             <TextField
-              label="Max Salary"
+              label={t('filters_max_salary')}
               type="number"
               value={filters.maxSalary}
               onChange={(e) => handleChange('maxSalary', e.target.value)}
