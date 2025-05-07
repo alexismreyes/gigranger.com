@@ -146,11 +146,14 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
           <MenuItem value="" disabled>
             {t('jobs-dialog-category')}
           </MenuItem>
-          {jobCategories.map((cat) => (
-            <MenuItem key={cat.id} value={cat.id}>
-              {cat.name}
-            </MenuItem>
-          ))}
+          {jobCategories
+            .slice()
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((cat) => (
+              <MenuItem key={cat.id} value={cat.id}>
+                {cat.name}
+              </MenuItem>
+            ))}
         </Select>
 
         <TextField
@@ -182,11 +185,14 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
           <MenuItem value="" disabled>
             {t('jobs-dialog-company')}
           </MenuItem>
-          {companies.map((com) => (
-            <MenuItem key={com.id} value={com.id}>
-              {com.name}
-            </MenuItem>
-          ))}
+          {companies
+            .slice()
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((com) => (
+              <MenuItem key={com.id} value={com.id}>
+                {com.name}
+              </MenuItem>
+            ))}
         </Select>
 
         <Button

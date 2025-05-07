@@ -117,11 +117,14 @@ const JobMatchingList = () => {
             sx={{ minWidth: 300 }}
           >
             <MenuItem value="">{t('jobs-dialog-category')}</MenuItem>
-            {jobCategories.map((cat) => (
-              <MenuItem key={cat.id} value={cat.id}>
-                {cat.name}
-              </MenuItem>
-            ))}
+            {jobCategories
+              .slice()
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((cat) => (
+                <MenuItem key={cat.id} value={cat.id}>
+                  {cat.name}
+                </MenuItem>
+              ))}
           </Select>
 
           {/* <Typography
