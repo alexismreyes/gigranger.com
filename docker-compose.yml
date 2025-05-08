@@ -40,6 +40,9 @@ services:
     container_name: gigranger-jobmatching
     ports:
       - '5000:5000'
+    volumes:
+      - ./jobmatching-service:/app/gigranger.com/jobmatching-service
+      - /app/gigranger.com/jobmatching-service/node_modules
     env_file:
       - ./jobmatching-service/.env
     networks:

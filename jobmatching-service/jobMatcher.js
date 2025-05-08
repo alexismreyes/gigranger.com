@@ -4,9 +4,12 @@ const recommendedJobs = async (resumeText, jobs) => {
   const headers = {
     Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
     'Content-Type': 'application/json',
+    Accept: 'application/json',
   };
 
   const modelUrl = process.env.MODEL_URL;
+
+  console.log('Requesting results from this model->', modelUrl);
 
   const results = [];
 

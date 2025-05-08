@@ -66,12 +66,14 @@ const UsersDialog: React.FC<JobsDialogProps> = ({
   }, [currentUser, open]);
 
   const handleSave = async () => {
+    const isNewUser = !currentUser;
+
     if (
       !firstName.trim() ||
       !lastName.trim() ||
       !role ||
       !email.trim() ||
-      !password.trim()
+      (isNewUser && !password.trim())
     ) {
       setFormError(
         t('users-dialog-missing-fields') ||
