@@ -32,7 +32,6 @@ const JobApplicationDetails: React.FC<JobApplicationDetailsProps> = ({
   onClose,
   jobs,
   users,
-  statuses,
 }) => {
   const { jobApplicationsHistory, fetchJobApplicationsHistory } =
     useJobApplicationHistoryManagement();

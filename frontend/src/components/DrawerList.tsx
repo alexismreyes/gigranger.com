@@ -4,7 +4,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -23,23 +22,6 @@ export const DrawerList = () => {
   const [openDialogLogout, setOpenDialogLogout] = useState<boolean>(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
-
-  const SectionTitle = ({ label }: { label: string }) => (
-    <Typography
-      variant="caption"
-      sx={{
-        px: 2,
-        mt: 2,
-        color: '#fff',
-        fontWeight: 'bold',
-        opacity: 0.8,
-        textTransform: 'uppercase',
-        letterSpacing: '0.05em',
-      }}
-    >
-      {label}
-    </Typography>
-  );
 
   const FancyDivider = () => (
     <Divider
