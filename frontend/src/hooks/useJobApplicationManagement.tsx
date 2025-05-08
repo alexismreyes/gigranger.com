@@ -19,7 +19,9 @@ export const useJobApplicationManagement = () => {
   const [jobApplications, setJobApplications] = useState<JobApplication[]>([]);
   const { setSnackStatus } = useSnackBarContext();
   const { user } = useAuthContext();
-  const { setLoading } = useLoadingContext();
+  const { setFeatureLoading, loadingMap } = useLoadingContext();
+  const isJobAppLoading = loadingMap['job-applications'] || false;
+
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -68,7 +70,7 @@ export const useJobApplicationManagement = () => {
 
   const createJobApplication = async (jobApplication: JobApplication) => {
     try {
-      setLoading(true);
+      setFeatureLoading('job-applications', true);
       const newJobApplication = await createJobApplicationAPI(jobApplication);
       setJobApplications((prev) => [...prev, newJobApplication]);
       setSnackStatus({
@@ -81,7 +83,7 @@ export const useJobApplicationManagement = () => {
       console.error('Error within the hook->', error);
       throw error;
     } finally {
-      setLoading(false);
+      setFeatureLoading('job-applications', false);
     }
   };
 
@@ -182,6 +184,7 @@ export const useJobApplicationManagement = () => {
   };
 
   return {
+    isJobAppLoading,
     jobApplications,
     createJobApplication,
     updateJobApplication,

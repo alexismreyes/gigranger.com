@@ -15,7 +15,6 @@ import SnackBar from '../SnackBar';
 import useSnackBarContext from '../../hooks/useSnackBarContext';
 import { AxiosError } from 'axios';
 import HasRole from '../HasRole';
-import useLoadingContext from '../../hooks/useLoadingContext';
 import { useTranslation } from 'react-i18next';
 
 interface JobDetailsProps {
@@ -35,10 +34,10 @@ const JobDetails: React.FC<JobDetailsProps> = ({
   companies,
   user,
 }) => {
-  const { createJobApplication } = useJobApplicationManagement();
+  const { isJobAppLoading, createJobApplication } =
+    useJobApplicationManagement();
   const { handleCloseSnack, snackStatus, setSnackStatus } =
     useSnackBarContext();
-  const { isLoading } = useLoadingContext();
   const { t } = useTranslation();
 
   if (!job) return null; // If no job is selected, don't render anything
@@ -205,7 +204,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({
                   variant="contained"
                   color="success"
                 >
-                  {isLoading ? (
+                  {isJobAppLoading ? (
                     <>
                       <CircularProgress
                         size={20}

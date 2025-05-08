@@ -1,28 +1,30 @@
 import { createContext, useState } from 'react';
 
+type LoadingMap = Record<string, boolean>;
+
 type LoadingContextType = {
-  isLoading: boolean;
-  setLoading: (val: boolean) => void;
+  loadingMap: LoadingMap;
+  setFeatureLoading: (key: string, value: boolean) => void;
 };
 
 //create and export the context
 export const LoadingContext = createContext<LoadingContextType>({
-  isLoading: false,
-  setLoading: () => {},
+  loadingMap: {},
+  setFeatureLoading: () => {},
 });
 
 //create and export the provider
 export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loadingMap, setLoadingMap] = useState<LoadingMap>({});
 
-  const setLoading = (val: boolean): void => {
-    setIsLoading(val);
+  const setFeatureLoading = (key: string, value: boolean) => {
+    setLoadingMap((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
-    <LoadingContext.Provider value={{ isLoading, setLoading }}>
+    <LoadingContext.Provider value={{ loadingMap, setFeatureLoading }}>
       {children}
     </LoadingContext.Provider>
   );

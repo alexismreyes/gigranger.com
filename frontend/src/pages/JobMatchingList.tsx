@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   MenuItem,
   Select,
@@ -9,8 +10,6 @@ import {
 } from '@mui/material';
 import JobMatchingTable from '../components/jobMatching/JobMatchingTable';
 import { useJobMatchingManagement } from '../hooks/useJobMatchingManagement';
-import useLoadingContext from '../hooks/useLoadingContext';
-import GlobalLoader from '../components/GlobalLoader';
 import SnackBar from '../components/SnackBar';
 import useSnackBarContext from '../hooks/useSnackBarContext';
 import { useJobCategoriesManagement } from '../hooks/useJobCategoriesMangement';
@@ -19,8 +18,9 @@ import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 const JobMatchingList = () => {
-  const { jobMatches, fetchJobMatching } = useJobMatchingManagement();
-  const { isLoading } = useLoadingContext();
+  const { isMatchingLoading, jobMatches, fetchJobMatching } =
+    useJobMatchingManagement();
+
   const { snackStatus, handleCloseSnack } = useSnackBarContext();
   const { jobCategories } = useJobCategoriesManagement();
   const [categoryId, setCategoryId] = useState<string>('');
@@ -127,19 +127,6 @@ const JobMatchingList = () => {
               ))}
           </Select>
 
-          {/* <Typography
-            variant="body2"
-            sx={{
-              color: 'error.main',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            <strong>
-              Keep as "Select Category" to search in all job categories (takes
-              more time)
-            </strong>
-          </Typography> */}
-
           <Typography
             variant="body2"
             sx={{
@@ -158,10 +145,10 @@ const JobMatchingList = () => {
         <Button
           variant="contained"
           onClick={() => fetchJobMatching(categoryId)}
-          disabled={isLoading}
+          disabled={isMatchingLoading}
           sx={{
             mb: 3,
-            animation: isLoading ? 'heartbeat 1.5s infinite' : 'none',
+            animation: isMatchingLoading ? 'heartbeat 1.5s infinite' : 'none',
             '@keyframes heartbeat': {
               '0%, 100%': {
                 transform: 'scale(1)',
@@ -172,8 +159,15 @@ const JobMatchingList = () => {
             },
           }}
         >
-          {isLoading ? (
-            <GlobalLoader context="job-matching" inline />
+          {isMatchingLoading ? (
+            <>
+              <Box display="flex" alignItems="center" gap={1}>
+                <CircularProgress size={16} color="inherit" />
+                <Typography variant="caption">
+                  {t('job-matching-researching')}
+                </Typography>
+              </Box>
+            </>
           ) : (
             t('job-matching-find-button')
           )}

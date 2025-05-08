@@ -1,20 +1,22 @@
 import { useState } from 'react';
 import { fetchJobMatching as fetchJobMatchingAPI } from '../services/jobMatchingService';
 import { Job } from '../interfaces/interfaces';
-import useLoadingContext from './useLoadingContext';
 import useSnackBarContext from './useSnackBarContext';
 import { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
+import useLoadingContext from './useLoadingContext';
 
 export const useJobMatchingManagement = () => {
   const [jobMatches, setJobMatches] = useState<Job[]>([]);
-  const { setLoading } = useLoadingContext();
+
   const { setSnackStatus } = useSnackBarContext();
   const { t } = useTranslation();
+  const { setFeatureLoading, loadingMap } = useLoadingContext();
+  const isMatchingLoading = loadingMap['job-matching'] || false;
 
   const fetchJobMatching = async (categoryId: string) => {
     try {
-      setLoading(true);
+      setFeatureLoading('job-matching', true);
       const data = await fetchJobMatchingAPI(categoryId);
       console.log('job matches in hook->', data);
 
@@ -47,12 +49,13 @@ export const useJobMatchingManagement = () => {
         });
       }
     } finally {
-      setLoading(false);
+      setFeatureLoading('job-matching', false);
     }
   };
 
   return {
     jobMatches,
     fetchJobMatching,
+    isMatchingLoading,
   };
 };
