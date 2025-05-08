@@ -12,6 +12,7 @@ import { Company } from '../../interfaces/interfaces';
 import { Delete, Edit } from '@mui/icons-material';
 import HasRole from '../HasRole';
 import { usePaginationManagement } from '../../hooks/usePaginationManagement';
+import { useTranslation } from 'react-i18next';
 
 interface CompaniesProps {
   companies: Company[];
@@ -27,6 +28,8 @@ const CompaniesTable: React.FC<CompaniesProps> = ({
   const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } =
     usePaginationManagement();
 
+  const { t } = useTranslation();
+
   // Get jobs for the current page
   const paginatedCompanies = companies.slice(
     page * rowsPerPage,
@@ -38,17 +41,17 @@ const CompaniesTable: React.FC<CompaniesProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Address</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Phone</TableCell>
-            <TableCell>Website</TableCell>
-            <TableCell>Foundation Date</TableCell>
-            <TableCell>AVG employees</TableCell>
+            <TableCell>{t('name')}</TableCell>
+            <TableCell>{t('company-address')}</TableCell>
+            <TableCell>{t('description')}</TableCell>
+            <TableCell>{t('email')}</TableCell>
+            <TableCell>{t('company-phone')}</TableCell>
+            <TableCell>{t('company-website')}</TableCell>
+            <TableCell>{t('company-foundation-date')}</TableCell>
+            <TableCell>{t('company-avg-employees')}</TableCell>
             {/* <TableCell>Active?</TableCell> */}
             <HasRole role={1}>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell align="right">{t('actions')}</TableCell>
             </HasRole>
           </TableRow>
         </TableHead>
@@ -91,6 +94,7 @@ const CompaniesTable: React.FC<CompaniesProps> = ({
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage={t('rows-per-page')}
       />
     </TableContainer>
   );

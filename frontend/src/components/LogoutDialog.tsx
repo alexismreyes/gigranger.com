@@ -7,6 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { Trans, useTranslation } from 'react-i18next';
 
 interface LogoutDialogProps {
   open: boolean;
@@ -19,6 +20,8 @@ const LogoutDialog: React.FC<LogoutDialogProps> = ({
   onClose,
   onConfirm,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Dialog
       open={open}
@@ -44,7 +47,7 @@ const LogoutDialog: React.FC<LogoutDialogProps> = ({
         }}
       >
         <LogoutIcon color="error" />
-        Confirm Logout
+        {t('logout-title')}
       </DialogTitle>
 
       {/* Message content */}
@@ -55,8 +58,12 @@ const LogoutDialog: React.FC<LogoutDialogProps> = ({
         }}
       >
         <Typography fontSize="1rem" fontWeight={500}>
-          Are you sure you want to log out from the{' '}
-          <strong>Employment App</strong>?
+          {/* {t('logout-content')} */}
+          <Trans
+            i18nKey="logout-content"
+            values={{ gigranger: 'GIGRANGER' }}
+            components={{ strong: <strong /> }}
+          />
         </Typography>
       </DialogContent>
 
@@ -69,10 +76,10 @@ const LogoutDialog: React.FC<LogoutDialogProps> = ({
         }}
       >
         <Button variant="outlined" onClick={onClose}>
-          Cancel
+          {t('cancel')}
         </Button>
         <Button variant="contained" color="error" onClick={onConfirm}>
-          Confirm Logout
+          {t('logout-confirm')}
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,7 +1,8 @@
 import { Formik, Form, FormikHelpers } from 'formik';
 import { Company } from '../../interfaces/interfaces';
-import { CompanySchema } from '../../validations/companySchema';
 import { Box, Button, TextField } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { getCompanySchema } from '../../validations/yupLocaleHelper';
 
 interface CompanyFormProps {
   initialValues: Company;
@@ -14,6 +15,9 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
   onSave,
   onClose,
 }) => {
+  const { t } = useTranslation();
+  const validationSchema = getCompanySchema(t);
+
   const handleSubmit = async (
     values: Company,
     actions: FormikHelpers<Company>
@@ -30,7 +34,8 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={CompanySchema}
+      /* validationSchema={CompanySchema} */
+      validationSchema={validationSchema}
       onSubmit={handleSubmit}
       validateOnBlur={true}
       validateOnChange={true}
@@ -49,7 +54,7 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
             }}
           >
             <TextField
-              label="Company name"
+              label={t('company')}
               name="name"
               value={values.name}
               onChange={handleChange}
@@ -57,7 +62,7 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
               helperText={touched.name && errors.name}
             />
             <TextField
-              label="Address"
+              label={t('company-address')}
               name="address"
               value={values.address}
               onChange={handleChange}
@@ -65,7 +70,7 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
               helperText={touched.address && errors.address}
             />
             <TextField
-              label="Description"
+              label={t('description')}
               name="description"
               value={values.description}
               onChange={handleChange}
@@ -73,7 +78,7 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
               helperText={touched.description && errors.description}
             />
             <TextField
-              label="Email"
+              label={t('email')}
               name="email"
               value={values.email}
               onChange={handleChange}
@@ -81,7 +86,7 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
               helperText={touched.email && errors.email}
             />
             <TextField
-              label="Phone"
+              label={t('company-phone')}
               name="phone"
               value={values.phone}
               onChange={handleChange}
@@ -89,7 +94,7 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
               helperText={touched.phone && errors.phone}
             />
             <TextField
-              label="Website"
+              label={t('company-website')}
               name="website"
               value={values.website}
               onChange={handleChange}
@@ -97,7 +102,7 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
               helperText={touched.website && errors.website}
             />
             <TextField
-              label="foundation date"
+              label={t('company-foundation-date')}
               name="foundationDate"
               type="date"
               value={values.foundationDate}
@@ -107,7 +112,7 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
               InputLabelProps={{ shrink: true }}
             />
             <TextField
-              label="Employees Number"
+              label={t('company-avg-employees')}
               name="employeesAvgNumber"
               type="number"
               value={values.employeesAvgNumber}
@@ -155,7 +160,7 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
                 sx={{ width: '50%' }}
               >
                 {' '}
-                Cancel{' '}
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"
@@ -163,7 +168,7 @@ const CompaniesForm: React.FC<CompanyFormProps> = ({
                 disabled={isSubmitting}
                 sx={{ width: '50%' }}
               >
-                {isSubmitting ? 'Submiting...' : 'Submit'}
+                {isSubmitting ? 'Submiting...' : t('save')}
               </Button>
             </Box>
           </Box>

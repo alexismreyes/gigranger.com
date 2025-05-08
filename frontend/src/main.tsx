@@ -11,6 +11,7 @@ import { MyOwnProvider } from './context/MyOwnContext.tsx';
 import { LoadingProvider } from './context/LoadingContext.tsx';
 import { ChatNotificationProvider } from './context/ChatNotificationContext.tsx';
 import { FloatingChatProvider } from './context/FloatingChatContext.tsx';
+import './locales/i18n'; //Import this BEFORE anything else using useTranslation
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

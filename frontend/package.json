@@ -17,9 +17,13 @@
     "@mui/material": "^6.4.4",
     "axios": "^1.7.9",
     "formik": "^2.4.6",
+    "i": "^0.3.7",
+    "i18next": "^25.0.2",
+    "i18next-browser-languagedetector": "^8.1.0",
     "jwt-decode": "^4.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-i18next": "^15.5.1",
     "react-router-dom": "^7.1.5",
     "socket.io-client": "^4.8.1",
     "yup": "^1.6.1"

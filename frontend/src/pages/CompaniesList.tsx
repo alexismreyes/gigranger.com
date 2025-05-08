@@ -9,6 +9,7 @@ import SnackBar from '../components/SnackBar';
 import useSnackBarContext from '../hooks/useSnackBarContext';
 
 import HasRole from '../components/HasRole';
+import { useTranslation } from 'react-i18next';
 
 const CompaniesList: React.FC = () => {
   const { companies, updateCompany, createCompany, deleteCompany } =
@@ -21,9 +22,7 @@ const CompaniesList: React.FC = () => {
     useState<boolean>(false);
   const [companyToDelete, setCompanyToDelete] = useState<number>(0);
   const { snackStatus, handleCloseSnack } = useSnackBarContext();
-
-  //use our own context
-  /* const { getTime } = useMyOwnContext(); */
+  const { t } = useTranslation();
 
   const handleOpenDialog = (company?: Company | undefined) => {
     setCurrentCompany(company);
@@ -58,22 +57,13 @@ const CompaniesList: React.FC = () => {
 
   return (
     <Container>
-      <Typography variant="h5">COMPANIES LIST</Typography>
+      <Typography variant="h5">{t('companies-title')}</Typography>
 
       <HasRole role={[1, 3]}>
         <Button variant="contained" onClick={() => handleOpenDialog()}>
-          Add a Company
+          {t('companies-add')}
         </Button>
       </HasRole>
-
-      {/* <Button
-        variant="contained"
-        onClick={() => getTime()}
-        sx={{ marginLeft: '1rem' }}
-        color="warning"
-      >
-        Get Time!!
-      </Button> */}
 
       <CompaniesTable
         companies={companies}
@@ -90,8 +80,8 @@ const CompaniesList: React.FC = () => {
 
       <ConfirmationDialog
         open={confirmationDialogOpen}
-        title="Confirm Deletion"
-        message="Are you sure you want to delete the selected Company?"
+        title={t('confirm-deletion')}
+        message={t('company-dialog-delete-content')}
         onConfirm={handleDelete}
         onCancel={handleCancelDelete}
       />

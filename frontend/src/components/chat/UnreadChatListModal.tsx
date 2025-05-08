@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { useEffect } from 'react';
 import { useChatManagement } from '../../hooks/useChatManagement';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   open: boolean;
@@ -24,6 +25,7 @@ const UnreadChatListModal: React.FC<Props> = ({
   onSelectRoom,
 }) => {
   const { chatUsersInfo, roomDetails } = useChatManagement();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!open || unreadRooms.length === 0) return;
@@ -37,7 +39,7 @@ const UnreadChatListModal: React.FC<Props> = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Unread Chats</DialogTitle>
+      <DialogTitle>{t('chat-unread-title')}</DialogTitle>
       <DialogContent>
         <List>
           {roomDetails?.map(({ roomId, participants }) => (

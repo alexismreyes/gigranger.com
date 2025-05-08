@@ -15,7 +15,8 @@ services:
       - gigranger-network
     volumes:
       - ./frontend:/app/gigranger.com/frontend
-      - /app/gigranger.com/frontend/node_modules
+      #- /app/gigranger.com/frontend/node_modules
+      - gigranger-frontend-node-modules:/app/gigranger.com/frontend/node_modules #named_volume
 
   gigranger-database-service:
     container_name: gigranger-database
@@ -39,6 +40,9 @@ services:
     container_name: gigranger-jobmatching
     ports:
       - '5000:5000'
+    volumes:
+      - ./jobmatching-service:/app/gigranger.com/jobmatching-service
+      - /app/gigranger.com/jobmatching-service/node_modules
     env_file:
       - ./jobmatching-service/.env
     networks:
@@ -86,6 +90,7 @@ services:
 
 volumes:
   mysql-data:
+  gigranger-frontend-node-modules:
 
 networks:
   gigranger-network:

@@ -10,6 +10,7 @@ import {
   Paper,
 } from '@mui/material';
 import axios, { AxiosError } from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
@@ -19,6 +20,7 @@ const VerifyEmail = () => {
   );
   const [message, setMessage] = useState<string>('');
   const hasVerified = useRef(false); // ⛔ prevents duplicate calls, if we dont use this, this component calls the api twice and we get an error
+  const { t } = useTranslation();
 
   useEffect(() => {
     const verifyEmail = async () => {
@@ -26,11 +28,20 @@ const VerifyEmail = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/auth/verifyemail?token=${token}`
         );
+        const translated = t(response.data.message || 'server-failure');
         setStatus('success');
-        setMessage(response.data.message);
+        //setMessage(response.data.message);
+        setMessage(translated);
       } catch (error: unknown) {
         if (error instanceof AxiosError) {
-          setMessage(error.response?.data.error || 'Verification failed.');
+          const message = error.response?.data.error;
+          const errorMessage = error.response?.data.message;
+          console.error('this->', message);
+          const translated = t(message || 'server-failure', {
+            defaultValue: errorMessage,
+          });
+          //setMessage(error.response?.data.error || 'Verification failed.');
+          setMessage(translated);
         }
         setStatus('error');
       }
@@ -49,7 +60,7 @@ const VerifyEmail = () => {
     <Container maxWidth="sm" sx={{ mt: 10 }}>
       <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
         <Typography variant="h4" fontWeight="bold" gutterBottom>
-          {status === 'success' ? 'Welcome!' : 'Oops!'}
+          {status === 'success' ? t('welcome') : 'Oops!'}
         </Typography>
 
         <Box display="flex" justifyContent="center" my={2}>
@@ -81,7 +92,7 @@ const VerifyEmail = () => {
             href="/login"
             sx={{ mt: 2 }}
           >
-            Proceed to Login
+            {t('proceedToLogin')}
           </Button>
         )}
       </Paper>
