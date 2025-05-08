@@ -18,6 +18,8 @@ This project showcases real-world, production-ready features such as:
 
 - 💬 **Live chat with offline message sync and unread badges**
 
+- 🌐 **Multilingual support with 10 languages via i18next**
+
 The backend leverages a **modular microservices architecture** for improved scalability:
 
 - Email notifications are offloaded to a dedicated **RabbitMQ-powered email microservice**.
@@ -148,7 +150,7 @@ RABBITMQ_HOST=rabbitmq
 
 HUGGINGFACE*API_KEY=\_YOUR_HUGGINGFACE_API_KEY*
 
-MODEL_URL=https://api-inference.huggingface.co/models/facebook/bart-large-mnli
+MODEL_URL=https://api-inference.huggingface.co/models/MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli
 
 PORT=5000
 
@@ -260,7 +262,7 @@ This app includes a resume-to-job matching microservice using a Hugging Face-hos
 
 ⚙️ Backend reads resumes (from S3 in production or disk locally), extracts their text with pdf-parse, and calls the AI service.
 
-🤖 Job descriptions are passed to a Hugging Face model (facebook/bart-large-mnli) for zero-shot classification.
+🤖 Job descriptions are passed to a Hugging Face model for zero-shot classification. (previously we used facebook/bart-large-mnli but due to some model downtimes we now changed to MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli which is always hosted in huggingfaces)
 
 📊 Results are scored and color-coded based on compatibility percentage.
 
@@ -269,6 +271,31 @@ This app includes a resume-to-job matching microservice using a Hugging Face-hos
 - Full CRUD for users, companies, jobs, categories, statuses
 
 - Filter and search functionality for easier record management
+
+🌐 \*\*Multilingual Support
+
+Gigranger now supports a total of **10 languages** to offer a more inclusive and global user experience. The multilingual implementation was achieved using the [`i18next`](https://www.i18next.com/) internationalization library, integrated with `react-i18next` for seamless support across the React frontend.
+
+### Supported Languages:
+
+- **English** (default)
+- **Español** (Spanish)
+- **Français** (French)
+- **Deutsch** (German)
+- **Português** (Portuguese)
+- **हिन्दी** (Hindi)
+- **Русский** (Russian)
+- **中文 (简体)** (Chinese - Simplified)
+- **日本語** (Japanese)
+- **العربية** (Arabic)
+
+### Implementation Details:
+
+- Language files are stored in `src/i18n/locales/{language}/translation.json`.
+- Language switching is handled via a `<Select>` dropdown menu in the app header.
+- Translations cover the whole UI elements as well as most of the errors received from the backend to be used for the snackbar component for user feedback.
+
+  The translation system is fully scalable, allowing new languages to be added by simply extending the translation files and configuration.
 
 ## 💠 Tech Stack
 
