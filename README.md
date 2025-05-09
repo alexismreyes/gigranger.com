@@ -293,7 +293,7 @@ Gigranger now supports a total of **10 languages** to offer a more inclusive and
 
 - Language files are stored in `src/i18n/locales/{language}/translation.json`.
 - Language switching is handled via a `<Select>` dropdown menu in the app header.
-- Translations cover the whole UI elements as well as most of the errors received from the backend to be used for the snackbar component for user feedback.
+- Translations cover the whole UI elements as well as most of the errors received from the backend to be used for the snackbar component for user feedback operations.
 
   The translation system is fully scalable, allowing new languages to be added by simply extending the translation files and configuration.
 
