@@ -32,8 +32,8 @@ const LanguageSwitcher: React.FC = () => {
       {/* RUSSIAN */}
       <MenuItem value="ar">العربية</MenuItem>
       {/* ARABIC */}
-      <MenuItem value="ch">中文 (简体)</MenuItem> {/* CHINESE SIMPLIFIED */}
-      <MenuItem value="jp">日本語</MenuItem>
+      <MenuItem value="zh">中文 (简体)</MenuItem> {/* CHINESE SIMPLIFIED */}
+      <MenuItem value="ja">日本語</MenuItem>
       {/* JAPANESE */}
     </Select>
   );
