@@ -272,7 +272,7 @@ This app includes a resume-to-job matching microservice using a Hugging Face-hos
 
 - Filter and search functionality for easier record management
 
-🌐 \*\*Multilingual Support
+🌐 **Multilingual Support**
 
 Gigranger now supports a total of **10 languages** to offer a more inclusive and global user experience. The multilingual implementation was achieved using the [`i18next`](https://www.i18next.com/) internationalization library, integrated with `react-i18next` for seamless support across the React frontend.
 
