@@ -10,8 +10,8 @@ import fr from './fr/translation.json';
 import hi from './hi/translation.json';
 import ru from './ru/translation.json';
 import ar from './ar/translation.json';
-import ch from './ch/translation.json';
-import jp from './jp/translation.json';
+import zh from './zh/translation.json';
+import ja from './ja/translation.json';
 
 i18n
   .use(LanguageDetector) // Detect browser language
@@ -26,8 +26,8 @@ i18n
       hi: { translation: hi },
       ru: { translation: ru },
       ar: { translation: ar },
-      ch: { translation: ch },
-      jp: { translation: jp },
+      zh: { translation: zh },
+      ja: { translation: ja },
     },
     fallbackLng: 'en',
     interpolation: { escapeValue: false },
