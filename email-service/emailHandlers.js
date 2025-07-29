@@ -17,7 +17,7 @@ const sendMailToApplicants = async ({
   comment,
 }) => {
   const mailOptions = {
-    from: `"Employment App" <${process.env.EMAIL_USER}>`,
+    from: `"GIGRANGER.COM" <${process.env.EMAIL_USER}>`,
     to,
     subject: `Application Update: ${jobName}`,
     html: `
@@ -45,7 +45,7 @@ const sendMailToRecruiter = async ({
   requestDate,
 }) => {
   const mailOptions = {
-    from: `"Employment App" <${process.env.EMAIL_USER}>`,
+    from: `"GIGRANGER.COM" <${process.env.EMAIL_USER}>`,
     to,
     subject: `Application created for: ${jobName}`,
     html: `
@@ -67,7 +67,7 @@ const sendMailToRecruiter = async ({
 
 const sendVerificationEmail = async (to, link) => {
   const mailOptions = {
-    from: `"Employment App" <${process.env.EMAIL_SENDER}>`,
+    from: `"GIGRANGER.COM" <${process.env.EMAIL_SENDER}>`,
     to,
     subject: 'Verify your email address',
     html: `
