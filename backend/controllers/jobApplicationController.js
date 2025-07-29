@@ -1,17 +1,17 @@
 const { where } = require('sequelize');
 const { JobApplication, Jobs } = require('../models');
-const {
-  notifyRecruiterOfJobApplication,
-} = require('../utils/jobApplicationNotifier');
+const { publishToQueue } = require('../utils/rabbitMQPublisher');
+const { userInfoForJobApplication } = require('../utils/retrieveUserInfo');
 
 exports.getAllJobsApplications = async (req, res) => {
   try {
     const jobApplications = await JobApplication.findAll();
 
     if (!jobApplications || jobApplications.length === 0)
-      return res
-        .status(404)
-        .json({ error: 'There are no applications active' });
+      return res.status(404).json({
+        error: 'jobApplication.noApplicationActive',
+        message: 'There are no applications active',
+      });
 
     res.status(200).json(jobApplications);
   } catch (error) {
@@ -27,7 +27,10 @@ exports.getJobApplicationById = async (req, res) => {
     if (jobApplication) {
       res.status(200).json(jobApplication);
     } else {
-      res.status(404).json({ message: 'Job application not found' });
+      res.status(404).json({
+        error: 'jobApplication.notFound',
+        message: 'Job application not found',
+      });
     }
   } catch (error) {
     res.status(404).json({ error: error.message });
@@ -45,9 +48,10 @@ exports.createJobApplication = async (req, res) => {
     });
 
     if (existingApplication) {
-      return res
-        .status(400)
-        .json({ error: 'You have already applied for this job.' });
+      return res.status(400).json({
+        error: 'jobApplication.alreadyApplied',
+        message: 'You have already applied for this job.',
+      });
     }
 
     //const newJobApplication = await JobApplication.create(jobApplication);
@@ -58,12 +62,28 @@ exports.createJobApplication = async (req, res) => {
       requestDate,
     });
 
-    // ✅ Notify the user via email
-    await notifyRecruiterOfJobApplication(
+    // ✅ Notify the user via email - previous approach
+    /* await notifyRecruiterOfJobApplication(
       newJobApplication.userId,
       newJobApplication.jobId,
       newJobApplication.requestDate
     );
+ */
+
+    //Fetch recruiter/applicant/job info for the email
+    const { recruiter, job, applicant } = await userInfoForJobApplication(
+      userId,
+      jobId
+    );
+
+    await publishToQueue({
+      type: 'notifyRecruiter',
+      to: recruiter.email,
+      recruiterName: recruiter.firstName,
+      jobName: job.name,
+      applicantName: `${applicant.firstName} ${applicant.lastName}`,
+      requestDate,
+    });
 
     res.status(201).json(newJobApplication);
   } catch (error) {
@@ -80,7 +100,10 @@ exports.updateJobApplication = async (req, res) => {
       await jobApplication.update(req.body);
       res.status(200).json(jobApplication);
     } else {
-      res.status(404).json({ message: 'Job Application not found' });
+      res.status(404).json({
+        error: 'jobApplication.notFound',
+        message: 'Job Application not found',
+      });
     }
   } catch (error) {
     res.status(404).json({ error: error.message });
@@ -94,7 +117,8 @@ exports.deleteJobApplication = async (req, res) => {
 
     if (jobApplication.statusId !== 1) {
       return res.status(400).json({
-        error:
+        error: 'jobApplication.alreadyStarted',
+        message:
           'A recruiter already started this process, you cannot delete it.',
       });
     }
@@ -124,9 +148,10 @@ exports.getJobApplicationsByUser = async (req, res) => {
     });
 
     if (!jobApplications || jobApplications.length === 0)
-      return res
-        .status(404)
-        .json({ error: 'The user has no applications active' });
+      return res.status(404).json({
+        error: 'jobApplication.userNoApplicationActive',
+        message: 'The user has no applications active',
+      });
 
     res.status(200).json(jobApplications);
   } catch (error) {
@@ -160,9 +185,10 @@ exports.getJobApplicationsByRecruiter = async (req, res) => {
       !jobApplicationsForRecruiter ||
       jobApplicationsForRecruiter.length === 0
     )
-      return res
-        .status(404)
-        .json({ error: 'Jobs posted by this recruiter has no applicants yet' });
+      return res.status(404).json({
+        error: 'jobApplication.noApplicants',
+        message: 'Jobs posted by this recruiter has no applicants yet',
+      });
 
     res.status(200).json(jobApplicationsForRecruiter);
   } catch (error) {

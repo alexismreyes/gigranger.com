@@ -21,6 +21,7 @@ import { usePaginationManagement } from '../../hooks/usePaginationManagement';
 import JobDetails from './JobsDetails';
 import HasRole from '../HasRole';
 import JobsFilters from './JobsFilters';
+import { useTranslation } from 'react-i18next';
 
 interface JobsProps {
   jobs: Job[];
@@ -55,6 +56,8 @@ const JobsTable: React.FC<JobsProps> = ({
     minSalary: '',
     maxSalary: '',
   });
+
+  const { t } = useTranslation();
 
   const handleFilterChange = (newFilters: Partial<typeof filters>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
@@ -124,14 +127,14 @@ const JobsTable: React.FC<JobsProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Category</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Company</TableCell>
-            <TableCell>Salaries</TableCell>
+            <TableCell>{t('category')}</TableCell>
+            <TableCell>{t('name')}</TableCell>
+            <TableCell>{t('company')}</TableCell>
+            <TableCell>{t('jobs-salary')}</TableCell>
             <HasRole role={[1, 3]}>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell align="right">{t('actions')}</TableCell>
             </HasRole>
-            <TableCell>Details</TableCell>
+            <TableCell>{t('jobs-details')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -199,6 +202,7 @@ const JobsTable: React.FC<JobsProps> = ({
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage={t('rows-per-page')}
       />
     </TableContainer>
   );

@@ -5,9 +5,11 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { JobCategory } from '../../interfaces/interfaces';
+import { useTranslation } from 'react-i18next';
 
 interface JobCategoriesDialogProps {
   open: boolean;
@@ -24,6 +26,8 @@ const JobCategoriesDialog: React.FC<JobCategoriesDialogProps> = ({
 }) => {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const { t } = useTranslation();
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (currentJobCategory) {
@@ -33,9 +37,21 @@ const JobCategoriesDialog: React.FC<JobCategoriesDialogProps> = ({
       setName('');
       setDescription('');
     }
-  }, [currentJobCategory]);
+
+    setFormError(null);
+  }, [currentJobCategory, open]);
 
   const handleSave = () => {
+    if (!name.trim() || !description.trim()) {
+      setFormError(
+        t('jobs-categories-missing-fields') ||
+          'Please fill in all required fields.'
+      );
+      return;
+    }
+
+    setFormError(null); // Clear previous errors
+
     onSave({
       id: currentJobCategory?.id,
       name,
@@ -46,27 +62,39 @@ const JobCategoriesDialog: React.FC<JobCategoriesDialogProps> = ({
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
-        {currentJobCategory ? 'Edit a Job Category' : 'Add a Job Category'}
+        {currentJobCategory
+          ? t('job-categories-edit-title')
+          : t('job-categories-add-title')}
       </DialogTitle>
       <DialogContent>
         <TextField
-          label="Name"
+          label={t('name')}
           margin="dense"
           fullWidth
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <TextField
-          label="Description"
+          label={t('description')}
           margin="dense"
           fullWidth
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
+        {formError && (
+          <Typography
+            sx={{
+              color: 'red',
+              fontSize: '1rem',
+            }}
+          >
+            {formError}
+          </Typography>
+        )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>CANCEL</Button>
-        <Button onClick={handleSave}>SAVE</Button>
+        <Button onClick={onClose}>{t('cancel')}</Button>
+        <Button onClick={handleSave}>{t('save')}</Button>
       </DialogActions>
     </Dialog>
   );

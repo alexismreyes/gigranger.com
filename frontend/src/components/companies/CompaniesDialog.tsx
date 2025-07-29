@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Company } from '../../interfaces/interfaces';
 import CompaniesForm from './CompaniesForm';
+import { useTranslation } from 'react-i18next';
 
 interface CompanyDialogProps {
   open: boolean;
@@ -28,6 +29,8 @@ const CompaniesDialog: React.FC<CompanyDialogProps> = ({
     /* active: false,
     logoUrl: '', */
   });
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (currentCompany) {
@@ -61,7 +64,9 @@ const CompaniesDialog: React.FC<CompanyDialogProps> = ({
       }}
     >
       <DialogTitle>
-        {currentCompany ? 'Edit a Company' : 'Add a Company'}
+        {currentCompany
+          ? t('company-dialog-edit-title')
+          : t('company-dialog-add-title')}
       </DialogTitle>
       <DialogContent>
         <CompaniesForm

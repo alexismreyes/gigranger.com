@@ -7,11 +7,13 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Company, Job, JobCategory, User } from '../../interfaces/interfaces';
 import { useCompaniesManagement } from '../../hooks/useCompaniesManagement';
 import CompaniesDialog from '../companies/CompaniesDialog';
+import { useTranslation } from 'react-i18next';
 
 interface JobsDialogProps {
   open: boolean;
@@ -46,6 +48,9 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
   //logic for adding non existing companies
   const [openCompanyDialog, setOpenCompanyDialog] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const { t } = useTranslation();
 
   //refresh companies
   const handleCompanyCreated = async (newCompany: Company) => {
@@ -83,9 +88,29 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
       setPhoneContact('');
       setVacancies(0);
     }
-  }, [currentJob]);
+
+    // ✅ Clear form error each time the dialog opens or job changes
+    setFormError(null);
+  }, [currentJob, open]);
 
   const handleSave = () => {
+    if (
+      !name.trim() ||
+      !description.trim() ||
+      !requirements.trim() ||
+      !company ||
+      !jobCategory ||
+      salary <= 0 ||
+      vancancies <= 0
+    ) {
+      setFormError(
+        t('jobs-dialog-missing-fields') || 'Please fill in all required fields.'
+      );
+      return;
+    }
+
+    setFormError(null); // Clear previous errors
+
     onSave({
       id: currentJob?.id,
       name,
@@ -103,7 +128,9 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{currentJob ? 'Edit a Job' : 'Add a Job'}</DialogTitle>
+      <DialogTitle>
+        {currentJob ? t('jobs-edit-title') : t('jobs-add-title')}
+      </DialogTitle>
       <DialogContent>
         <Select
           fullWidth
@@ -113,28 +140,31 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
           renderValue={(selected) =>
             selected
               ? jobCategories.find((cat) => cat.id === selected)?.name
-              : 'Select Category'
+              : t('jobs-dialog-category')
           }
         >
           <MenuItem value="" disabled>
-            Select Category
+            {t('jobs-dialog-category')}
           </MenuItem>
-          {jobCategories.map((cat) => (
-            <MenuItem key={cat.id} value={cat.id}>
-              {cat.name}
-            </MenuItem>
-          ))}
+          {jobCategories
+            .slice()
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((cat) => (
+              <MenuItem key={cat.id} value={cat.id}>
+                {cat.name}
+              </MenuItem>
+            ))}
         </Select>
 
         <TextField
-          label="Name"
+          label={t('name')}
           margin="dense"
           fullWidth
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <TextField
-          label="Description"
+          label={t('description')}
           margin="dense"
           fullWidth
           value={description}
@@ -149,17 +179,20 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
           renderValue={(selected) =>
             selected
               ? companies.find((com) => com.id === Number(selected))?.name
-              : 'Select Company'
+              : t('jobs-dialog-company')
           }
         >
           <MenuItem value="" disabled>
-            Select Company
+            {t('jobs-dialog-company')}
           </MenuItem>
-          {companies.map((com) => (
-            <MenuItem key={com.id} value={com.id}>
-              {com.name}
-            </MenuItem>
-          ))}
+          {companies
+            .slice()
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((com) => (
+              <MenuItem key={com.id} value={com.id}>
+                {com.name}
+              </MenuItem>
+            ))}
         </Select>
 
         <Button
@@ -168,18 +201,18 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
           color="primary"
           sx={{ mt: 1 }}
         >
-          + Add Company
+          + {t('jobs-dialog-add-company')}
         </Button>
 
         <TextField
-          label="Salary"
+          label={t('jobs-dialog-salary')}
           margin="dense"
           fullWidth
           value={salary}
           onChange={(e) => setSalary(parseInt(e.target.value))}
         />
         <TextField
-          label="requirements"
+          label={t('jobs-dialog-requirements')}
           margin="dense"
           fullWidth
           multiline
@@ -189,7 +222,7 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
         />
 
         <TextField
-          label="Email contact"
+          label={t('jobs-dialog-contact-email')}
           margin="dense"
           type="email"
           fullWidth
@@ -200,7 +233,7 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
         />
 
         <TextField
-          label="Phone contact"
+          label={t('jobs-dialog-contact-phone')}
           margin="dense"
           type="email"
           fullWidth
@@ -209,22 +242,33 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
         />
 
         <TextField
-          label="Vacancies"
+          label={t('jobs-dialog-vacancies')}
           margin="dense"
           fullWidth
           type="number"
           value={vancancies}
           onChange={(e) => setVacancies(parseInt(e.target.value))}
         />
+
+        {formError && (
+          <Typography
+            sx={{
+              color: 'red',
+            }}
+          >
+            {formError}
+          </Typography>
+        )}
       </DialogContent>
+
       <DialogActions>
-        <Button onClick={onClose}>CANCEL</Button>
+        <Button onClick={onClose}>{t('cancel')}</Button>
 
         <Button
           onClick={handleSave}
           disabled={errorEmail && emailContact !== ''}
         >
-          SAVE
+          {t('save')}
         </Button>
       </DialogActions>
 

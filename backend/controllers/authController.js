@@ -3,7 +3,7 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const moment = require('moment');
-const { sendVerificationEmail } = require('../utils/emailService');
+const { publishToQueue } = require('../utils/rabbitMQPublisher');
 
 exports.login = async (req, res) => {
   const JWT_SECRET = process.env.JWT_SECRET;
@@ -15,17 +15,19 @@ exports.login = async (req, res) => {
 
     //console.log(user);
 
-    if (!user) return res.status(401).json({ error: 'User not found' });
+    if (!user)
+      return res
+        .status(401)
+        .json({ error: 'auth.userNotFound', message: 'User not found' });
 
     const isMatch = await bcryptjs.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid Password!!!' });
+      return res.status(401).json({
+        error: 'auth.invalidPassword',
+        message: 'Invalid Password!!!',
+      });
     }
-
-    /* const token = jwt.sign({ id: user.id, role_id: user.role_id }, JWT_SECRET, {
-      expiresIn: '1h',
-    }); */
 
     const token = jwt.sign({ id: user.id, roleId: user.roleId }, JWT_SECRET, {
       expiresIn: '6h',
@@ -45,21 +47,11 @@ exports.requestVerification = async (req, res) => {
 
     // 1. Check if user already exists
     const user = await User.findOne({ where: { email } });
-    if (user) return res.status(400).json({ error: 'email already exists' });
-
-    /*  const saltRounds = 10;
-    const hashedPassword = await bcryptjs.hash(password, saltRounds);
-    const newUser = await User.create({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-      roleId,
-    });
-
-    res
-      .status(201)
-      .json({ message: 'User created successfully', user: newUser }); */
+    if (user)
+      return res.status(400).json({
+        error: 'auth.emailExists',
+        message: 'Email already exists',
+      });
 
     // Check if verification already exists (optional: clean up old ones)
     await EmailVerification.destroy({ where: { email } });
@@ -81,11 +73,17 @@ exports.requestVerification = async (req, res) => {
     });
 
     // Send verification email
-    //const link = `http://localhost:4000/api/v1/auth/verifyemail?token=${token}`;
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     const link = `${frontendUrl}/verifyemail?token=${token}`;
 
-    await sendVerificationEmail(email, link);
+    //previous approach direct mailing
+    //await sendVerificationEmail(email, link);
+
+    await publishToQueue({
+      type: 'verifyEmail',
+      to: email,
+      link,
+    });
 
     return res.status(200).json({ message: 'Verification email sent!' });
   } catch (error) {
@@ -106,7 +104,12 @@ exports.verifyEmail = async (req, res) => {
     const verification = await EmailVerification.findOne({ where: { token } });
 
     if (!verification) {
-      return res.status(404).json({ error: 'Token not found or already used' });
+      return res
+        .status(404)
+        .json({
+          error: 'auth.tokenNotFound',
+          message: 'Token not found or already used',
+        });
     }
 
     if (verification.verified === 1) {
@@ -122,7 +125,10 @@ exports.verifyEmail = async (req, res) => {
     // Check if user already exists (double safety)
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
+      return res.status(400).json({
+        error: 'auth.userAlreadyExists',
+        message: 'User already exists',
+      });
     }
 
     const hashedPassword = await bcryptjs.hash(password, 10);
@@ -141,9 +147,10 @@ exports.verifyEmail = async (req, res) => {
 
     //await EmailVerification.destroy({ where: { email } }); //destroy the record
 
-    return res
-      .status(201)
-      .json({ message: 'Email verified and user created successfully!' });
+    return res.status(201).json({
+      message: 'verifiedEmail',
+      rawMessage: 'Email verified and user created successfully!',
+    });
   } catch (error) {
     console.error('Email verification error:', error);
     return res

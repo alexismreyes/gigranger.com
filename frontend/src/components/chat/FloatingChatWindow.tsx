@@ -2,6 +2,7 @@
 import { Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ChatBox from '../ChatBox';
+import { useTranslation } from 'react-i18next';
 
 interface FloatingChatWindowProps {
   open: boolean;
@@ -16,6 +17,8 @@ const FloatingChatWindow: React.FC<FloatingChatWindowProps> = ({
   roomId,
   currentUserId,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Dialog
       open={open}
@@ -45,7 +48,7 @@ const FloatingChatWindow: React.FC<FloatingChatWindowProps> = ({
           alignItems: 'center',
         }}
       >
-        Chat Room {roomId}
+        {t('chat-room')} {roomId}
         <IconButton size="small" onClick={onClose}>
           <CloseIcon fontSize="small" />
         </IconButton>

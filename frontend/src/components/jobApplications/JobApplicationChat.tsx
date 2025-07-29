@@ -1,6 +1,7 @@
 import { Button } from '@mui/material';
 import { useFloatingChatContext } from '../../context/FloatingChatContext';
 import { useChatManagement } from '../../hooks/useChatManagement';
+import { useTranslation } from 'react-i18next';
 
 interface JobApplicationChatProps {
   recruiterId: number;
@@ -13,6 +14,7 @@ const JobApplicationChat: React.FC<JobApplicationChatProps> = ({
 }) => {
   const { startChat } = useChatManagement();
   const { setActiveRoomId } = useFloatingChatContext();
+  const { t } = useTranslation();
 
   const openChat = async () => {
     const room = await startChat({ recruiterId, jobSeekerId });
@@ -21,7 +23,7 @@ const JobApplicationChat: React.FC<JobApplicationChatProps> = ({
 
   return (
     <Button onClick={openChat} variant="contained">
-      💬 Start Chat
+      💬 {t('job-application-start-chat')}
     </Button>
   );
 };

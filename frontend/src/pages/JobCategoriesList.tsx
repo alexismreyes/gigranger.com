@@ -8,6 +8,7 @@ import ConfirmationDialog from '../components/ConfirmationDialog';
 import useSnackBarContext from '../hooks/useSnackBarContext';
 import SnackBar from '../components/SnackBar';
 import HasRole from '../components/HasRole';
+import { useTranslation } from 'react-i18next';
 
 const JobCategoriesList: React.FC = () => {
   const {
@@ -24,6 +25,7 @@ const JobCategoriesList: React.FC = () => {
   >(undefined);
   const [jobCategoryToDelete, setJobCategoryToDelete] = useState<number>(0);
   const { snackStatus, handleCloseSnack } = useSnackBarContext();
+  const { t } = useTranslation();
 
   const handleOpenDialog = (jobCategory?: JobCategory | null) => {
     setCurrentJobCategory(jobCategory);
@@ -61,10 +63,10 @@ const JobCategoriesList: React.FC = () => {
   return (
     <>
       <Container>
-        <Typography variant="h5">JOB CATEGORIES LIST</Typography>
+        <Typography variant="h5">{t('job-categories-title')}</Typography>
         <HasRole role={1}>
           <Button variant="contained" onClick={() => handleOpenDialog()}>
-            Add Job Category
+            {t('job-categories-add')}
           </Button>
         </HasRole>
         <JobCategoriesTable
@@ -81,8 +83,8 @@ const JobCategoriesList: React.FC = () => {
 
         <ConfirmationDialog
           open={confirmationDialogOpen}
-          title="Confirm Deletion"
-          message="Are you sure you want to delete the selected Job Category?"
+          title={t('confirm-deletion')}
+          message={t('job-categories-dialog-delete-content')}
           onConfirm={handleDelete}
           onCancel={handleCancelDelete}
         />

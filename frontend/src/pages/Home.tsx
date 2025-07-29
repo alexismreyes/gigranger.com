@@ -1,6 +1,9 @@
 import { Box, Container, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const Home: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <Box
       sx={{
@@ -60,7 +63,7 @@ const Home: React.FC = () => {
             },
           }}
         >
-          Welcome to GIGRANGER
+          {t('homewelcome')}
         </Typography>
         <Typography
           variant="h5"
@@ -81,7 +84,7 @@ const Home: React.FC = () => {
             },
           }}
         >
-          Job posting & seeking made easy.
+          {t('homephrase')}
         </Typography>
       </Container>
     </Box>

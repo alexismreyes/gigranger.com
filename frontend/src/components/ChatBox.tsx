@@ -4,6 +4,7 @@ import { useChatNotificationContext } from '../context/ChatNotificationContext';
 import { Button, Typography } from '@mui/material';
 import { useChatManagement } from '../hooks/useChatManagement';
 import { Message } from '../interfaces/interfaces';
+import { useTranslation } from 'react-i18next';
 
 interface ChatBoxProps {
   currentUserId: number;
@@ -15,6 +16,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ currentUserId, roomId }) => {
   const { clearUnreadRoom } = useChatNotificationContext();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [receiverId, setReceiverId] = useState<number | null>(null);
+  const { t } = useTranslation();
 
   const {
     userMap,
@@ -95,7 +97,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ currentUserId, roomId }) => {
   return (
     <div style={{ maxWidth: 500, margin: '0 auto', padding: 8 }}>
       <Typography variant="h6" gutterBottom style={{ marginBottom: 4 }}>
-        💬 Live Chat
+        💬 {t('chat-live')}
       </Typography>
 
       <div
@@ -135,7 +137,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ currentUserId, roomId }) => {
             border: '1px solid #ccc',
             fontSize: '1rem',
           }}
-          placeholder="Type a message..."
+          placeholder={t('chat-type-message')}
         />
         <Button
           variant="contained"
@@ -146,7 +148,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ currentUserId, roomId }) => {
             textTransform: 'none',
           }}
         >
-          Send
+          {t('send')}
         </Button>
       </div>
     </div>

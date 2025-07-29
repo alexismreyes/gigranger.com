@@ -27,6 +27,7 @@ import HasRole from '../HasRole';
 import { useEffect, useState } from 'react';
 import { usePaginationManagement } from '../../hooks/usePaginationManagement';
 import JobApplicationDetails from './JobApplicationDetails';
+import { useTranslation } from 'react-i18next';
 
 interface JobApplicationTableProps {
   jobApplications: JobApplication[];
@@ -57,6 +58,7 @@ const JobApplicationTable: React.FC<JobApplicationTableProps> = ({
   const [selectedJobApplication, setSelectedJobApplication] = useState<
     JobApplication | undefined
   >(undefined);
+  const { t } = useTranslation();
 
   // ✅ Reset page when filtering, Resets to page 0 when searching, so results are always visible.
   useEffect(() => {
@@ -113,6 +115,23 @@ const JobApplicationTable: React.FC<JobApplicationTableProps> = ({
     }
   };
 
+  const getStatusName = (statusId: number) => {
+    switch (statusId) {
+      case 1:
+        return t('requested');
+      case 2:
+        return t('in-progress');
+      case 3:
+        return t('hired');
+      case 4:
+        return t('rejected');
+      case 5:
+        return t('resume-pending');
+      default:
+        return '';
+    }
+  };
+
   return (
     <TableContainer>
       {/* Search Input */}
@@ -125,7 +144,7 @@ const JobApplicationTable: React.FC<JobApplicationTableProps> = ({
           }}
         >
           <TextField
-            label="Search for Jobs Applications - filter using any keyword"
+            label={t('filters_job_application')}
             variant="outlined"
             fullWidth
             margin="normal"
@@ -138,15 +157,15 @@ const JobApplicationTable: React.FC<JobApplicationTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Applicant</TableCell>
-            <TableCell>Resume</TableCell>
-            <TableCell>Position</TableCell>
-            <TableCell>Company</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Request Date</TableCell>
-            <TableCell>History</TableCell>
+            <TableCell>{t('job-application-applicant')}</TableCell>
+            <TableCell>{t('job-application-resume')}</TableCell>
+            <TableCell>{t('job-application-position')}</TableCell>
+            <TableCell>{t('company')}</TableCell>
+            <TableCell>{t('job-application-status')}</TableCell>
+            <TableCell>{t('job-application-request-date')}</TableCell>
+            <TableCell>{t('job-application-history')}</TableCell>
 
-            <TableCell align="right">Actions</TableCell>
+            <TableCell align="right">{t('actions')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -161,9 +180,9 @@ const JobApplicationTable: React.FC<JobApplicationTableProps> = ({
               ? `${applicant.firstName} ${applicant.lastName}`
               : 'Unknown';
 
-            const statusName =
+            /* const statusName =
               statuses.find((sta) => app.statusId === sta.id)?.name ||
-              'Unknown';
+              'Unknown'; */
 
             //const requestDate = new Date(app.requestDate).toLocaleDateString();
             const requestDate = new Date(app.requestDate)
@@ -184,7 +203,8 @@ const JobApplicationTable: React.FC<JobApplicationTableProps> = ({
                 </TableCell>
                 <TableCell>{job?.name}</TableCell>
                 <TableCell>{companyName}</TableCell>
-                <TableCell>{statusName}</TableCell>
+                {/* <TableCell>{statusName}</TableCell> */}
+                <TableCell>{getStatusName(app.statusId)}</TableCell>
                 <TableCell>{requestDate}</TableCell>
                 <TableCell>
                   <IconButton
@@ -196,7 +216,7 @@ const JobApplicationTable: React.FC<JobApplicationTableProps> = ({
                 </TableCell>
 
                 <TableCell align="right">
-                  <HasRole role={1 | 3}>
+                  <HasRole role={[1, 3]}>
                     <IconButton color="primary" onClick={() => onEdit(app)}>
                       <Edit />
                     </IconButton>
@@ -232,6 +252,7 @@ const JobApplicationTable: React.FC<JobApplicationTableProps> = ({
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage={t('rows-per-page')}
       />
     </TableContainer>
   );

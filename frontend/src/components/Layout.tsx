@@ -4,9 +4,6 @@ import {
   Box,
   Drawer,
   IconButton,
-  List,
-  ListItemButton,
-  ListItemText,
   Toolbar,
   Typography,
   useMediaQuery,
@@ -30,14 +27,17 @@ import FloatingChatWindow from './chat/FloatingChatWindow';
 import { useFloatingChatContext } from '../context/FloatingChatContext';
 import SnackBar from './SnackBar';
 import useSnackBarContext from '../hooks/useSnackBarContext';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
+import { DrawerList } from './DrawerList';
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true);
-  const [openDialogLogout, setOpenDialogLogout] = useState<boolean>(false);
 
-  const openDrawerWidth = 150;
-  const collapsedDrawerWidth = 0;
+  const { drawer, openDialogLogout, setOpenDialogLogout } = DrawerList();
+  const drawerWidth = 170;
+
   const { user } = useAuthContext();
   const { roles } = useRolesManagement();
   const { snackStatus, handleCloseSnack, setSnackStatus } =
@@ -57,6 +57,8 @@ const Layout: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const { t } = useTranslation();
+
   const handleLogout = (): void => {
     setOpenDialogLogout(false);
     navigate('/logout');
@@ -68,34 +70,6 @@ const Layout: React.FC = () => {
     }
   }, [user?.id]);
 
-  const drawer = (
-    <List>
-      <ListItemButton onClick={() => navigate('/')}>
-        <ListItemText primary="Home" />
-      </ListItemButton>
-      <ListItemButton onClick={() => navigate('/companies')}>
-        <ListItemText primary="Companies" />
-      </ListItemButton>
-      <ListItemButton onClick={() => navigate('/jobcategories')}>
-        <ListItemText primary="Job Categories" />
-      </ListItemButton>
-      <ListItemButton onClick={() => navigate('/jobs')}>
-        <ListItemText primary="Jobs" />
-      </ListItemButton>
-      <ListItemButton onClick={() => navigate('/jobapplications')}>
-        <ListItemText primary="Job Applications" />
-      </ListItemButton>
-
-      <ListItemButton onClick={() => navigate('/users')}>
-        <ListItemText primary="Users" />
-      </ListItemButton>
-
-      <ListItemButton onClick={() => setOpenDialogLogout(true)}>
-        <ListItemText primary="Logout" />
-      </ListItemButton>
-    </List>
-  );
-
   return (
     <>
       <SocketListener />
@@ -106,10 +80,12 @@ const Layout: React.FC = () => {
           position="fixed"
           sx={{
             width: {
-              sm: drawerOpen
-                ? `calc(100% - ${openDrawerWidth}px)`
-                : `calc(100% - ${collapsedDrawerWidth}px)`,
+              sm: drawerOpen ? `calc(100% - ${drawerWidth}px)` : '100%',
             },
+            ml: {
+              sm: drawerOpen ? `${drawerWidth}px` : 0,
+            },
+            transition: 'width 0.3s ease-in-out, margin 0.3s ease-in-ou',
           }}
         >
           <Toolbar
@@ -126,11 +102,11 @@ const Layout: React.FC = () => {
                 {drawerOpen ? <ChevronLeftIcon /> : <MenuIcon />}
               </IconButton>
               <Typography variant={isMobile ? 'body1' : 'h4'}>
-                The Job Finding App
+                {t('toolbartext')}
               </Typography>
             </Box>
 
-            {/* Right Side: User Info */}
+            {/* Right Side: User Information */}
 
             {user && (
               <Box
@@ -186,6 +162,7 @@ const Layout: React.FC = () => {
                     {roles.find((rol) => rol.id === user.roleId)?.name}
                   </Typography>
                 </IconButton>
+                <LanguageSwitcher />
               </Box>
             )}
           </Toolbar>
@@ -205,9 +182,7 @@ const Layout: React.FC = () => {
             marginTop: '64px',
             padding: '16px',
             ml: {
-              sm: drawerOpen
-                ? `${openDrawerWidth + 30}px`
-                : `${collapsedDrawerWidth}px`,
+              sm: drawerOpen ? `${drawerWidth + 15}px` : `10px`,
             },
             transition: 'margin-left 0.3s ease-in-out',
           }}

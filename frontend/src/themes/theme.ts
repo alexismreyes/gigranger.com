@@ -137,16 +137,22 @@ const eyecandyTheme = createTheme({
     },
 
     /* DRAWER */
+
     MuiDrawer: {
       styleOverrides: {
         paper: {
+          width: 170,
           borderRadius: 0,
-          background: '#FFC145',
+          backgroundColor: 'rgba(30, 30, 30, 0.5)', // dark overlay
+          backdropFilter: 'blur(5px)',
           color: '#fff',
-          borderRight: '5px solidrgb(212, 161, 19)',
+          borderRight: '1px solid rgba(0, 0, 0, 0.2)',
+          overflowX: 'hidden',
+          transition: 'width 0.3s ease-in-out',
         },
       },
     },
+
     MuiListItemButton: {
       styleOverrides: {
         root: {
@@ -156,7 +162,7 @@ const eyecandyTheme = createTheme({
             color: '#1976d2',
             transform: 'scale(1.1)',
             backgroundColor: '#f5f5f5',
-            transition: 'all 0.3s ease',
+            transition: 'all 0.3s ease ',
           },
         },
       },
@@ -164,9 +170,16 @@ const eyecandyTheme = createTheme({
     MuiListItemText: {
       styleOverrides: {
         primary: {
-          fontSize: '18px',
+          fontSize: '16px',
           fontWeight: '1000',
           textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+        },
+      },
+    },
+    MuiListItemIcon: {
+      styleOverrides: {
+        root: {
+          minWidth: 35,
         },
       },
     },

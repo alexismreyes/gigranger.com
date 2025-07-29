@@ -26,8 +26,11 @@ jobs:
       - name: ✅ Run tests
         run: npm test
 
-      - name: 🗜 Zip source code for deployment
-        run: zip -r backend.zip . -x "node_modules/*" ".env.*"
+      #- name: 🗜 Zip source code for deployment
+      #  run: zip -r backend.zip . -x "node_modules/*" ".env.*"
+
+      - name: 🗜 Zip including hidden files
+        run: zip -r backend.zip . .* * -x "node_modules/*" ".env.*" "*.git*" || true
 
       - name: 🚀 Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21

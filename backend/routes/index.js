@@ -15,6 +15,7 @@ const initializeRoutes = (app) => {
   app.use('/api/v1/roles', require('./rolesRoute'));
   app.use('/api/v1/uploads', require('./uploadRoute'));
   app.use('/api/v1/chat', require('./chatRoute'));
+  app.use('/api/v1/jobmatching', require('./jobMatchingRoute'));
 };
 
 module.exports = { initializeRoutes };

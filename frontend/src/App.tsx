@@ -11,6 +11,7 @@ import CompaniesList from './pages/CompaniesList';
 import JobApplicationsList from './pages/JobApplicationList';
 import UsersList from './pages/UsersList';
 import VerifyEmail from './pages/VerifyEmail';
+import JobMatchingList from './pages/JobMatchingList';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
                 path="/jobapplications"
                 element={<JobApplicationsList />}
               />
+              <Route path="/jobmatching" element={<JobMatchingList />} />
               <Route path="/users" element={<UsersList />} />
               <Route path="/logout" element={<Logout />} />
             </Route>

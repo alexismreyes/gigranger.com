@@ -12,6 +12,7 @@ import { JobCategory } from '../../interfaces/interfaces';
 import { Delete, Edit } from '@mui/icons-material';
 import HasRole from '../HasRole';
 import { usePaginationManagement } from '../../hooks/usePaginationManagement';
+import { useTranslation } from 'react-i18next';
 
 interface JobCategoriesProps {
   jobCategories: JobCategory[];
@@ -27,6 +28,8 @@ const JobCategoriesTable: React.FC<JobCategoriesProps> = ({
   const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } =
     usePaginationManagement();
 
+  const { t } = useTranslation();
+
   // Get jobs for the current page
   const paginatedJobCategories = jobCategories.slice(
     page * rowsPerPage,
@@ -38,10 +41,10 @@ const JobCategoriesTable: React.FC<JobCategoriesProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Description</TableCell>
+            <TableCell>{t('name')}</TableCell>
+            <TableCell>{t('description')}</TableCell>
             <HasRole role={1}>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell align="right">{t('actions')}</TableCell>
             </HasRole>
           </TableRow>
         </TableHead>
@@ -78,6 +81,7 @@ const JobCategoriesTable: React.FC<JobCategoriesProps> = ({
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage={t('rows-per-page')}
       />
     </TableContainer>
   );

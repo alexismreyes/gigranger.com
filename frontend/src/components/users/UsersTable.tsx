@@ -11,6 +11,7 @@ import {
 import { Role, User } from '../../interfaces/interfaces';
 import { Delete, Edit } from '@mui/icons-material';
 import HasRole from '../HasRole';
+import { useTranslation } from 'react-i18next';
 
 interface UsersTableProps {
   users: User[];
@@ -27,6 +28,8 @@ const UsersTable: React.FC<UsersTableProps> = ({
   onDelete,
   user,
 }) => {
+  const { t } = useTranslation();
+
   let userList = [];
   userList =
     user?.roleId === 1 ? users : users.filter((u) => u.id === user?.id);
@@ -36,14 +39,14 @@ const UsersTable: React.FC<UsersTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>First Name</TableCell>
-            <TableCell>Last Name</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Role</TableCell>
+            <TableCell>{t('users-first-name')}</TableCell>
+            <TableCell>{t('users-last-name')}</TableCell>
+            <TableCell>{t('email')}</TableCell>
+            <TableCell>{t('users-role')}</TableCell>
             <HasRole role={2}>
               <TableCell>Resume</TableCell>
             </HasRole>
-            <TableCell>Actions</TableCell>
+            <TableCell>{t('actions')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -66,7 +69,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                         style={{ textDecoration: 'none' }}
                       >
                         <Button variant="outlined" size="small">
-                          View Resume
+                          {t('users-view-resume')}
                         </Button>
                       </a>
                     )}

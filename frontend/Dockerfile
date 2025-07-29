@@ -2,8 +2,9 @@ FROM node:21
 
 WORKDIR /app/gigranger.com/frontend
 
-COPY package*.json ./
+COPY . .
 
-RUN npm i
+# Then install dependencies after code is present
+RUN npm install
 
-CMD npm run dev
+CMD ["npm", "run", "dev"]

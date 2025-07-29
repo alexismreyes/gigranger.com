@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { SnackStatus } from '../interfaces/interfaces';
 import { Alert, Snackbar } from '@mui/material';
 
@@ -12,23 +13,27 @@ const SnackBar: React.FC<SnackBarProps> = ({
   handleCloseSnack,
   snackStatus,
 }) => {
+  const { t } = useTranslation();
+
   // ✅ Use `parentComponent` directly instead of setting it inside `useEffect`
   const parent =
     parentComponent === 'JobCategoriesList'
-      ? 'Job Category'
+      ? t('category')
       : parentComponent === 'JobsList'
-      ? 'Job'
+      ? t('job')
       : parentComponent === 'CompaniesList'
-      ? 'Company'
+      ? t('company')
       : parentComponent === 'Login' || parentComponent === 'UsersList'
-      ? 'User'
+      ? t('user')
       : parentComponent === 'JobApplicationsList' ||
         parentComponent === 'JobsDetails'
-      ? 'Job Application'
+      ? t('snackbar-parent-job-application')
       : parentComponent === 'JobApplicationsHistoryList'
-      ? 'Job Application History'
+      ? t('snackbar-parent-job-application-history')
+      : parentComponent === 'JobMatchingList'
+      ? t('snackbar-parent-job-matching')
       : parentComponent === 'Chat'
-      ? 'Chat service'
+      ? t('snackbar-parent-chat')
       : undefined;
 
   return (
@@ -65,15 +70,16 @@ const SnackBar: React.FC<SnackBarProps> = ({
         }}
       >
         {snackStatus.action === 'created'
-          ? `${parent} added successfully`
+          ? `${parent} ${t('snackbar-added')}`
           : snackStatus.action === 'updated'
-          ? `${parent} updated successfully`
+          ? `${parent} ${t('snackbar-updated')}`
           : snackStatus.action === 'deleted'
-          ? `${parent} deleted successfully`
+          ? `${parent} ${t('snackbar-deleted')}`
           : snackStatus.action === 'nonewchat'
-          ? `${parent} - No unread chats yet. Go to a job application and click "💬 Start Chat"
-          to continue your conversation.`
-          : snackStatus.message || 'An error ocurred'}
+          ? `${parent} - ${t('snackbar-action-chat')}`
+          : snackStatus.action === 'no-resume'
+          ? `${parent} - ${snackStatus.message}`
+          : snackStatus.message || t('snackbar-error')}
       </Alert>
     </Snackbar>
   );

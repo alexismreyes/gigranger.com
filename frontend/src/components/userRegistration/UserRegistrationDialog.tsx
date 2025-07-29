@@ -3,6 +3,7 @@ import { User } from '../../interfaces/interfaces';
 import { useState } from 'react';
 import UserRegistrationForm from './UserRegistrationForm';
 import { useRolesManagement } from '../../hooks/useRolesManagement';
+import { useTranslation } from 'react-i18next';
 
 interface UserRegistrationProps {
   open: boolean;
@@ -25,6 +26,7 @@ const UserRegistrationDialog: React.FC<UserRegistrationProps> = ({
   });
 
   const { roles } = useRolesManagement(true); //we send true to set this is for public retrieval and do not show admin role
+  const { t } = useTranslation();
 
   return (
     <Dialog
@@ -39,7 +41,7 @@ const UserRegistrationDialog: React.FC<UserRegistrationProps> = ({
         p: 2, // add padding for internal spacing
       }}
     >
-      <DialogTitle>{'New user registration'}</DialogTitle>
+      <DialogTitle>{t('new-user-title')}</DialogTitle>
       <DialogContent>
         <UserRegistrationForm
           onSave={onSave}

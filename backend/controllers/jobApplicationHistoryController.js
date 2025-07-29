@@ -1,7 +1,8 @@
 const { JobApplicationHistory } = require('../models');
+const { publishToQueue } = require('../utils/rabbitMQPublisher');
 const {
-  notifyUserOfJobApplicationStatus,
-} = require('../utils/jobApplicationNotifier');
+  userInfoForJobApplicationHistory,
+} = require('../utils/retrieveUserInfo');
 
 exports.getAllJobsApplicationsHistory = async (req, res) => {
   try {
@@ -42,12 +43,27 @@ exports.createJobApplicationHistory = async (req, res) => {
       jobApplicationHistory
     );
 
-    // ✅ Notify the user via email
-    await notifyUserOfJobApplicationStatus(
+    // ✅ Notify the user via email - previous approach
+    /* await notifyUserOfJobApplicationStatus(
       jobApplicationHistory.jobAppId,
       jobApplicationHistory.updatedStatus,
       jobApplicationHistory.comment
     );
+ */
+
+    const { user, job, status } = await userInfoForJobApplicationHistory(
+      jobApplicationHistory.jobAppId,
+      jobApplicationHistory.updatedStatus
+    );
+
+    await publishToQueue({
+      type: 'notifyApplicant',
+      to: user.email,
+      name: `${user.firstName} ${user.lastName}`,
+      jobName: job.name,
+      newStatus: status ? status.name : 'Updated',
+      comment: jobApplicationHistory.comment,
+    });
 
     res.status(201).json(newJobApplicationHistory);
   } catch (error) {
